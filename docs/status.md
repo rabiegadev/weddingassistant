@@ -4,6 +4,7 @@
 **Cel produktu:** Jedna, spójna platforma: przygotowania, przebieg wesela, wspomnienia — marka **Weddingassistant** (łączenie z kierunkiem “Weddinfo / wizytówka” w jedną ofertę).
 
 ## Założenia (nadrzędne)
+- **Tryb obecny (tymczasowo):** jedna baza = **produkcja** — w `.env` lokalnie i w Vercel ten sam `DATABASE_URL`. Przy wprowadzaniu zmian w schemacie: tylko **`npx prisma migrate deploy`** (nie seed testowy na produkcję, najpierw backup w panelu SEOHost). Później docelowo: osobna baza **preview** / lokalna pod rozwój.
 - **Next.js** (monolit) na **Vercel** + **MySQL/MariaDB** w **SEOHost** — `DATABASE_URL` w env.
 - **Domena:** [https://weddingassistant.pl](https://weddingassistant.pl) w `metadata` + `NEXT_PUBLIC_APP_URL` w linkach e-mail.
 - **Sesje:** `wa_s_client` / `wa_s_admin` + `Session.mfaComplete` (admin: pełna sesja dopiero po 2FA lub pierwszym skanie QR).
