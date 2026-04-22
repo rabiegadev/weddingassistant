@@ -1,6 +1,6 @@
 # Status prac: Weddingassistant.pl
 
-**Aktualizacja:** 2026-04-22 (pełne MVP z planu: auth, pakiety, zamówienia, maile, 2FA admina, testy e2e)  
+**Aktualizacja:** 2026-04-22 (MVP + UI marketing/admin, nagłówek wg sesji, cennik na stronie głównej)  
 **Cel produktu:** Jedna, spójna platforma: przygotowania, przebieg wesela, wspomnienia — marka **Weddingassistant** (łączenie z kierunkiem “Weddinfo / wizytówka” w jedną ofertę).
 
 ## Założenia (nadrzędne)
@@ -8,7 +8,9 @@
 - **Next.js** (monolit) na **Vercel** + **MySQL/MariaDB** w **SEOHost** — `DATABASE_URL` w env.
 - **Domena:** [https://weddingassistant.pl](https://weddingassistant.pl) w `metadata` + `NEXT_PUBLIC_APP_URL` w linkach e-mail.
 - **Sesje:** `wa_s_client` / `wa_s_admin` + `Session.mfaComplete` (admin: pełna sesja dopiero po 2FA lub pierwszym skanie QR).
-- **Pakiety:** jeden katalog w DB — [`/cennik`](https://weddingassistant.pl/cennik) (public) = źródło dla klienta i [admin/pakiety](/admin/pakiety).
+- **Pakiety:** jeden katalog w DB — [`/cennik`](https://weddingassistant.pl/cennik) (public) = źródło dla klienta i [admin/pakiety](/admin/pakiety); **strona główna** sekcja „Oferowane funkcjonalności” ładuje te same pakiety (opublikowane) z bazy.
+- **UI publiczne:** nagłówek reaguje na sesję (para / admin / 2FA w toku) — **brak** publicznego linku do logowania admina w stopce (wejście tylko znanym URL, np. `/logowanie?k=admin`).
+- **UI admina:** jednolite tło `slate-100`, formularze jasne (czytelność); nie „ciemny monolit”.
 - **Checklista infrastruktury:** [docs/infra-checklist.md](infra-checklist.md)
 
 ## Co ukończono (wdrożenie zgodne z planem)
@@ -23,12 +25,15 @@
 - [x] **Seed (opcjonalny):** [prisma/seed.ts](../prisma/seed.ts) — pakiety + opcjonalnie `SEED_ADMIN_PASSWORD` + opcjonalnie konto demo pary.
 - [x] **Hardening:** nagłówki w [next.config.ts](../next.config.ts) (`X-Frame-Options`, `nosniff`, `Referrer-Policy`); Sentry: [instrumentation.ts](../instrumentation.ts) (tylko gdy `SENTRY_DSN`).
 - [x] **E2E (Playwright):** [e2e/smoke.spec.ts](../e2e/smoke.spec.ts) — strona główna + `GET /api/health` (`npm run test:e2e`).
+- [x] **Strona główna (2026-04-22):** nowe treści H1/CTA, sekcja `#oferta` z pakiety z DB, kontakt (e-mail, telefon, [rabiegadevelopment.pl](https://rabiegadevelopment.pl)), przełamania kolorystyczne, usunięty kicker marki.
+- [x] **Nagłówek / stopka:** po zalogowaniu (para lub admin) ukryte Zaloguj/Załóż konto; linki do panelu + wylogowanie; usunięty łatwy link „wejście do obsługi” ze stopki i przełącznik z formularza logowania pary.
 
-## W toku / techniczne „następne”
-- [ ] Wypełnienie treści prawnych z pomocą prawnika; treści marketingu spójne z ofertą.
-- [ ] Płatności (Stripe / przelewy) do statusu „opłacone” zamiast ręcznej zmiany w adminie.
-- [ ] Wizytówka weselna: formularz, subdomena, QR, szablony (roadmapa z planu użytkownika).
-- [ ] E2E przepływów zalogowanych (wymaga testowej bazy + seedu).
+## W toku / techniczne „następne” (priorytet z planu)
+- [ ] **Płatności** (Stripe / przelewy) + status „opłacone” w workflow zamówienia.
+- [ ] **Wizytówka weselna** (roadmapa): formularz konfiguracji, subdomena, QR, szablony; **osobna konfiguracja** per para (zgodnie z ustaleniami użytkownika).
+- [ ] **Treści prawne** z pomocą prawnika (obecnie szkice); copy marketingowe — iteracje.
+- [ ] **E2E** pełnych ścieżek (auth, zamówienie, e-mail) — wymaga DB testowej lub seeda; obecnie smoke tylko.
+- [ ] **Osobna baza preview/dev** gdy zakończysz pracę „tylko na produkcji” (mniejsze ryzyko błędów na danych żywych).
 
 ## Oszacowanie (orientacyjnie, po tej serii)
 | Obszar | Stan |
@@ -37,7 +42,8 @@
 | Auth + 2FA + sesje | **~90%** |
 | Pakiety + cennik + zamówienia + maile | **~85%** (placeholdery: płatności, treści) |
 | Prawo (jako strony szkiców) | **~40%** (wymagane doprecyzowanie merytoryczne) |
-| **MVP całości (plan główny)** | **~80%** |
+| Marketing / strona główna (copy + pakiety live) | **~75%** (demo strefa w menu nadal placeholder) |
+| **MVP całości (plan główny)** | **~82%** |
 
 ## Ryzyka
 - Vercel ↔ zewn. MySQL: opóźnienia sieciowe i limity połączeń — trzymać `connection_limit` niskie, monitorować.

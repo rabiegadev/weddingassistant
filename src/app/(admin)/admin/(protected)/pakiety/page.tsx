@@ -13,13 +13,13 @@ export default async function AdminPakietyPage() {
   const list = await prisma.package.findMany({ orderBy: { sortOrder: "asc" } });
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
-      <h2 className="font-sans text-lg text-zinc-200">Pakiety (jeden katalog: cennik + wybór klienta)</h2>
-      <p className="mt-1 text-sm text-amber-100/70">Opublikowane pakiety widoczne na /cennik i w panelu pary.</p>
+      <h2 className="font-sans text-lg font-semibold text-slate-800">Pakiety (jeden katalog: cennik + wybór klienta)</h2>
+      <p className="mt-1 text-sm text-slate-600">Opublikowane pakiety widoczne na /cennik i w panelu pary.</p>
       <div className="mt-8 space-y-10">
         {list.map((p) => (
-          <div key={p.id} className="rounded-lg border border-amber-900/30 bg-zinc-900/40 p-4">
-            <h3 className="text-sm font-medium text-amber-200">{p.name}</h3>
-            <p className="text-xs text-zinc-500">slug: {p.slug}</p>
+          <div key={p.id} className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+            <h3 className="text-sm font-medium text-slate-900">{p.name}</h3>
+            <p className="text-xs text-slate-500">slug: {p.slug}</p>
             <div className="mt-3">
               <PackageForm
                 key={p.id}
@@ -39,8 +39,8 @@ export default async function AdminPakietyPage() {
           </div>
         ))}
       </div>
-      <div className="mt-10 rounded-lg border border-dashed border-amber-800/50 p-4">
-        <h3 className="text-sm font-medium text-amber-200/90">Nowy pakiet</h3>
+      <div className="mt-10 rounded-lg border border-dashed border-slate-300 bg-slate-50/50 p-4">
+        <h3 className="text-sm font-medium text-slate-800">Nowy pakiet</h3>
         <div className="mt-3">
           <PackageForm
             action={savePackageAction}

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import { HomeOfferSection } from "@/components/marketing/home-offer-section";
 
 const features = [
   {
@@ -53,26 +55,39 @@ function FeatureIcon({ k }: { k: string }) {
   return <div className="text-2xl text-[#B8955C]">◎</div>;
 }
 
+function OfferSectionFallback() {
+  return (
+    <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {[1, 2, 3].map((i) => (
+        <div
+          key={i}
+          className="h-64 animate-pulse rounded-2xl border border-[#E8DCC4]/50 bg-gradient-to-b from-white to-[#F5E9D3]/40"
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function HomePage() {
   return (
     <main>
       <section
-        className="relative border-b border-[#E8DCC4]/60 bg-gradient-to-b from-[#FDF8F0] to-[#F4EBDC]"
+        className="relative overflow-hidden border-b border-[#E8DCC4]/60 bg-gradient-to-b from-[#FDF8F0] via-[#FAF2E4] to-[#F4EBDC]"
         aria-label="Nagłówek"
       >
-        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-20">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -left-20 top-20 h-72 w-72 rounded-full bg-[#B8955C]/[0.08]" />
+          <div className="absolute -right-16 bottom-0 h-96 w-96 rounded-full bg-[#6B8F71]/[0.07]" />
+        </div>
+        <div className="relative mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-20">
           <div className="grid items-center gap-10 lg:grid-cols-2">
             <div>
-              <p className="text-sm font-medium uppercase tracking-wide text-[#7A6343]">
-                Nowa strona marki, jeden produkt, jeden styl
-              </p>
-              <h1 className="mt-3 max-w-2xl font-serif text-3xl font-semibold leading-tight text-[#2B2B2B] sm:text-4xl md:text-5xl">
-                Wszystko, czego potrzebujesz do lepszego, spokojniejszego wesela
+              <h1 className="mt-0 max-w-2xl font-serif text-3xl font-semibold leading-tight text-[#2B2B2B] sm:text-4xl md:text-5xl">
+                Wszystko, co pozwoli Ci mieć kontrolę nad przygotowaniami weselnymi
               </h1>
               <p className="mt-5 max-w-prose text-base text-[#4A4A4A] sm:text-lg">
-                Zbieramy narzędzia i wspomnienia: od planu i listy gości, przez RSVP i harmonogram,
-                po wspomnienia, które wrócisz w przyszłości. Startujemy od spójnej platformy, nad
-                którą będziemy budować kolejne moduły.
+                W jednym miejscu: plan, lista gości, RSVP, harmonogram i wspomnienia, do których wrócisz. Zaczynamy
+                od przejrzystych narzędzi, które będziemy rozbudowywać razem z Tobą.
               </p>
               <div className="mt-8 flex w-full max-w-md flex-col gap-3 sm:flex-row sm:items-center">
                 <Link
@@ -81,45 +96,41 @@ export default function HomePage() {
                 >
                   Załóż darmowe konto
                 </Link>
-                <a
-                  className="inline-flex h-12 min-w-[200px] flex-1 items-center justify-center rounded-md border border-[#B8955C] bg-white/70 px-6 text-sm font-semibold text-[#2B2B2B] transition hover:bg-white"
-                  href="#funkcje"
+                <Link
+                  className="inline-flex h-12 min-w-[200px] flex-1 items-center justify-center rounded-md border-2 border-[#B8955C] bg-white/80 px-6 text-sm font-semibold text-[#2B2B2B] shadow-sm transition hover:bg-white"
+                  href="/#oferta"
                 >
-                  Zobacz, co będziemy rozbudowywać
-                </a>
+                  Sprawdź, co możesz otrzymać
+                </Link>
               </div>
             </div>
 
-            <div
-              className="relative min-h-56 self-stretch rounded-2xl border border-white/50 bg-gradient-to-tr from-white to-[#EEE2CD] p-4 shadow-sm ring-1 ring-[#E0D0B0]/50"
-              role="img"
-              aria-label="Dekoracyjny blat z symbolami: checklist, RSVP, obrączki"
-            >
-              <div className="h-full w-full rounded-xl bg-gradient-to-b from-white/50 to-white/0 p-4 sm:p-6">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="w-full max-w-sm rounded-md border border-[#D9C6A0] bg-white/90 p-3 text-xs text-[#3A3A3A] shadow-sm">
-                    <p className="text-[0.6rem] font-bold uppercase text-[#8A6A3A]">Checklista</p>
-                    <ul className="mt-2 space-y-1.5 text-[#2B2B2B]">
-                      {["Fotograf", "Catering", "Muzyka"].map((x) => (
-                        <li className="flex items-center justify-between" key={x}>
-                          <span className="flex items-center gap-1">
-                            <span className="text-[#B8955C]">✓</span> {x}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="hidden w-20 shrink-0 sm:block" aria-hidden />
+            <div className="relative">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="rounded-2xl border border-white/80 bg-gradient-to-br from-white to-[#EEF4E8]/80 p-5 shadow-lg shadow-[#B8955C]/5 ring-1 ring-[#B8955C]/10 sm:col-span-1">
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#5A7A5F]">W jednym miejscu</p>
+                  <h2 className="mt-2 font-serif text-lg text-[#2B2B2B]">Plan i lista zadań</h2>
+                  <ul className="mt-3 space-y-2.5 text-sm text-[#3A3A3A]">
+                    {["Miejsce i data", "Goście i stoliki", "Muzyka i fotograf"].map((x) => (
+                      <li className="flex items-center gap-2" key={x}>
+                        <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#6B8F71]/20 text-xs text-[#2D4A32]">✓</span>
+                        {x}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <p className="mt-4 text-right text-sm font-serif text-[#2B2B2B]">
-                  RSVP
-                  <span className="block text-xs text-[#6A6A6A]">Spójny, powtarzalny, spokój w głowie</span>
-                </p>
-                <div
-                  className="pointer-events-none absolute bottom-0 right-4 h-20 w-20 opacity-20"
-                  aria-hidden
-                >
-                  <div className="h-full w-full rounded-full border-2 border-dashed border-[#B8955C]" />
+                <div className="flex flex-col gap-4 sm:col-span-1 sm:pt-8">
+                  <div className="rounded-2xl border border-[#B8955C]/25 bg-gradient-to-br from-[#FFF9F0] to-[#F0E3D0] p-4 shadow-md">
+                    <p className="text-xs font-semibold uppercase text-[#8A6A3A]">RSVP</p>
+                    <p className="mt-1 font-serif text-base text-[#2B2B2B]">Odpowiedzi gości bez chaosu w wiadomościach</p>
+                    <p className="mt-2 text-xs leading-relaxed text-[#5A5A5A]">
+                      Link do wydarzenia, potwierdzenia w jednej tabeli.
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-white/60 bg-white/90 p-4 ring-1 ring-inset ring-[#E0D0B0]/30">
+                    <p className="text-xs text-[#6A6A6A]">Spójny kalendarz dnia</p>
+                    <p className="mt-1 text-sm font-medium text-[#2B2B2B]">Od ślubu po oczepiny — w przyszłych wersjach szczegółowy plan godzinowy.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -137,11 +148,10 @@ export default function HomePage() {
             className="font-serif text-2xl font-semibold text-[#2B2B2B] sm:text-3xl"
             id="sekcja-funkcje"
           >
-            Czym ma być platforma? — orientacyjne filary
+            Czym ma być platforma? — filary
           </h2>
           <p className="mt-2 max-w-2xl text-sm text-[#4A4A4A] sm:text-base">
-            Te sekcje ewoluują w kierunku w pełni działających modułów. Poniżej: orientacja, nie pełne
-            wdrożenie w tej wersji szkieletu.
+            Te moduły stopniowo uruchomimy. Poniżej: kierunek i korzyści dla pary, nie tylko lista techniczna.
           </p>
           <ul className="mt-8 grid list-none grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((f) => (
@@ -160,26 +170,62 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="cennik" className="bg-[#F9F0E0]/40" aria-labelledby="sekcja-cennik">
+      <section
+        id="oferta"
+        className="border-b border-[#B8955C]/15 bg-gradient-to-b from-[#2D4A32]/[0.04] to-[#F9F0E0]/50"
+        aria-labelledby="sekcja-oferta"
+      >
+        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+          <h2
+            className="font-serif text-2xl font-semibold text-[#2B2B2B] sm:text-3xl"
+            id="sekcja-oferta"
+          >
+            Oferowane funkcjonalności i cennik
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm text-[#4A4A4A] sm:text-base">
+            Poniżej pakiety takie same jak w{" "}
+            <Link className="font-medium text-[#6B5427] underline underline-offset-2" href="/cennik">
+              cenniku
+            </Link>{" "}
+            — wybierzesz, co odpowiada Twojemu weselu, a potem w panelu dopracujesz szczegóły z obsługą.
+          </p>
+          <Suspense fallback={<OfferSectionFallback />}>
+            <HomeOfferSection />
+          </Suspense>
+        </div>
+      </section>
+
+      <section
+        id="cennik"
+        className="scroll-mt-20 border-b border-[#E8DCC4]/60 bg-white"
+        aria-labelledby="sekcja-cennik"
+      >
         <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <h2 className="font-serif text-2xl font-semibold text-[#2B2B2B]" id="sekcja-cennik">
-            Cennik i pakiety
+            Pełny cennik
           </h2>
           <p className="mt-2 text-sm text-[#4A4A4A] sm:text-base">
-            Konfiguracja pakietów w panelu administratora, jeden źródłowy katalog, widoczny w cenniku i
-            u klienta — w kolejnych krokach ten blok połączymy z bazą i płatnościami.
+            Porównaj pakiety i opisy w jednej tabeli — ceny w zł, bez ukrytych sekcji.
+          </p>
+          <p className="mt-4">
+            <Link
+              className="inline-flex h-12 items-center justify-center rounded-md bg-[#B8955C] px-6 text-sm font-semibold text-white transition hover:brightness-105"
+              href="/cennik"
+            >
+              Przejdź do cennika
+            </Link>
           </p>
         </div>
       </section>
 
-      <section id="demo" className="bg-white" aria-labelledby="sekcja-demo">
+      <section id="demo" className="bg-[#F8F2E8]/30" aria-labelledby="sekcja-demo">
         <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <h2 className="font-serif text-2xl font-semibold text-[#2B2B2B]" id="sekcja-demo">
             Strefa demo
           </h2>
           <p className="mt-2 text-sm text-[#4A4A4A] sm:text-base">
-            Tutaj trafią krok po kroku demonstracje: RSVP, kody QR, galeria gościnna, checklisty, itd.
-            Na tym etapie — placeholder, żeby utrzymać ścieżkę w menu i layout.
+            Wkrótce: krótkie przewodniki po RSVP, planie dnia i innych modułach. Na dziś — utrzymujemy
+            w menu miejsce na rozwijane demonstracje.
           </p>
         </div>
       </section>
@@ -193,19 +239,41 @@ export default function HomePage() {
           <h2 className="font-serif text-2xl font-semibold text-[#2B2B2B]" id="sekcja-kontakt">
             Kontakt
           </h2>
-          <p className="mt-2 text-sm text-[#4A4A4A] sm:text-base">
-            Formularz, numer telefonu i godziny odbioru dołożymy, gdy zdecydujemy, przez które kanały
-            wolisz odbiór (mail / telefon / ticket w panelu).
-          </p>
+          <p className="mt-2 text-sm text-[#4A4A4A] sm:text-base">Masz pytania o pakiety lub współpracę? Napisz lub zadzwoń.</p>
+          <ul className="mt-4 space-y-2 text-sm text-[#2B2B2B]">
+            <li>
+              <span className="text-[#5A5A5A]">E-mail: </span>
+              <a className="font-medium text-[#6B5427] underline" href="mailto:kontakt@weddingassistant.pl">
+                kontakt@weddingassistant.pl
+              </a>
+            </li>
+            <li>
+              <span className="text-[#5A5A5A]">Telefon: </span>
+              <a className="font-medium text-[#2B2B2B] underline" href="tel:+48793745717">
+                +48 793 745 717
+              </a>
+            </li>
+            <li>
+              <span className="text-[#5A5A5A]">Studio: </span>
+              <a
+                className="font-medium text-[#6B5427] underline"
+                href="https://rabiegadevelopment.pl"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                rabiegadevelopment.pl
+              </a>
+            </li>
+          </ul>
         </div>
       </section>
 
-      <section className="bg-[#F2E1C4]/20" aria-label="Sekcja kołowa">
+      <section className="bg-[#E8C99B]/[0.2]" aria-label="Zaproszenie do rejestracji">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-stretch gap-4 px-4 py-12 text-center sm:px-6 sm:py-16">
           <h2 className="font-serif text-2xl font-semibold text-[#2B2B2B] sm:text-3xl">
-            Z Weddingassistant praca nad weselem ma być przejrzysta i w jednym miejscu.
+            Z Weddingassistant praca nad weselem może być w jednym, przejrzystym miejscu.
           </h2>
-          <p className="text-sm text-[#4A4A4A] sm:text-base">Nie potrzebujesz jeszcze karty. Start od szkieletu.</p>
+          <p className="text-sm text-[#4A4A4A] sm:text-base">Możesz zacząć od darmowego konta — bez karty płatniczej.</p>
           <div className="pt-1">
             <Link
               className="inline-flex h-12 min-w-[16rem] items-center justify-center rounded-md bg-[#B8955C] px-8 text-sm font-semibold text-white shadow transition hover:brightness-105"

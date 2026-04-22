@@ -16,5 +16,9 @@ export default async function Admin2faLayout({ children }: { children: React.Rea
   if (full) {
     redirect("/admin");
   }
-  return <div className="mx-auto flex min-h-svh w-full max-w-md flex-col justify-center px-4 py-8">{children}</div>;
+  return (
+    <div className="mx-auto flex min-h-svh w-full max-w-md flex-col justify-center bg-slate-100 px-4 py-8 text-slate-900">
+      {children}
+    </div>
+  );
 }

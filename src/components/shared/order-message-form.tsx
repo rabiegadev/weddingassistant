@@ -10,7 +10,7 @@ function Send() {
   return (
     <button
       type="submit"
-      className="rounded bg-zinc-800 py-1.5 px-3 text-xs text-amber-100 disabled:opacity-50"
+      className="rounded border border-slate-300 bg-[#B8955C] py-1.5 px-3 text-xs font-medium text-white disabled:opacity-50 hover:brightness-105"
       disabled={pending}
     >
       {pending ? "…" : "Wyślij"}
@@ -18,25 +18,25 @@ function Send() {
   );
 }
 
-type Props = { orderId: string; isFromAdmin: boolean; dark?: boolean };
+type Props = { orderId: string; isFromAdmin: boolean };
 
-export function OrderMessageForm({ orderId, isFromAdmin, dark }: Props) {
+export function OrderMessageForm({ orderId, isFromAdmin }: Props) {
   const [st, formAction] = useFormState(postOrderMessageAction, init);
   return (
-    <form action={formAction} className="space-y-1 text-sm">
+    <form action={formAction} className="space-y-1 text-sm text-slate-800">
       <input name="orderId" type="hidden" value={orderId} readOnly />
       <textarea
-        className={
-          dark
-            ? "min-h-20 w-full rounded border border-amber-900/40 bg-zinc-900/50 px-2 py-1 text-amber-50"
-            : "min-h-20 w-full rounded border border-[#B8A99A] bg-white px-2 py-1"
-        }
+        className="min-h-20 w-full rounded border border-slate-300 bg-white px-2 py-1 text-slate-900 shadow-sm"
         name="body"
         required
-        placeholder={isFromAdmin ? "Odpowiedź do pary młodej (e-mail wychodzi automatycznie)" : "Napisz do obsługi…"}
+        placeholder={
+          isFromAdmin
+            ? "Odpowiedź do pary młodej (e-mail wychodzi automatycznie)"
+            : "Napisz do obsługi…"
+        }
       />
-      {st && "error" in st && st.error ? <p className="text-rose-400 text-xs">{st.error}</p> : null}
-      {st && "ok" in st && st.ok ? <p className="text-xs text-emerald-400">Wysłano.</p> : null}
+      {st && "error" in st && st.error ? <p className="text-rose-600 text-xs">{st.error}</p> : null}
+      {st && "ok" in st && st.ok ? <p className="text-xs text-emerald-700">Wysłano.</p> : null}
       <Send />
     </form>
   );

@@ -20,12 +20,12 @@ export default async function Admin2faPage() {
   }
   return (
     <div>
-      <h1 className="text-center font-sans text-lg text-zinc-200">Kod weryfikacyjny (2FA)</h1>
-      <p className="mt-1 text-center text-sm text-amber-100/70">Wprowadź 6-cyfrowy kod z Authenticatora.</p>
+      <h1 className="text-center font-sans text-lg font-medium text-slate-900">Kod weryfikacyjny (2FA)</h1>
+      <p className="mt-1 text-center text-sm text-slate-600">Wprowadź 6-cyfrowy kod z Authenticatora.</p>
       <div className="mt-6">
         <AdminTotpForm action="afterLogin" />
       </div>
-      <p className="mt-6 text-center text-sm text-zinc-500">
+      <p className="mt-6 text-center text-sm text-slate-500">
         <Link className="underline" href="/">
           Strona główna
         </Link>

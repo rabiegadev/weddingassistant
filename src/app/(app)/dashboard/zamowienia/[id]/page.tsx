@@ -48,7 +48,7 @@ export default async function ZamowienieClientPage({ params }: P) {
           ))}
         </ul>
         <div className="mt-3">
-          <OrderMessageForm orderId={o.id} isFromAdmin={false} dark={false} />
+          <OrderMessageForm orderId={o.id} isFromAdmin={false} />
         </div>
       </section>
     </div>

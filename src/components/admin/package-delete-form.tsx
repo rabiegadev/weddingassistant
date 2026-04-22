@@ -10,7 +10,7 @@ function DelBtn() {
   return (
     <button
       type="submit"
-      className="text-xs text-rose-300/90 underline disabled:opacity-50"
+      className="text-xs text-rose-600 underline disabled:opacity-50"
       disabled={pending}
     >
       {pending ? "…" : "Usuń (gdy brak powiązań z zamówieniami)"}
@@ -23,7 +23,7 @@ export function PackageDeleteForm({ id }: { id: string }) {
   return (
     <form action={formAction} className="pt-2">
       <input type="hidden" name="id" value={id} readOnly />
-      {st && "error" in st && st.error ? <p className="text-xs text-rose-300">{st.error}</p> : null}
+      {st && "error" in st && st.error ? <p className="text-xs text-rose-600">{st.error}</p> : null}
       <DelBtn />
     </form>
   );

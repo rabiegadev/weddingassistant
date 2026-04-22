@@ -11,26 +11,28 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
   if (full) {
     return (
       <div className="min-h-0 flex-1">
-        <div className="mb-0 border-b border-amber-900/40 bg-gradient-to-b from-zinc-900/70 to-zinc-950/90">
+        <div className="mb-0 border-b border-slate-200/80 bg-white shadow-sm">
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4">
-            <h1 className="font-sans text-base font-medium tracking-tight sm:text-lg">Weddingassistant — obsługa</h1>
-            <p className="text-xs text-amber-100/60" title={full.user.email}>
+            <h1 className="font-sans text-base font-semibold tracking-tight text-slate-800 sm:text-lg">
+              Weddingassistant — obsługa
+            </h1>
+            <p className="text-xs text-slate-500" title={full.user.email}>
               {full.user.email}
             </p>
-            <nav className="flex flex-wrap items-center gap-2 text-sm" aria-label="Nawigacja admina">
-              <Link className="rounded-md px-2 py-1 text-amber-100/90 hover:bg-zinc-800" href="/admin">
+            <nav className="flex flex-wrap items-center gap-1 text-sm" aria-label="Nawigacja admina">
+              <Link className="rounded-md px-2 py-1.5 text-slate-700 hover:bg-slate-100" href="/admin">
                 Kokpit
               </Link>
-              <Link className="rounded-md px-2 py-1 text-amber-100/90 hover:bg-zinc-800" href="/admin/pakiety">
+              <Link className="rounded-md px-2 py-1.5 text-slate-700 hover:bg-slate-100" href="/admin/pakiety">
                 Pakiety
               </Link>
-              <Link className="rounded-md px-2 py-1 text-amber-100/90 hover:bg-zinc-800" href="/admin/zamowienia">
+              <Link className="rounded-md px-2 py-1.5 text-slate-700 hover:bg-slate-100" href="/admin/zamowienia">
                 Zamówienia
               </Link>
               <form action={logoutAdminAction} className="inline">
                 <button
                   type="submit"
-                  className="rounded-md px-2 py-1 text-amber-200/80 hover:bg-zinc-800"
+                  className="rounded-md px-2 py-1.5 text-slate-600 underline decoration-slate-300 decoration-1 underline-offset-2 hover:bg-slate-100"
                 >
                   Wyloguj
                 </button>

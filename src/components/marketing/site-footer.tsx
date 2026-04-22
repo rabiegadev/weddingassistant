@@ -18,14 +18,7 @@ export function SiteFooter() {
               className="font-medium text-[#6B5427] underline-offset-2 hover:underline"
               href="/logowanie?k=client"
             >
-              Panel pary
-            </Link>{" "}
-            <span className="text-[#4A4A4A]">|</span>{" "}
-            <Link
-              className="font-medium text-[#5C5C5C] underline-offset-2 hover:underline"
-              href="/logowanie?k=admin"
-            >
-              Wejście do obsługi
+              Zaloguj się / panel pary
             </Link>
           </p>
           <p className="mt-2 text-xs text-[#5A5A5A]">

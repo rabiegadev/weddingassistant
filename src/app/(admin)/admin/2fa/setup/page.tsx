@@ -23,18 +23,18 @@ export default async function Admin2faSetupPage() {
   const dataUrl = await qrcode.toDataURL(url, { width: 256, margin: 1, color: { dark: "#0a0a0a", light: "#ffffff" } });
   return (
     <div>
-      <h1 className="text-center font-sans text-lg text-zinc-200">Pierwsze włączenie 2FA</h1>
-      <p className="mt-2 text-center text-sm text-amber-100/70">
+      <h1 className="text-center font-sans text-lg font-medium text-slate-900">Pierwsze włączenie 2FA</h1>
+      <p className="mt-2 text-center text-sm text-slate-600">
         Zeskanuj kod w Google Authenticator / 1Password itd. Następnie wpisz 6-cyfrowy kod, aby zatwierdzić.
       </p>
       <div className="mt-4 flex justify-center">
         <Image width={200} height={200} className="rounded-md bg-white p-2" src={dataUrl} alt="Kod QR 2FA" unoptimized />
       </div>
-      <p className="mt-2 break-all text-center text-xs text-zinc-500">Ręcznie: {secret}</p>
+      <p className="mt-2 break-all text-center text-xs text-slate-500">Ręcznie: {secret}</p>
       <div className="mt-4">
         <AdminTotpForm action="firstSetup" />
       </div>
-      <p className="mt-4 text-center text-sm text-zinc-500">
+      <p className="mt-4 text-center text-sm text-slate-500">
         <Link className="underline" href="/">
           Strona główna
         </Link>

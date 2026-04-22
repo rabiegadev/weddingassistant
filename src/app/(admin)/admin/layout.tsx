@@ -1,6 +1,10 @@
 import type { ReactNode } from "react";
 
-/** Wspólna strefa ciemna dla obsługi (2FA + panel właściwy). */
+/** Jednolite tło panelu obsługi (2FA + właściwy admin). */
 export default function AdminRootLayout({ children }: { children: ReactNode }) {
-  return <div className="min-h-svh flex-1 bg-zinc-950 text-zinc-100">{children}</div>;
+  return (
+    <div className="min-h-svh flex-1 bg-slate-100 text-slate-900 antialiased">
+      {children}
+    </div>
+  );
 }
