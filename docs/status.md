@@ -5,6 +5,7 @@
 
 ## Założenia (nadrzędne)
 - **Tryb obecny (tymczasowo):** jedna baza = **produkcja** — w `.env` lokalnie i w Vercel ten sam `DATABASE_URL`. Przy wprowadzaniu zmian w schemacie: tylko **`npx prisma migrate deploy`** (nie seed testowy na produkcję, najpierw backup w panelu SEOHost). Później docelowo: osobna baza **preview** / lokalna pod rozwój.
+- **Git / Vercel:** obecnie praca tylko na **`main`** (bez osobnego brancha preview); produkcja = deploy z `main`. Wejście na domyślny host **`*.vercel.app`** (nadal oferowany przez Vercel do projektu) to inna sytuacja niż „preview branch” — Turnstile i env traktuj pod własną domeną vs. ten URL.
 - **Next.js** (monolit) na **Vercel** + **MySQL/MariaDB** w **SEOHost** — `DATABASE_URL` w env.
 - **Domena:** [https://weddingassistant.pl](https://weddingassistant.pl) w `metadata` + `NEXT_PUBLIC_APP_URL` w linkach e-mail.
 - **Sesje:** `wa_s_client` / `wa_s_admin` + `Session.mfaComplete` (admin: pełna sesja dopiero po 2FA lub pierwszym skanie QR).
