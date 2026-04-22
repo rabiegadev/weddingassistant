@@ -1,0 +1,183 @@
+// MySQL (MariaDB) na SEOHost — użyj DATABASE_URL w .env
+// https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CLIENT
+  ADMIN
+}
+
+enum SessionScope {
+  CLIENT
+  ADMIN
+}
+
+enum OrderStatus {
+  DRAFT
+  SUBMITTED
+  PENDING_REVIEW
+  APPROVED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+/// Po logowaniu hasłem admin: false do czasu weryfikacji TOTP lub dokończenia setupu. Klient: zawsze true.
+model User {
+  id    String  @id @default(cuid())
+  email String  @unique
+  name  String?
+
+  passwordHash    String
+  emailVerifiedAt DateTime?
+
+  role UserRole
+
+  /// Sekret TOTP w base32 (dla roli admin); włączone gdy `totpEnabledAt` uzupełnione
+  totpSecret    String?   @db.VarChar(64)
+  totpEnabledAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions           Session[]
+  orders             Order[]
+  messages           OrderMessage[]
+  emailVerifications EmailVerificationToken[]
+  passwordResets     PasswordResetToken[]
+
+  orderEvents  OrderEvent[] @relation("EventActor")
+  auditEntries AuditLog[]
+}
+
+model Session {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash   String
+  scope       SessionScope
+  expiresAt   DateTime
+  mfaComplete Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+
+  @@unique([tokenHash])
+  @@index([userId])
+  @@index([scope])
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([tokenHash])
+  @@index([userId])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([tokenHash])
+  @@index([userId])
+}
+
+/// Prosty rate limit (najpierw auth); klucz np. "login:email:ip"
+model RateLimitEntry {
+  id           String   @id @default(cuid())
+  key          String   @unique
+  count        Int
+  windowEndsAt DateTime
+  createdAt    DateTime @default(now())
+}
+
+/// Pakiet / szablon ofertowy; jeden katalog: publiczny cennik + wybór klienta
+model Package {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  description  String   @db.Text
+  priceCents   Int
+  /// JSON: np. { "weddingPage": true, "subdomain": true, "rsvp": true }
+  featuresJson String   @db.Text
+  sortOrder    Int      @default(0)
+  isPublished  Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  orders       Order[]
+
+  @@index([isPublished, sortOrder])
+}
+
+model Order {
+  id            String         @id @default(cuid())
+  userId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  packageId     String
+  package       Package        @relation(fields: [packageId], references: [id])
+  status        OrderStatus    @default(DRAFT)
+  totalCents    Int
+  /// Snapshot wyboru klienta
+  selectionJson String         @db.Text
+  lastMessageAt DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  events        OrderEvent[]
+  messages      OrderMessage[]
+
+  @@index([userId, status])
+  @@index([status])
+  @@index([packageId])
+}
+
+model OrderEvent {
+  id          String       @id @default(cuid())
+  orderId     String
+  order       Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  fromStatus  OrderStatus?
+  toStatus    OrderStatus
+  message     String?      @db.Text
+  createdById String?
+  createdBy   User?        @relation("EventActor", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime     @default(now())
+}
+
+model OrderMessage {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  isFromAdmin Boolean
+  body        String   @db.VarChar(8000)
+  createdAt   DateTime @default(now())
+
+  @@index([orderId, createdAt])
+  @@index([authorId])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  adminId     String
+  admin       User     @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  action      String   @db.VarChar(100)
+  targetType  String   @db.VarChar(100)
+  targetId    String   @db.VarChar(64)
+  detailsJson String?  @db.Text
+  createdAt   DateTime @default(now())
+}
