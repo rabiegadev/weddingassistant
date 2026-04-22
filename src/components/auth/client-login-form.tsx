@@ -2,7 +2,8 @@
 
 import { useFormState, useFormStatus } from "react-dom";
 import { loginClientAction, type LoginState } from "@/app/actions/auth";
-import { TurnstileField } from "./turnstile-field";
+import { MathCaptchaField } from "./math-captcha-field";
+import type { MathChallengeClient } from "@/lib/captcha/math-challenge";
 
 const initial: LoginState = undefined;
 
@@ -19,7 +20,7 @@ function Submit() {
   );
 }
 
-export function ClientLoginForm() {
+export function ClientLoginForm({ challenge }: { challenge: MathChallengeClient }) {
   const [state, formAction] = useFormState(loginClientAction, initial);
   return (
     <form action={formAction} className="mt-4 space-y-3">
@@ -49,9 +50,7 @@ export function ClientLoginForm() {
           className="mt-1 w-full rounded-md border border-[#D9C6A0] bg-white/90 px-3 py-2 text-sm"
         />
       </div>
-      <div className="pt-1">
-        <TurnstileField />
-      </div>
+      <MathCaptchaField challenge={challenge} inputId="c-math" />
       {state && "error" in state && state.error ? <p className="text-sm text-rose-700">{state.error}</p> : null}
       <Submit />
     </form>

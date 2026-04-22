@@ -5,6 +5,7 @@ import { AdminLoginForm } from "@/components/auth/admin-login-form";
 import { getClientSession, getAnyAdminSession, getFullAdminSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { getAdmin2faEntryPath } from "@/lib/auth/mfa-routing";
+import { buildMathChallenge } from "@/lib/captcha/math-challenge";
 
 type P = { searchParams?: Promise<Record<string, string | string[] | undefined>> };
 
@@ -32,6 +33,7 @@ export default async function LogowaniePage({ searchParams }: P) {
 
   const tytuł =
     kontekst === "admin" ? "Logowanie — obsługa" : "Logowanie pary młodej / gościa";
+  const challenge = buildMathChallenge();
 
   return (
     <div className="min-h-full bg-[#FDF8F0] px-4 py-10 sm:px-6">
@@ -57,7 +59,7 @@ export default async function LogowaniePage({ searchParams }: P) {
                 reset hasła
               </Link>
             </p>
-            <ClientLoginForm />
+            <ClientLoginForm challenge={challenge} />
           </>
         ) : (
           <>
@@ -68,7 +70,7 @@ export default async function LogowaniePage({ searchParams }: P) {
               </Link>{" "}
               · <Link className="text-slate-700 underline" href="/">Strona główna</Link>
             </p>
-            <AdminLoginForm />
+            <AdminLoginForm challenge={challenge} />
           </>
         )}
       </div>

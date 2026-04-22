@@ -2,7 +2,8 @@
 
 import { useFormState, useFormStatus } from "react-dom";
 import { resetPasswordWithTokenAction, type PassState } from "@/app/actions/password";
-import { TurnstileField } from "./turnstile-field";
+import { MathCaptchaField } from "./math-captcha-field";
+import type { MathChallengeClient } from "@/lib/captcha/math-challenge";
 
 const initial: PassState = {};
 
@@ -19,7 +20,7 @@ function Submit() {
   );
 }
 
-export function NewPasswordForm({ token }: { token: string }) {
+export function NewPasswordForm({ token, challenge }: { token: string; challenge: MathChallengeClient }) {
   const [state, formAction] = useFormState(resetPasswordWithTokenAction, initial);
   return (
     <form action={formAction} className="mt-4 space-y-2 text-left text-sm">
@@ -36,9 +37,7 @@ export function NewPasswordForm({ token }: { token: string }) {
         />
         <p className="text-xs text-[#5A5A5A]">min. 12 znaków, wielka, mała, cyfra, znak spec.</p>
       </div>
-      <div className="pt-1">
-        <TurnstileField />
-      </div>
+      <MathCaptchaField challenge={challenge} inputId="np-math" />
       {state.error ? <p className="text-rose-700">{state.error}</p> : null}
       {state.success ? <p className="text-emerald-800">{state.success}</p> : null}
       <Submit />

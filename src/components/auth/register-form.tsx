@@ -2,7 +2,8 @@
 
 import { useFormState, useFormStatus } from "react-dom";
 import { registerClientAction, type AuthFormState } from "@/app/actions/auth";
-import { TurnstileField } from "./turnstile-field";
+import { MathCaptchaField } from "./math-captcha-field";
+import type { MathChallengeClient } from "@/lib/captcha/math-challenge";
 
 const initial: AuthFormState = {};
 
@@ -19,7 +20,7 @@ function Submit() {
   );
 }
 
-export function RegisterForm() {
+export function RegisterForm({ challenge }: { challenge: MathChallengeClient }) {
   const [state, formAction] = useFormState(registerClientAction, initial);
   return (
     <form action={formAction} className="mt-4 space-y-3">
@@ -59,9 +60,7 @@ export function RegisterForm() {
         />
         <p className="mt-0.5 text-xs text-[#5A5A5A]">min. 12 znaków, wielka i mała litera, cyfra, znak spec.</p>
       </div>
-      <div>
-        <TurnstileField />
-      </div>
+      <MathCaptchaField challenge={challenge} inputId="reg-math" />
       {state.error ? <p className="text-sm text-rose-700">{state.error}</p> : null}
       {state.success ? <p className="text-sm text-emerald-800">{state.success}</p> : null}
       {state.warning ? <p className="text-sm text-amber-900/90">{state.warning}</p> : null}

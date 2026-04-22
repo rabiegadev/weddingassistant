@@ -12,7 +12,7 @@ import { getAdmin2faEntryPath } from "@/lib/auth/mfa-routing";
 import { rateLimitOrThrow } from "@/lib/rate-limit";
 import { sendMailIfConfigured, parseAdminRecipientList } from "@/lib/mail/send";
 import { strongPasswordSchema, emailSchema, nameOptionalSchema } from "@/lib/validation/user";
-import { verifyTurnstileIfConfigured } from "@/lib/turnstile";
+import { verifyMathCaptchaForm } from "@/lib/captcha/math-challenge";
 import { verifyUserTotpCode } from "@/lib/auth/totp-app";
 import {
   createClientSessionForUserId,
@@ -61,12 +61,9 @@ export async function registerClientAction(
   _prev: AuthFormState,
   formData: FormData
 ): Promise<AuthFormState> {
-  const cfr = (formData.get("cf-turnstile-response") ?? formData.get("turnstile")) as
-    | string
-    | null;
-  const t = await verifyTurnstileIfConfigured(cfr ?? undefined);
-  if (t.ok === false) {
-    return { error: t.error };
+  const cap = verifyMathCaptchaForm(formData);
+  if (cap.ok === false) {
+    return { error: cap.error };
   }
   const parsed = registerSchema.safeParse({
     name: formData.get("name") ?? undefined,
@@ -129,12 +126,9 @@ export type LoginState = { error?: string; ok?: boolean } | void;
  * Logowanie pary (cookie `wa_s_client`).
  */
 export async function loginClientAction(_: LoginState, formData: FormData): Promise<LoginState> {
-  const cfr = (formData.get("cf-turnstile-response") ?? formData.get("turnstile")) as
-    | string
-    | null;
-  const tv = await verifyTurnstileIfConfigured(cfr ?? undefined);
-  if (tv.ok === false) {
-    return { error: tv.error };
+  const cap = verifyMathCaptchaForm(formData);
+  if (cap.ok === false) {
+    return { error: cap.error };
   }
   const parsed = loginSchema.safeParse({
     email: formData.get("email") ?? "",
@@ -168,12 +162,9 @@ export async function loginClientAction(_: LoginState, formData: FormData): Prom
  * Logowanie hasłem w obsłudze (2FA w kolejnych krokach — cookie `wa_s_admin`, mfa niedomknięte).
  */
 export async function loginAdminAction(_: LoginState, formData: FormData): Promise<LoginState> {
-  const cfr = (formData.get("cf-turnstile-response") ?? formData.get("turnstile")) as
-    | string
-    | null;
-  const tv = await verifyTurnstileIfConfigured(cfr ?? undefined);
-  if (tv.ok === false) {
-    return { error: tv.error };
+  const cap = verifyMathCaptchaForm(formData);
+  if (cap.ok === false) {
+    return { error: cap.error };
   }
   const parsed = loginSchema.safeParse({
     email: formData.get("email") ?? "",

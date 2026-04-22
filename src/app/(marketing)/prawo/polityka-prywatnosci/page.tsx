@@ -9,7 +9,7 @@ export default function PolitykaPrywatnosciPage() {
         <h1 className="font-serif text-2xl font-semibold">Polityka prywatności (szkic)</h1>
         <p className="text-sm leading-relaxed sm:text-base">
           Opis: cel przetwarzania danych, podstawy RODO, okresy przechowywania, prawo użytkowników, cookies,
-          wykorzystanie narzędzi (np. Turnstile), hosting, baza danych, newsletter / maile
+          wykorzystanie prostego zadania antybotowego (suma), hosting, baza danych, newsletter / maile
           transakcyjne.
         </p>
         <p>

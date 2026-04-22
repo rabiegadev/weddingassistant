@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getClientSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { RegisterForm } from "@/components/auth/register-form";
+import { buildMathChallenge } from "@/lib/captcha/math-challenge";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +10,7 @@ export default async function RejestracjaPage() {
   if (await getClientSession()) {
     redirect("/dashboard");
   }
+  const challenge = buildMathChallenge();
   return (
     <div className="min-h-full bg-[#FDF8F0] px-4 py-10 sm:px-6">
       <div className="mx-auto w-full max-w-md rounded-2xl border border-[#E0D0B0]/50 bg-white p-6 shadow-sm sm:p-8">
@@ -19,7 +21,7 @@ export default async function RejestracjaPage() {
             Masz konto? Zaloguj się
           </Link>
         </p>
-        <RegisterForm />
+        <RegisterForm challenge={challenge} />
       </div>
     </div>
   );

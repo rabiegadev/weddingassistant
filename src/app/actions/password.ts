@@ -9,7 +9,7 @@ import { strongPasswordSchema, emailSchema } from "@/lib/validation/user";
 import { rateLimitOrThrow } from "@/lib/rate-limit";
 import { hashPassword } from "@/lib/auth/password";
 import { headers } from "next/headers";
-import { verifyTurnstileIfConfigured } from "@/lib/turnstile";
+import { verifyMathCaptchaForm } from "@/lib/captcha/math-challenge";
 
 const H = 1000 * 60 * 60; // 1h
 
@@ -29,10 +29,9 @@ export async function requestPasswordResetAction(
   _p: PassState,
   formData: FormData
 ): Promise<PassState> {
-  const cfr = (formData.get("cf-turnstile-response") as string) || undefined;
-  const t = await verifyTurnstileIfConfigured(cfr);
-  if (t.ok === false) {
-    return { error: t.error };
+  const cap = verifyMathCaptchaForm(formData);
+  if (cap.ok === false) {
+    return { error: cap.error };
   }
   const parsed = emailOnly.safeParse({ email: formData.get("email") ?? "" });
   if (!parsed.success) {
@@ -65,17 +64,15 @@ export async function requestPasswordResetAction(
 const resetSchema = z.object({
   token: z.string().min(20).max(500),
   password: strongPasswordSchema,
-  "cf-turnstile-response": z.string().optional(),
 });
 
 export async function resetPasswordWithTokenAction(
   _p: PassState,
   formData: FormData
 ): Promise<PassState> {
-  const cfr = (formData.get("cf-turnstile-response") as string) || undefined;
-  const t = await verifyTurnstileIfConfigured(cfr);
-  if (t.ok === false) {
-    return { error: t.error };
+  const cap = verifyMathCaptchaForm(formData);
+  if (cap.ok === false) {
+    return { error: cap.error };
   }
   const parsed = resetSchema.safeParse({
     token: formData.get("token") ?? "",

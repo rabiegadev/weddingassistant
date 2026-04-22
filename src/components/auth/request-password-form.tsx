@@ -2,7 +2,8 @@
 
 import { useFormState, useFormStatus } from "react-dom";
 import { requestPasswordResetAction, type PassState } from "@/app/actions/password";
-import { TurnstileField } from "./turnstile-field";
+import { MathCaptchaField } from "./math-captcha-field";
+import type { MathChallengeClient } from "@/lib/captcha/math-challenge";
 
 const initial: PassState = {};
 
@@ -19,7 +20,7 @@ function Submit() {
   );
 }
 
-export function RequestPasswordForm() {
+export function RequestPasswordForm({ challenge }: { challenge: MathChallengeClient }) {
   const [state, formAction] = useFormState(requestPasswordResetAction, initial);
   return (
     <form action={formAction} className="mt-4 space-y-2">
@@ -33,9 +34,7 @@ export function RequestPasswordForm() {
         required
         className="w-full rounded-md border border-[#D9C6A0] px-3 py-2 text-sm"
       />
-      <div className="pt-1">
-        <TurnstileField />
-      </div>
+      <MathCaptchaField challenge={challenge} inputId="pr-math" />
       {state.error ? <p className="text-sm text-rose-700">{state.error}</p> : null}
       {state.success ? <p className="text-sm text-emerald-800">{state.success}</p> : null}
       <Submit />

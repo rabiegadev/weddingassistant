@@ -5,7 +5,7 @@
 
 ## Założenia (nadrzędne)
 - **Tryb obecny (tymczasowo):** jedna baza = **produkcja** — w `.env` lokalnie i w Vercel ten sam `DATABASE_URL`. Przy wprowadzaniu zmian w schemacie: tylko **`npx prisma migrate deploy`** (nie seed testowy na produkcję, najpierw backup w panelu SEOHost). Później docelowo: osobna baza **preview** / lokalna pod rozwój.
-- **Git / Vercel:** obecnie praca tylko na **`main`** (bez osobnego brancha preview); produkcja = deploy z `main`. Wejście na domyślny host **`*.vercel.app`** (nadal oferowany przez Vercel do projektu) to inna sytuacja niż „preview branch” — Turnstile i env traktuj pod własną domeną vs. ten URL.
+- **Git / Vercel:** obecnie praca tylko na **`main`** (bez osobnego brancha preview); produkcja = deploy z `main`.
 - **Next.js** (monolit) na **Vercel** + **MySQL/MariaDB** w **SEOHost** — `DATABASE_URL` w env.
 - **Domena:** [https://weddingassistant.pl](https://weddingassistant.pl) w `metadata` + `NEXT_PUBLIC_APP_URL` w linkach e-mail.
 - **Sesje:** `wa_s_client` / `wa_s_admin` + `Session.mfaComplete` (admin: pełna sesja dopiero po 2FA lub pierwszym skanie QR).
@@ -16,7 +16,7 @@
 
 ## Co ukończono (wdrożenie zgodne z planem)
 - [x] **Auth:** rejestracja pary, silne hasło (Zod), e-mail weryfikacyjny (`/api/auth/verify-email`), logowanie pary, reset hasła (`/reset-hasla`, `/nowe-haslo`), rate limit w MySQL.
-- [x] **Turnstile** (opcjonalne w dev): [`TurnstileField`](../src/components/auth/turnstile-field.tsx) + weryfikacja serwerowa; brak klucza w dev = pomijane z logiem.
+- [x] **Zadanie antybotowe (proste):** suma trzech liczb, token HMAC ([`math-challenge`](../src/lib/captcha/math-challenge.ts) + `MATH_CAPTCHA_SECRET`); bez Cloudflare.
 - [x] **Admin 2FA (TOTP):** [`/admin/2fa/setup`](../src/app/(admin)/admin/2fa/setup/page.tsx) pierwsze skanowanie, [`/admin/2fa`](../src/app/(admin)/admin/2fa/page.tsx) po każdym logowaniu; `otplib@12` (API `authenticator`).
 - [x] **Pakiety (CRUD):** `src/app/(admin)/admin/(protected)/pakiety/page.tsx` + `revalidatePath` cennika.
 - [x] **Zamówienia + wątki:** klient: [dashboard/zamowienia](../src/app/(app)/dashboard/zamowienia/page.tsx); admin: [zamowienia](../src/app/(admin)/admin/(protected)/zamowienia/page.tsx); zmiana statusu + `OrderEvent`.
@@ -49,7 +49,7 @@
 ## Ryzyka
 - Vercel ↔ zewn. MySQL: opóźnienia sieciowe i limity połączeń — trzymać `connection_limit` niskie, monitorować.
 - E-maile: bez SPF/DKIM/DMARC trafią do spamu.
-- Turnstile: w produkcji ustaw oba klucze w Vercel.
+- `MATH_CAPTCHA_SECRET` w Vercel (produkcja) — inaczej rejestracja / logowanie zwrócą błąd konfiguracji.
 
 ## Jak uruchomić
 1. `npm install`  
