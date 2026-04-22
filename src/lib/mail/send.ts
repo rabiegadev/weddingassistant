@@ -57,9 +57,7 @@ export async function sendMailIfConfigured(
 ): Promise<{ sent: true } | { sent: false; reason: "no_smtp" | "error" }> {
   const t = getTransporter();
   if (!t) {
-    if (process.env.NODE_ENV === "development") {
-      console.warn(`[mail] (nie wysłano) ${o.to} — brak SMTP_URL / SMTP_HOST`);
-    }
+    console.warn(`[mail] (nie wysłano) do=${o.to} — brak SMTP: ustaw SMTP_URL lub SMTP_HOST w env (Vercel: Production/Preview).`);
     return { sent: false, reason: "no_smtp" };
   }
   try {
@@ -73,9 +71,9 @@ export async function sendMailIfConfigured(
     });
     return { sent: true };
   } catch (e) {
-    if (process.env.NODE_ENV === "development") {
-      console.error("[mail]", e);
-    }
+    // Zawsze loguj — na Vercel widać w Runtime Logs (diagnoza SMTP/MAIL_FROM/tls).
+    const msg = e instanceof Error ? e.message : String(e);
+    console.error("[mail] sendMail failed:", msg);
     return { sent: false, reason: "error" };
   }
 }

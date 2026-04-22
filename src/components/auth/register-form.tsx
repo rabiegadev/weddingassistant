@@ -64,6 +64,7 @@ export function RegisterForm() {
       </div>
       {state.error ? <p className="text-sm text-rose-700">{state.error}</p> : null}
       {state.success ? <p className="text-sm text-emerald-800">{state.success}</p> : null}
+      {state.warning ? <p className="text-sm text-amber-900/90">{state.warning}</p> : null}
       <Submit />
     </form>
   );

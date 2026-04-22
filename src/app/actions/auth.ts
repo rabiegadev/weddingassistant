@@ -52,7 +52,7 @@ function firstZodMessage(err: z.ZodError): string {
   return err.issues[0]?.message ?? "Błąd walidacji";
 }
 
-export type AuthFormState = { error?: string; success?: string };
+export type AuthFormState = { error?: string; success?: string; warning?: string };
 
 /**
  * Rejestracja tylko konta pary młodej; admin tworzony w seed/CLI.
@@ -106,10 +106,20 @@ export async function registerClientAction(
     subject: "Potwierdź rejestrację — Weddingassistant",
     text: `Otwórz w przeglądarce (2 dni):\n${link}\n\nPozdrowienia, Weddingassistant`,
   });
+  if (mail.sent) {
+    return {
+      success: "Konto utworzone. Otwórz e-mail, aby potwierdzić adres (sprawdź też folder spam).",
+    };
+  }
+  if (mail.reason === "no_smtp") {
+    return {
+      warning:
+        "Konto zapisane w bazie, ale e-mail weryfikacyjny nie wysłany: brak SMTP w środowisku (Vercel → Environment Variables: SMTP_URL lub SMTP_HOST itd. dla odpowiedniego typu deployu).",
+    };
+  }
   return {
-    success: mail.sent
-      ? "Konto utworzone. Otwórz e-mail, aby potwierdzić adres."
-      : "Konto utworzone. Jeśli SMTP nie skonfigurowano, link weryfikacyjny nie wysłany—skopiuj z tabeli EmailVerificationToken lub włącz smtp.",
+    warning:
+      "Konto zapisane w bazie, ale wysyłka e-maila nie powiodła się (odrzucenie przez serwer SMTP). W Vercel → Logs szukaj „[mail]”. Często: zły MAIL_FROM, hasło, port lub limit hosta; sprawdź też spam odbiorcy.",
   };
 }
 
