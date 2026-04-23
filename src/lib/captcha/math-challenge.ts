@@ -27,17 +27,16 @@ function isPayload(x: unknown): x is Payload {
 
 /**
  * Losowe trzy składniki, suma do wpisania; token podpisany HMAC (bez sesji w DB).
+ * W produkcji **bez** `MATH_CAPTCHA_SECRET` zwraca `null` (strona ma pokazać komunikat, nie 500).
  */
-export function buildMathChallenge(): MathChallengeClient {
+export function buildMathChallenge(): MathChallengeClient | null {
   const devFallback = !getSecret() && process.env.NODE_ENV === "development";
   if (devFallback) {
     return { question: "1 + 1 + 1", token: "dev" };
   }
   const secret = getSecret();
   if (!secret) {
-    throw new Error(
-      "MATH_CAPTCHA_SECRET nie jest ustawiony. Dodaj go do .env (min. 12 znaków, np. openssl rand -base64 32)."
-    );
+    return null;
   }
   const a = randomInt(5, 99);
   const b = randomInt(5, 99);

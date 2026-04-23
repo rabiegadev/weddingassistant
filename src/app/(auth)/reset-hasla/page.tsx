@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { RequestPasswordForm } from "@/components/auth/request-password-form";
 import { buildMathChallenge } from "@/lib/captcha/math-challenge";
+import { MathCaptchaMissingNotice } from "@/components/auth/math-captcha-missing";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,13 @@ export default function ResetHaslaPage() {
             Wróć do logowania
           </Link>
         </p>
-        <RequestPasswordForm challenge={challenge} />
+        {challenge ? (
+          <RequestPasswordForm challenge={challenge} />
+        ) : (
+          <div className="mt-4">
+            <MathCaptchaMissingNotice />
+          </div>
+        )}
       </div>
     </div>
   );

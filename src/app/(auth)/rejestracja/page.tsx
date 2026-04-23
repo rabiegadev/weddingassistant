@@ -3,6 +3,7 @@ import { getClientSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { RegisterForm } from "@/components/auth/register-form";
 import { buildMathChallenge } from "@/lib/captcha/math-challenge";
+import { MathCaptchaMissingNotice } from "@/components/auth/math-captcha-missing";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +22,7 @@ export default async function RejestracjaPage() {
             Masz konto? Zaloguj się
           </Link>
         </p>
-        <RegisterForm challenge={challenge} />
+        {challenge ? <RegisterForm challenge={challenge} /> : <div className="mt-4"><MathCaptchaMissingNotice /></div>}
       </div>
     </div>
   );
