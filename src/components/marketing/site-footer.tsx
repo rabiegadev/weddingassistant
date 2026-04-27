@@ -1,8 +1,16 @@
 import Link from "next/link";
 
-export function SiteFooter() {
+type SiteFooterProps = {
+  className?: string;
+};
+
+export function SiteFooter({ className }: SiteFooterProps) {
   return (
-    <footer className="mt-auto border-t border-[#E8DCC4]/60 bg-[#FDF8F0]">
+    <footer
+      className={["mt-auto border-t border-[#E8DCC4]/60 bg-[#FDF8F0]", className]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-2">
         <div>
           <h2 className="font-serif text-lg font-semibold text-[#2B2B2B]">Weddingassistant.pl</h2>

@@ -14,10 +14,29 @@
   body {
     height: 100%;
   }
+  :root {
+    /* Szerokość paska = to samo, co `h-[var(--wa-sticky-offset)]` w (marketing)/layout. Trzymaj zgodne z wysokością fixed header. */
+    --wa-sticky-offset: 5rem; /* 80px */
+  }
+  @media (min-width: 640px) {
+    :root {
+      --wa-sticky-offset: 5.5rem; /* 88px */
+    }
+  }
 }
 
 @layer utilities {
   .font-serif {
     font-family: var(--font-wa-serif), ui-serif, Georgia, "Times New Roman", serif;
+  }
+  /* Pełne okno widoku minus sam pasek menu: max(100svh,100dvh) — unika 1. sekcji „niższej” na pierwszym paint (mobile/address bar). */
+  .min-h-wa-section {
+    min-height: max(
+      calc(100svh - var(--wa-sticky-offset)),
+      calc(100dvh - var(--wa-sticky-offset))
+    );
+  }
+  .scroll-mt-wa {
+    scroll-margin-top: var(--wa-sticky-offset);
   }
 }

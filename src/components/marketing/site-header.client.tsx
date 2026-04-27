@@ -43,8 +43,8 @@ export function SiteHeaderClient({
   const showAuthButtons = !isClient && !isAdminFull && !isAdmin2faPending;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-[#E8DCC4]/60 bg-[#FDF8F0]/90 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+    <header className="fixed inset-x-0 top-0 z-50 w-full border-b border-[#D8C19A]/80 bg-[#FCF5EA]/92 shadow-[0_8px_28px_-20px_rgba(58,43,18,0.55)] backdrop-blur-md">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 sm:py-5">
         <Link href="/" className="flex min-w-0 items-center gap-2">
           <span className="shrink-0" aria-hidden>
             <WaMark />
@@ -54,14 +54,11 @@ export function SiteHeaderClient({
           </span>
         </Link>
 
-        <nav
-          className="hidden items-center gap-1 text-sm text-[#3A3A3A] md:flex"
-          aria-label="Nawigacja główna"
-        >
+        <nav className="hidden items-center gap-1 text-sm text-[#3A3A3A] md:flex" aria-label="Nawigacja główna">
           {nav.map((item) => (
             <Link
               key={item.href}
-              className="rounded-md px-3 py-2 transition hover:bg-white/60"
+              className="rounded-md px-3 py-2 transition hover:bg-[#B8955C]/15"
               href={item.href}
             >
               {item.label}

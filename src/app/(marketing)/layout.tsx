@@ -6,6 +6,7 @@ export default async function MarketingLayout({ children }: { children: ReactNod
   return (
     <div className="flex min-h-full flex-1 flex-col">
       <SiteHeader />
+      <div className="h-[var(--wa-sticky-offset)]" aria-hidden />
       {children}
       <SiteFooter />
     </div>

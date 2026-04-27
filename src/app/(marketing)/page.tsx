@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Suspense } from "react";
 import { HomeOfferSection } from "@/components/marketing/home-offer-section";
 
@@ -68,20 +69,32 @@ function OfferSectionFallback() {
   );
 }
 
+function SoftBackdrop({ src }: { src: "/images/bg2.jpg" | "/images/bg3.jpg" }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+      <Image
+        src={src}
+        alt=""
+        fill
+        priority={false}
+        className="scale-105 object-cover opacity-34 blur-[0.6px]"
+      />
+      <div className="absolute inset-0 bg-[#FDF8F0]/62" />
+    </div>
+  );
+}
+
 export default function HomePage() {
   return (
     <main>
       <section
-        className="relative overflow-hidden border-b border-[#E8DCC4]/60 bg-gradient-to-b from-[#FDF8F0] via-[#FAF2E4] to-[#F4EBDC]"
+        className="relative isolate flex min-h-wa-section flex-col overflow-x-clip border-b border-[#E8DCC4]/60 bg-gradient-to-b from-[#FDF8F0] via-[#FAF2E4] to-[#F4EBDC]"
         aria-label="Nagłówek"
       >
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -left-20 top-20 h-72 w-72 rounded-full bg-[#B8955C]/[0.08]" />
-          <div className="absolute -right-16 bottom-0 h-96 w-96 rounded-full bg-[#6B8F71]/[0.07]" />
-        </div>
-        <div className="relative mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-20">
-          <div className="grid items-center gap-10 lg:grid-cols-2">
-            <div>
+        <SoftBackdrop src="/images/bg2.jpg" />
+        <div className="relative mx-auto flex w-full min-h-0 max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 sm:py-14">
+          <div className="grid w-full min-h-0 items-stretch gap-10 lg:grid-cols-2">
+            <div className="flex h-full min-h-0 flex-col justify-center">
               <h1 className="mt-0 max-w-2xl font-serif text-3xl font-semibold leading-tight text-[#2B2B2B] sm:text-4xl md:text-5xl">
                 Wszystko, co pozwoli Ci mieć kontrolę nad przygotowaniami weselnymi
               </h1>
@@ -105,33 +118,16 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="relative">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="rounded-2xl border border-white/80 bg-gradient-to-br from-white to-[#EEF4E8]/80 p-5 shadow-lg shadow-[#B8955C]/5 ring-1 ring-[#B8955C]/10 sm:col-span-1">
-                  <p className="text-xs font-bold uppercase tracking-widest text-[#5A7A5F]">W jednym miejscu</p>
-                  <h2 className="mt-2 font-serif text-lg text-[#2B2B2B]">Plan i lista zadań</h2>
-                  <ul className="mt-3 space-y-2.5 text-sm text-[#3A3A3A]">
-                    {["Miejsce i data", "Goście i stoliki", "Muzyka i fotograf"].map((x) => (
-                      <li className="flex items-center gap-2" key={x}>
-                        <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#6B8F71]/20 text-xs text-[#2D4A32]">✓</span>
-                        {x}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="flex flex-col gap-4 sm:col-span-1 sm:pt-8">
-                  <div className="rounded-2xl border border-[#B8955C]/25 bg-gradient-to-br from-[#FFF9F0] to-[#F0E3D0] p-4 shadow-md">
-                    <p className="text-xs font-semibold uppercase text-[#8A6A3A]">RSVP</p>
-                    <p className="mt-1 font-serif text-base text-[#2B2B2B]">Odpowiedzi gości bez chaosu w wiadomościach</p>
-                    <p className="mt-2 text-xs leading-relaxed text-[#5A5A5A]">
-                      Link do wydarzenia, potwierdzenia w jednej tabeli.
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-white/60 bg-white/90 p-4 ring-1 ring-inset ring-[#E0D0B0]/30">
-                    <p className="text-xs text-[#6A6A6A]">Spójny kalendarz dnia</p>
-                    <p className="mt-1 text-sm font-medium text-[#2B2B2B]">Od ślubu po oczepiny — w przyszłych wersjach szczegółowy plan godzinowy.</p>
-                  </div>
-                </div>
+            <div className="relative flex h-full min-h-0 flex-col items-center justify-center pt-2 sm:pt-3">
+              <div className="relative mx-auto aspect-[2/3] w-full max-w-[438px] overflow-hidden rounded-3xl border border-[#DCC6A2]/90 bg-white/72 p-2 shadow-[0_22px_60px_-36px_rgba(62,44,18,0.55)]">
+                <Image
+                  src="/images/header_good.png"
+                  alt="Podgląd planowania wesela w Weddingassistant"
+                  fill
+                  priority
+                  className="rounded-[1.25rem] object-cover object-center"
+                  sizes="(min-width: 1024px) 438px, 100vw"
+                />
               </div>
             </div>
           </div>
@@ -140,10 +136,11 @@ export default function HomePage() {
 
       <section
         id="funkcje"
-        className="border-b border-[#E8DCC4]/60 bg-white"
+        className="relative isolate flex min-h-wa-section flex-col border-b border-[#E8DCC4]/60 bg-white scroll-mt-wa"
         aria-labelledby="sekcja-funkcje"
       >
-        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        <SoftBackdrop src="/images/bg3.jpg" />
+        <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 sm:py-14">
           <h2
             className="font-serif text-2xl font-semibold text-[#2B2B2B] sm:text-3xl"
             id="sekcja-funkcje"
@@ -172,10 +169,11 @@ export default function HomePage() {
 
       <section
         id="oferta"
-        className="border-b border-[#B8955C]/15 bg-gradient-to-b from-[#2D4A32]/[0.04] to-[#F9F0E0]/50"
+        className="relative isolate flex min-h-wa-section flex-col border-b border-[#B8955C]/15 bg-gradient-to-b from-[#2D4A32]/[0.04] to-[#F9F0E0]/50 scroll-mt-wa"
         aria-labelledby="sekcja-oferta"
       >
-        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        <SoftBackdrop src="/images/bg2.jpg" />
+        <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 sm:py-14">
           <h2
             className="font-serif text-2xl font-semibold text-[#2B2B2B] sm:text-3xl"
             id="sekcja-oferta"
@@ -197,10 +195,11 @@ export default function HomePage() {
 
       <section
         id="cennik"
-        className="scroll-mt-20 border-b border-[#E8DCC4]/60 bg-white"
+        className="relative isolate flex min-h-wa-section flex-col border-b border-[#E8DCC4]/60 bg-white scroll-mt-wa"
         aria-labelledby="sekcja-cennik"
       >
-        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        <SoftBackdrop src="/images/bg3.jpg" />
+        <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 sm:py-14">
           <h2 className="font-serif text-2xl font-semibold text-[#2B2B2B]" id="sekcja-cennik">
             Pełny cennik
           </h2>
@@ -218,8 +217,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="demo" className="bg-[#F8F2E8]/30" aria-labelledby="sekcja-demo">
-        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+      <section
+        id="demo"
+        className="relative isolate flex min-h-wa-section flex-col bg-[#F8F2E8]/30 scroll-mt-wa"
+        aria-labelledby="sekcja-demo"
+      >
+        <SoftBackdrop src="/images/bg2.jpg" />
+        <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 sm:py-14">
           <h2 className="font-serif text-2xl font-semibold text-[#2B2B2B]" id="sekcja-demo">
             Strefa demo
           </h2>
@@ -232,10 +236,11 @@ export default function HomePage() {
 
       <section
         id="kontakt"
-        className="border-b border-[#E8DCC4]/40 bg-gradient-to-b from-white to-[#FDF8F0]"
+        className="relative isolate flex min-h-wa-section flex-col border-b border-[#E8DCC4]/40 bg-gradient-to-b from-white to-[#FDF8F0] scroll-mt-wa"
         aria-labelledby="sekcja-kontakt"
       >
-        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        <SoftBackdrop src="/images/bg3.jpg" />
+        <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 sm:py-14">
           <h2 className="font-serif text-2xl font-semibold text-[#2B2B2B]" id="sekcja-kontakt">
             Kontakt
           </h2>
@@ -268,8 +273,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#E8C99B]/[0.2]" aria-label="Zaproszenie do rejestracji">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-stretch gap-4 px-4 py-12 text-center sm:px-6 sm:py-16">
+      <section
+        className="relative isolate flex min-h-wa-section flex-col bg-[#E8C99B]/[0.2]"
+        aria-label="Zaproszenie do rejestracji"
+      >
+        <SoftBackdrop src="/images/bg2.jpg" />
+        <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col items-stretch justify-center gap-4 px-4 py-10 text-center sm:px-6 sm:py-14">
           <h2 className="font-serif text-2xl font-semibold text-[#2B2B2B] sm:text-3xl">
             Z Weddingassistant praca nad weselem może być w jednym, przejrzystym miejscu.
           </h2>
