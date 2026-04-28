@@ -69,7 +69,17 @@ function OfferSectionFallback() {
   );
 }
 
-function SoftBackdrop({ src }: { src: "/images/bg2.jpg" | "/images/bg3.jpg" }) {
+const heroPrepItems = [
+  "wypisywanie zaproszeń",
+  "rozdawanie zaproszeń",
+  "rozmieszczanie gości przy stolikach",
+  "dopinanie umów z usługodawcami",
+  "wybieranie dekoracji",
+  "spotkania z wykonawcami i tak dalej",
+] as const;
+
+function SoftBackdrop({ src }: { src: "/images/bg3.jpg" | "/images/bg5.jpg" }) {
+  const rich = src.endsWith("bg5.jpg");
   return (
     <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
       <Image
@@ -77,9 +87,17 @@ function SoftBackdrop({ src }: { src: "/images/bg2.jpg" | "/images/bg3.jpg" }) {
         alt=""
         fill
         priority={false}
-        className="scale-105 object-cover opacity-34 blur-[0.6px]"
+        className={
+          rich
+            ? "scale-105 object-cover opacity-52 blur-[0.35px]"
+            : "scale-105 object-cover opacity-34 blur-[0.6px]"
+        }
       />
-      <div className="absolute inset-0 bg-[#FDF8F0]/62" />
+      <div
+        className={
+          rich ? "absolute inset-0 bg-[#FDF8F0]/44" : "absolute inset-0 bg-[#FDF8F0]/62"
+        }
+      />
     </div>
   );
 }
@@ -91,42 +109,63 @@ export default function HomePage() {
         className="relative isolate flex min-h-wa-section flex-col overflow-x-clip border-b border-[#E8DCC4]/60 bg-gradient-to-b from-[#FDF8F0] via-[#FAF2E4] to-[#F4EBDC]"
         aria-label="Nagłówek"
       >
-        <SoftBackdrop src="/images/bg2.jpg" />
-        <div className="relative mx-auto flex w-full min-h-0 max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 sm:py-14">
+        <SoftBackdrop src="/images/bg5.jpg" />
+        <div className="relative mx-auto flex w-full min-h-0 max-w-6xl flex-1 flex-col justify-center px-4 pb-10 pt-24 sm:px-6 sm:pb-14 sm:pt-32">
           <div className="grid w-full min-h-0 items-stretch gap-10 lg:grid-cols-2">
-            <div className="flex h-full min-h-0 flex-col justify-center">
-              <h1 className="mt-0 max-w-2xl font-serif text-3xl font-semibold leading-tight text-[#2B2B2B] sm:text-4xl md:text-5xl">
-                Wszystko, co pozwoli Ci mieć kontrolę nad przygotowaniami weselnymi
-              </h1>
-              <p className="mt-5 max-w-prose text-base text-[#4A4A4A] sm:text-lg">
-                W jednym miejscu: plan, lista gości, RSVP, harmonogram i wspomnienia, do których wrócisz. Zaczynamy
-                od przejrzystych narzędzi, które będziemy rozbudowywać razem z Tobą.
-              </p>
-              <div className="mt-8 flex w-full max-w-md flex-col gap-3 sm:flex-row sm:items-center">
-                <Link
-                  className="inline-flex h-12 min-w-[200px] flex-1 items-center justify-center rounded-md bg-[#B8955C] px-6 text-sm font-semibold text-white shadow-sm transition hover:brightness-105"
-                  href="/rejestracja"
+            <div className="flex h-full min-h-0 max-w-xl flex-col gap-6 lg:justify-between lg:gap-8">
+              <header className="shrink-0 space-y-3">
+                <p className="max-w-full break-words text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-[#8A765E] sm:text-[0.65rem] sm:tracking-[0.28em]">
+                  Weddingassistant //
+                </p>
+                <h1 className="font-wa-display text-balance text-lg font-bold leading-snug tracking-[0.01em] text-[#2E2A26] sm:text-xl">
+                  Twoje wsparcie przedweselne online
+                </h1>
+              </header>
+
+              <div className="flex min-h-0 flex-col gap-5 text-[0.8125rem] leading-[1.68] text-[#4F4A45] sm:text-sm">
+                <p className="text-pretty">
+                  Dziękujemy za wizytę na naszej stronie — a skoro już tutaj się widzimy… to najpewniej
+                  planujecie wielkimi krokami ten piękny i&nbsp;wyczekiwany dzień!
+                </p>
+                <p className="text-pretty">
+                  Tak się składa, że wraz z&nbsp;moją jeszcze wtedy narzeczoną byliśmy rok temu w&nbsp;tym samym
+                  miejscu:
+                </p>
+                <ul
+                  className="list-none space-y-1.5 border-l-2 border-[#B8955C]/30 py-0.5 pl-4 text-[0.8rem] text-[#5A534C] sm:text-[0.8125rem]"
+                  aria-label="Przykładowe zadania przed ślubem"
                 >
-                  Załóż darmowe konto
-                </Link>
-                <Link
-                  className="inline-flex h-12 min-w-[200px] flex-1 items-center justify-center rounded-md border-2 border-[#B8955C] bg-white/80 px-6 text-sm font-semibold text-[#2B2B2B] shadow-sm transition hover:bg-white"
-                  href="/#oferta"
-                >
-                  Sprawdź, co możesz otrzymać
-                </Link>
+                  {heroPrepItems.map((line) => (
+                    <li key={line} className="flex gap-2.5 text-pretty">
+                      <span className="mt-[0.55em] h-1 w-1 shrink-0 rounded-full bg-[#B8955C]/55" aria-hidden />
+                      <span>{line}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-pretty">
+                  Było tego tak dużo, że zdarzało się o&nbsp;czymś zapomnieć, spóźnić się, na&nbsp;ostatnią chwilę
+                  zamawiać i&nbsp;tracić bardzo dużo czasu. Sprawdzałem różne aplikacje oraz serwisy, żeby wygenerować
+                  sobie checklisty, zrobić nieco bardziej rozbudowany spis gości czy rozłożyć gości przy stołach —
+                  ale wszystko kończyło się brakiem możliwości dopasowania do&nbsp;naszych wymagań.
+                </p>
+                <p className="text-pretty">
+                  W&nbsp;związku z&nbsp;nieubłaganie pędzącym czasem postanowiłem wykorzystać swoje zainteresowania
+                  i&nbsp;doświadczenie, żeby przygotować różnego rodzaju „helpery” weselne na&nbsp;własny użytek.
+                  Własny użytek zmienił się w&nbsp;przesyłanie aplikacji znajomym i&nbsp;naturalną siłą rzeczy
+                  pojawił się pomysł na&nbsp;udostępnienie tych narzędzi online szerszej grupie odbiorców.
+                </p>
               </div>
             </div>
 
-            <div className="relative flex h-full min-h-0 flex-col items-center justify-center pt-2 sm:pt-3">
-              <div className="relative mx-auto aspect-[2/3] w-full max-w-[438px] overflow-hidden rounded-3xl border border-[#DCC6A2]/90 bg-white/72 p-2 shadow-[0_22px_60px_-36px_rgba(62,44,18,0.55)]">
+            <div className="relative flex h-full min-h-0 flex-col items-center justify-center pt-8 sm:pt-12">
+              <div className="relative mx-auto aspect-[2/3] w-full max-w-[420px] overflow-hidden rounded-3xl border border-[#DCC6A2]/90 bg-white/72 p-2 shadow-[0_22px_60px_-36px_rgba(62,44,18,0.55)]">
                 <Image
                   src="/images/header_good.png"
                   alt="Podgląd planowania wesela w Weddingassistant"
                   fill
                   priority
                   className="rounded-[1.25rem] object-cover object-center"
-                  sizes="(min-width: 1024px) 438px, 100vw"
+                  sizes="(min-width: 1024px) 420px, 92vw"
                 />
               </div>
             </div>
@@ -142,7 +181,7 @@ export default function HomePage() {
         <SoftBackdrop src="/images/bg3.jpg" />
         <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 sm:py-14">
           <h2
-            className="font-serif text-2xl font-semibold text-[#2B2B2B] sm:text-3xl"
+            className="font-wa-display text-xl font-medium tracking-[0.02em] text-[#2E2A26] sm:text-2xl"
             id="sekcja-funkcje"
           >
             Czym ma być platforma? — filary
@@ -172,10 +211,10 @@ export default function HomePage() {
         className="relative isolate flex min-h-wa-section flex-col border-b border-[#B8955C]/15 bg-gradient-to-b from-[#2D4A32]/[0.04] to-[#F9F0E0]/50 scroll-mt-wa"
         aria-labelledby="sekcja-oferta"
       >
-        <SoftBackdrop src="/images/bg2.jpg" />
+        <SoftBackdrop src="/images/bg5.jpg" />
         <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 sm:py-14">
           <h2
-            className="font-serif text-2xl font-semibold text-[#2B2B2B] sm:text-3xl"
+            className="font-wa-display text-xl font-medium tracking-[0.02em] text-[#2E2A26] sm:text-2xl"
             id="sekcja-oferta"
           >
             Oferowane funkcjonalności i cennik
@@ -200,7 +239,7 @@ export default function HomePage() {
       >
         <SoftBackdrop src="/images/bg3.jpg" />
         <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 sm:py-14">
-          <h2 className="font-serif text-2xl font-semibold text-[#2B2B2B]" id="sekcja-cennik">
+          <h2 className="font-wa-display text-xl font-medium tracking-[0.02em] text-[#2E2A26] sm:text-2xl" id="sekcja-cennik">
             Pełny cennik
           </h2>
           <p className="mt-2 text-sm text-[#4A4A4A] sm:text-base">
@@ -222,9 +261,9 @@ export default function HomePage() {
         className="relative isolate flex min-h-wa-section flex-col bg-[#F8F2E8]/30 scroll-mt-wa"
         aria-labelledby="sekcja-demo"
       >
-        <SoftBackdrop src="/images/bg2.jpg" />
+        <SoftBackdrop src="/images/bg5.jpg" />
         <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 sm:py-14">
-          <h2 className="font-serif text-2xl font-semibold text-[#2B2B2B]" id="sekcja-demo">
+          <h2 className="font-wa-display text-xl font-medium tracking-[0.02em] text-[#2E2A26] sm:text-2xl" id="sekcja-demo">
             Strefa demo
           </h2>
           <p className="mt-2 text-sm text-[#4A4A4A] sm:text-base">
@@ -241,7 +280,7 @@ export default function HomePage() {
       >
         <SoftBackdrop src="/images/bg3.jpg" />
         <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 sm:py-14">
-          <h2 className="font-serif text-2xl font-semibold text-[#2B2B2B]" id="sekcja-kontakt">
+          <h2 className="font-wa-display text-xl font-medium tracking-[0.02em] text-[#2E2A26] sm:text-2xl" id="sekcja-kontakt">
             Kontakt
           </h2>
           <p className="mt-2 text-sm text-[#4A4A4A] sm:text-base">Masz pytania o pakiety lub współpracę? Napisz lub zadzwoń.</p>
@@ -277,9 +316,9 @@ export default function HomePage() {
         className="relative isolate flex min-h-wa-section flex-col bg-[#E8C99B]/[0.2]"
         aria-label="Zaproszenie do rejestracji"
       >
-        <SoftBackdrop src="/images/bg2.jpg" />
+        <SoftBackdrop src="/images/bg5.jpg" />
         <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col items-stretch justify-center gap-4 px-4 py-10 text-center sm:px-6 sm:py-14">
-          <h2 className="font-serif text-2xl font-semibold text-[#2B2B2B] sm:text-3xl">
+          <h2 className="font-wa-display text-xl font-medium tracking-[0.02em] text-[#2E2A26] sm:text-2xl">
             Z Weddingassistant praca nad weselem może być w jednym, przejrzystym miejscu.
           </h2>
           <p className="text-sm text-[#4A4A4A] sm:text-base">Możesz zacząć od darmowego konta — bez karty płatniczej.</p>

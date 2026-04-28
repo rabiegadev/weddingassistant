@@ -29,6 +29,9 @@
   .font-serif {
     font-family: var(--font-wa-serif), ui-serif, Georgia, "Times New Roman", serif;
   }
+  .font-wa-display {
+    font-family: var(--font-wa-display), var(--font-wa-serif), ui-serif, Georgia, "Times New Roman", serif;
+  }
   /* Pełne okno widoku minus sam pasek menu: max(100svh,100dvh) — unika 1. sekcji „niższej” na pierwszym paint (mobile/address bar). */
   .min-h-wa-section {
     min-height: max(
