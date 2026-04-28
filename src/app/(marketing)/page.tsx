@@ -2,59 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Suspense } from "react";
 import { HomeOfferSection } from "@/components/marketing/home-offer-section";
-
-const features = [
-  {
-    id: "guests",
-    title: "Lista gości",
-    desc: "Baza, statusy, zaproszenia, podgląd w jednym miejscu.",
-  },
-  {
-    id: "rsvp",
-    title: "RSVP online",
-    desc: "Potwierdzenia, terminy, link do wydarzenia w jednej perspektywie.",
-  },
-  {
-    id: "check",
-    title: "Checklisty",
-    desc: "Od formalności po catering, bez zapomnienia o szczegółach.",
-  },
-  {
-    id: "qr",
-    title: "Kody QR",
-    desc: "Dostęp szybki, powtarzalny, wygodny dla gości.",
-  },
-  {
-    id: "budget",
-    title: "Budżet",
-    desc: "Kontrola wydatków, plan, porównanie wariantów (w dalszych wersjach).",
-  },
-] as const;
-
-function FeatureIcon({ k }: { k: string }) {
-  if (k === "guests") {
-    return (
-      <div className="text-[#B8955C]" aria-hidden>
-        <span className="text-2xl">▪</span>
-        <span className="pl-0.5 text-2xl">▪</span>
-      </div>
-    );
-  }
-  if (k === "rsvp") {
-    return (
-      <div className="font-serif text-xs font-semibold tracking-wide text-[#B8955C]" aria-hidden>
-        R·S·V·P
-      </div>
-    );
-  }
-  if (k === "check") {
-    return <div className="text-2xl text-[#B8955C]">▣</div>;
-  }
-  if (k === "qr") {
-    return <div className="text-2xl text-[#B8955C]">⬛</div>;
-  }
-  return <div className="text-2xl text-[#B8955C]">◎</div>;
-}
+import { PlatformToolTile } from "@/components/marketing/platform-tool-tile";
+import { platformTools } from "@/data/platform-tools";
 
 function OfferSectionFallback() {
   return (
@@ -181,25 +130,26 @@ export default function HomePage() {
         <SoftBackdrop src="/images/bg3.jpg" />
         <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 sm:py-14">
           <h2
-            className="font-wa-display text-xl font-medium tracking-[0.02em] text-[#2E2A26] sm:text-2xl"
+            className="font-wa-display text-balance text-xl font-semibold tracking-[0.02em] text-[#2E2A26] sm:text-2xl"
             id="sekcja-funkcje"
           >
-            Czym ma być platforma? — filary
+            Jakie dokładnie narzędzia oraz usługi oferujemy?
           </h2>
-          <p className="mt-2 max-w-2xl text-sm text-[#4A4A4A] sm:text-base">
-            Te moduły stopniowo uruchomimy. Poniżej: kierunek i korzyści dla pary, nie tylko lista techniczna.
+          <p className="mt-4 max-w-3xl text-[0.8125rem] leading-[1.7] text-[#5A534C] sm:text-sm">
+            Na tę chwilę nie wszystkie z przedstawionych poniżej rozwiązań są dostępne w pełni albo w ogóle.
+            Część z nich jest naprawdę praktyczna i niesie dużo pomocy, lecz nie wszystkie zostały
+            przygotowane do użytkowania przez osoby, które nie miały z nimi wcześniej styczności: brakuje
+            opisów „krok po kroku”, brakuje niektórych etapów w działaniu — część kroków pomijałem u siebie, a
+            innym ją włączałem.{" "}
+            <span className="text-pretty">
+              Obserwujcie na bieżąco, aby dowiadywać się o postępach, a jeśli czegoś tu brakuje, zapraszam do
+              zgłaszania nowych pomysłów.
+            </span>
           </p>
-          <ul className="mt-8 grid list-none grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((f) => (
-              <li
-                key={f.id}
-                className="min-h-28 rounded-2xl border border-[#E6D4B0]/50 bg-gradient-to-b from-white to-[#FDF8F0] p-4 shadow-sm"
-              >
-                <div className="mb-1 flex h-8 items-center justify-center rounded-lg bg-gradient-to-b from-white to-[#F5E9D3] text-[#2B2B2B] ring-1 ring-inset ring-[#E0D0B0]/30">
-                  <FeatureIcon k={f.id} />
-                </div>
-                <h3 className="mt-2 text-base font-semibold text-[#2B2B2B]">{f.title}</h3>
-                <p className="mt-1.5 text-sm text-[#4A4A4A]">{f.desc}</p>
+          <ul className="mt-10 grid list-none grid-cols-1 gap-6 md:grid-cols-2 md:gap-7">
+            {platformTools.map((tool) => (
+              <li key={tool.id}>
+                <PlatformToolTile tool={tool} />
               </li>
             ))}
           </ul>
