@@ -1,6 +1,7 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { OrderStatus } from "@prisma/client";
 import { updateOrderStatusAction, type OrderActionState } from "@/app/actions/orders";
 
@@ -30,7 +31,7 @@ const all: OrderStatus[] = [
 ];
 
 export function AdminOrderStatusForm({ orderId, current }: { orderId: string; current: OrderStatus }) {
-  const [st, formAction] = useFormState(updateOrderStatusAction, init);
+  const [st, formAction] = useActionState(updateOrderStatusAction, init);
   return (
     <form action={formAction} className="mt-2 space-y-1 text-left text-sm text-slate-800">
       <input name="orderId" type="hidden" value={orderId} readOnly />

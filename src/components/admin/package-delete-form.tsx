@@ -1,6 +1,7 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { deletePackageAction, type PkgState } from "@/app/actions/packages";
 
 const delInit: PkgState = undefined;
@@ -19,7 +20,7 @@ function DelBtn() {
 }
 
 export function PackageDeleteForm({ id }: { id: string }) {
-  const [st, formAction] = useFormState(deletePackageAction, delInit);
+  const [st, formAction] = useActionState(deletePackageAction, delInit);
   return (
     <form action={formAction} className="pt-2">
       <input type="hidden" name="id" value={id} readOnly />

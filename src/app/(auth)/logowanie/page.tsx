@@ -5,8 +5,7 @@ import { AdminLoginForm } from "@/components/auth/admin-login-form";
 import { getClientSession, getAnyAdminSession, getFullAdminSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { getAdmin2faEntryPath } from "@/lib/auth/mfa-routing";
-import { buildMathChallenge } from "@/lib/captcha/math-challenge";
-import { MathCaptchaMissingNotice } from "@/components/auth/math-captcha-missing";
+import { GoogleSignInPanel } from "@/components/auth/google-sign-in-panel";
 
 type P = { searchParams?: Promise<Record<string, string | string[] | undefined>> };
 
@@ -15,6 +14,7 @@ export const dynamic = "force-dynamic";
 export default async function LogowaniePage({ searchParams }: P) {
   const sp = (await searchParams) ?? {};
   const { kontekst } = parseLogowanieKontekst({ k: sp.k });
+  const googleErr = typeof sp.ge === "string" ? sp.ge : undefined;
   if (kontekst === "client" && (await getFullAdminSession())) {
     redirect("/admin");
   }
@@ -34,8 +34,6 @@ export default async function LogowaniePage({ searchParams }: P) {
 
   const tytuł =
     kontekst === "admin" ? "Logowanie — obsługa" : "Logowanie pary młodej / gościa";
-  const challenge = buildMathChallenge();
-  const ok = challenge !== null;
 
   return (
     <div className="min-h-full bg-[#FDF8F0] px-4 py-10 sm:px-6">
@@ -47,11 +45,7 @@ export default async function LogowaniePage({ searchParams }: P) {
         >
           {tytuł}
         </h1>
-        {!ok ? (
-          <div className="mt-4">
-            <MathCaptchaMissingNotice />
-          </div>
-        ) : kontekst === "client" ? (
+        {kontekst === "client" ? (
           <>
             <p className="mt-1 text-center text-sm text-[#4A4A4A]">
               Po zatwierdzeniu rejestracji w e-mailu będziesz mógł w pełni korzystać z panelu.
@@ -65,7 +59,10 @@ export default async function LogowaniePage({ searchParams }: P) {
                 reset hasła
               </Link>
             </p>
-            <ClientLoginForm challenge={challenge} />
+            <GoogleSignInPanel errorCode={googleErr} />
+            <div className="mt-4">
+              <ClientLoginForm />
+            </div>
           </>
         ) : (
           <>
@@ -76,7 +73,9 @@ export default async function LogowaniePage({ searchParams }: P) {
               </Link>{" "}
               · <Link className="text-slate-700 underline" href="/">Strona główna</Link>
             </p>
-            <AdminLoginForm challenge={challenge} />
+            <div className="mt-4">
+              <AdminLoginForm />
+            </div>
           </>
         )}
       </div>

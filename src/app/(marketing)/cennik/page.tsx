@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import Link from "next/link";
+import { CennikRegisterButton } from "@/components/marketing/cennik-register-button";
 
 export const dynamic = "force-dynamic";
 
@@ -55,12 +55,7 @@ export default async function CennikPage() {
                     </ul>
                   ) : null}
                   <div className="mt-auto flex flex-1 flex-col justify-end pt-4">
-                    <Link
-                      className="inline-block w-full rounded-md border border-[#B8955C] py-2 text-center text-sm font-medium text-[#2B2B2B] transition hover:bg-white"
-                      href="/rejestracja"
-                    >
-                      Utwórz konto, aby złożyć zamówienie
-                    </Link>
+                    <CennikRegisterButton />
                   </div>
                 </li>
               );

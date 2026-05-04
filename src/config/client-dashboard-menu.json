@@ -1,0 +1,107 @@
+{
+  "mainCategories": [
+    {
+      "id": "start",
+      "label": "Start",
+      "slug": "start",
+      "icon": "home",
+      "description": "Panel startowy klienta"
+    },
+    {
+      "id": "narzedzia",
+      "label": "Narzędzia",
+      "slug": "narzedzia",
+      "icon": "tools",
+      "description": "Narzędzia organizacyjne",
+      "subcategories": [
+        { "id": "widok-glowny", "label": "Widok główny", "slug": "widok-glowny", "icon": "dashboard" },
+        { "id": "lista-gosci", "label": "Lista gości", "slug": "lista-gosci", "icon": "users" },
+        { "id": "potwierdzenia-rsvp", "label": "Potwierdzenia RSVP", "slug": "potwierdzenia-rsvp", "icon": "check" },
+        { "id": "plan-stolow", "label": "Plan stołów", "slug": "plan-stolow", "icon": "table" },
+        { "id": "plan-slubu", "label": "Plan ślubu", "slug": "plan-slubu", "icon": "calendar" },
+        { "id": "checklisty", "label": "Checklisty", "slug": "checklisty", "icon": "list" },
+        { "id": "generator-qr", "label": "Generator QR", "slug": "generator-qr", "icon": "qr" },
+        { "id": "tool-1", "label": "Tool #1", "slug": "tool-1", "icon": "spark" },
+        { "id": "tool-2", "label": "Tool #2", "slug": "tool-2", "icon": "spark" },
+        { "id": "tool-3", "label": "Tool #3", "slug": "tool-3", "icon": "spark" },
+        { "id": "tool-4", "label": "Tool #4", "slug": "tool-4", "icon": "spark" },
+        { "id": "tool-5", "label": "Tool #5", "slug": "tool-5", "icon": "spark" }
+      ]
+    },
+    {
+      "id": "asystent-budzetu",
+      "label": "Asystent budżetu",
+      "slug": "asystent-budzetu",
+      "icon": "wallet",
+      "description": "Kontrola finansów i wydatków",
+      "subcategories": [
+        { "id": "widok-glowny", "label": "Widok główny", "slug": "widok-glowny", "icon": "dashboard" },
+        { "id": "lista-wydatkow", "label": "Lista wydatków", "slug": "lista-wydatkow", "icon": "receipt" },
+        { "id": "konfiguracja", "label": "Konfiguracja", "slug": "konfiguracja", "icon": "settings" }
+      ]
+    },
+    {
+      "id": "galeria",
+      "label": "Galeria",
+      "slug": "galeria",
+      "icon": "gallery",
+      "description": "Zdjęcia i multimedia",
+      "subcategories": [
+        { "id": "widok-glowny", "label": "Widok główny", "slug": "widok-glowny", "icon": "dashboard" },
+        { "id": "ustawienia", "label": "Ustawienia", "slug": "ustawienia", "icon": "settings" }
+      ]
+    },
+    {
+      "id": "kalendarz",
+      "label": "Kalendarz",
+      "slug": "kalendarz",
+      "icon": "calendar",
+      "description": "Terminy i oś czasu",
+      "subcategories": [
+        { "id": "widok-glowny", "label": "Widok główny", "slug": "widok-glowny", "icon": "dashboard" },
+        { "id": "widok-osi-czasu", "label": "Widok osi czasu", "slug": "widok-osi-czasu", "icon": "timeline" },
+        { "id": "konfiguracja", "label": "Konfiguracja", "slug": "konfiguracja", "icon": "settings" }
+      ]
+    },
+    {
+      "id": "strona-weselna",
+      "label": "Strona weselna",
+      "slug": "strona-weselna",
+      "icon": "globe",
+      "description": "Panel konfiguracji strony weselnej",
+      "subcategories": [
+        { "id": "widok-glowny", "label": "Widok główny", "slug": "widok-glowny", "icon": "dashboard" },
+        { "id": "szczegoly", "label": "Szczegóły", "slug": "szczegoly", "icon": "info" },
+        { "id": "konfiguracja", "label": "Konfiguracja", "slug": "konfiguracja", "icon": "settings" }
+      ]
+    },
+    {
+      "id": "baza-informacji",
+      "label": "Baza informacji",
+      "slug": "baza-informacji",
+      "icon": "book",
+      "description": "Komplet informacji dla gości",
+      "subcategories": [
+        { "id": "widok-glowny", "label": "Widok główny", "slug": "widok-glowny", "icon": "dashboard" },
+        { "id": "informacje-podstawowe", "label": "Informacje podstawowe", "slug": "informacje-podstawowe", "icon": "info" },
+        { "id": "harmonogram-wesela", "label": "Harmonogram wesela", "slug": "harmonogram-wesela", "icon": "timeline" },
+        { "id": "menu", "label": "Menu", "slug": "menu", "icon": "utensils" },
+        { "id": "informacje-dodatkowe", "label": "Informacje dodatkowe", "slug": "informacje-dodatkowe", "icon": "plus" }
+      ]
+    },
+    {
+      "id": "moje-konto",
+      "label": "Moje konto",
+      "slug": "moje-konto",
+      "icon": "user",
+      "description": "Ustawienia konta i pakietu",
+      "subcategories": [
+        { "id": "widok-glowny", "label": "Widok główny", "slug": "widok-glowny", "icon": "dashboard" },
+        { "id": "moje-dane", "label": "Moje dane", "slug": "moje-dane", "icon": "id" },
+        { "id": "powiadomienia", "label": "Powiadomienia", "slug": "powiadomienia", "icon": "bell" },
+        { "id": "moj-pakiet", "label": "Mój pakiet", "slug": "moj-pakiet", "icon": "package" },
+        { "id": "wszystkie-pakiety", "label": "Wszystkie pakiety", "slug": "wszystkie-pakiety", "icon": "layers" }
+      ]
+    }
+  ]
+}

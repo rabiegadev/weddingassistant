@@ -1,6 +1,7 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { completeTotpSetupAction, verifyAdminTotpAfterPasswordAction } from "@/app/actions/auth";
 import type { AuthFormState } from "@/app/actions/auth";
 
@@ -15,7 +16,7 @@ type Props = { action: "firstSetup" | "afterLogin" };
 
 export function AdminTotpForm({ action: kind }: Props) {
   const act = kind === "firstSetup" ? completeTotpSetupAction : verifyAdminTotpAfterPasswordAction;
-  const [state, formAction] = useFormState(act, initial);
+  const [state, formAction] = useActionState(act, initial);
   return (
     <form action={formAction} className="space-y-3">
       <label className="block text-sm text-slate-700" htmlFor="code">

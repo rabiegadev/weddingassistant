@@ -23,6 +23,8 @@ Użyj listy, żeby nic nie pominąć przed **produkcją** / pierwszym deployem. 
 - [ ] Wszystkie zmienne z `.env.example` wklejone w Vercel (Production + Preview, jeśli inne).
 - [ ] Domena `weddingassistant.pl` przypięta do projektu; w DNS zgodnie z kreatorem Vercel (A/CNAME/ALIAS).
 - [ ] Po pierwszym deploy: smoke test `/`, `/api/health`, `/cennik`, rejestracja, logowanie, `/admin` (2FA).
+- [ ] (Opcjonalnie) **Google OAuth (para):** w Vercel ustaw `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_OAUTH_COOKIE_SECRET` (≥32 znaki) — patrz `.env.example`. W Google Console dodaj redirect URI dokładnie `${NEXT_PUBLIC_APP_URL}/api/auth/google/callback` dla prod i localhost dla dev. Smoke: „Kontynuuj z Google” na `/logowanie` i `/rejestracja`.
+- [ ] **Rejestracja (marketing):** albo `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` (Cloudflare Turnstile), albo `MATH_CAPTCHA_SECRET` (ukryty token czasu + honeypot, bez zadania „1+1+1”). Logowanie nie wymaga captchy (rate limit zostaje).
 - [ ] (Opcjonalnie) włącz Sentry w produkcji — zmienne `Sentry` z kreatora integracji Vercel.
 
 ## 4. Poczta wychodząca (SMTP) i DNS

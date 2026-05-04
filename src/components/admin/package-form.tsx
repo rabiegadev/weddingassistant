@@ -1,6 +1,7 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import type { savePackageAction } from "@/app/actions/packages";
 import { PackageDeleteForm } from "@/components/admin/package-delete-form";
 import type { PkgState } from "@/app/actions/packages";
@@ -37,7 +38,7 @@ function Submit() {
 }
 
 export function PackageForm({ action, initial: init }: Props) {
-  const [state, formAction] = useFormState(action, initial);
+  const [state, formAction] = useActionState(action, initial);
   return (
     <div className="space-y-2 text-left text-sm text-slate-800">
       <form action={formAction} className="space-y-2">

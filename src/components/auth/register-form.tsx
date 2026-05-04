@@ -1,9 +1,10 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { registerClientAction, type AuthFormState } from "@/app/actions/auth";
-import { MathCaptchaField } from "./math-captcha-field";
-import type { MathChallengeClient } from "@/lib/captcha/math-challenge";
+import type { RegisterPreflight } from "@/lib/captcha/register-preflight";
+import { RegistrationAntispamFields } from "@/components/auth/registration-antispam-fields";
 
 const initial: AuthFormState = {};
 
@@ -20,10 +21,10 @@ function Submit() {
   );
 }
 
-export function RegisterForm({ challenge }: { challenge: MathChallengeClient }) {
-  const [state, formAction] = useFormState(registerClientAction, initial);
+export function RegisterForm({ preflight }: { preflight: RegisterPreflight }) {
+  const [state, formAction] = useActionState(registerClientAction, initial);
   return (
-    <form action={formAction} className="mt-4 space-y-3">
+    <form action={formAction} className="relative mt-0 space-y-3">
       <div>
         <label className="text-sm text-[#3A3A3A]" htmlFor="name">
           Imię pary (opcjonalne)
@@ -60,7 +61,7 @@ export function RegisterForm({ challenge }: { challenge: MathChallengeClient }) 
         />
         <p className="mt-0.5 text-xs text-[#5A5A5A]">min. 12 znaków, wielka i mała litera, cyfra, znak spec.</p>
       </div>
-      <MathCaptchaField challenge={challenge} inputId="reg-math" />
+      <RegistrationAntispamFields preflight={preflight} />
       {state.error ? <p className="text-sm text-rose-700">{state.error}</p> : null}
       {state.success ? <p className="text-sm text-emerald-800">{state.success}</p> : null}
       {state.warning ? <p className="text-sm text-amber-900/90">{state.warning}</p> : null}

@@ -36,7 +36,10 @@ model User {
   email String  @unique
   name  String?
 
-  passwordHash    String
+  /// Null, gdy konto wyłącznie przez Google (logowanie hasłem niedostępne).
+  passwordHash String?
+  /// Unikalny identyfikator konta Google (OpenID `sub`).
+  googleSub String? @unique
   emailVerifiedAt DateTime?
 
   role UserRole

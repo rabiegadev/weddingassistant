@@ -1,6 +1,7 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { createOrderForClientAction, type OrderActionState } from "@/app/actions/orders";
 
 const init: OrderActionState = undefined;
@@ -21,7 +22,7 @@ function Submit() {
 }
 
 export function CreateOrderForm({ action, packages: packs }: { action: typeof createOrderForClientAction; packages: P }) {
-  const [st, formAction] = useFormState(action, init);
+  const [st, formAction] = useActionState(action, init);
   return (
     <form action={formAction} className="space-y-2 text-left text-sm">
       <div>

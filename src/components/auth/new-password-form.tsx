@@ -1,6 +1,7 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { resetPasswordWithTokenAction, type PassState } from "@/app/actions/password";
 import { MathCaptchaField } from "./math-captcha-field";
 import type { MathChallengeClient } from "@/lib/captcha/math-challenge";
@@ -21,7 +22,7 @@ function Submit() {
 }
 
 export function NewPasswordForm({ token, challenge }: { token: string; challenge: MathChallengeClient }) {
-  const [state, formAction] = useFormState(resetPasswordWithTokenAction, initial);
+  const [state, formAction] = useActionState(resetPasswordWithTokenAction, initial);
   return (
     <form action={formAction} className="mt-4 space-y-2 text-left text-sm">
       <input name="token" type="hidden" value={token} readOnly />

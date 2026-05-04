@@ -1,6 +1,7 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { postOrderMessageAction, type OrderActionState } from "@/app/actions/orders";
 
 const init: OrderActionState = undefined;
@@ -21,7 +22,7 @@ function Send() {
 type Props = { orderId: string; isFromAdmin: boolean };
 
 export function OrderMessageForm({ orderId, isFromAdmin }: Props) {
-  const [st, formAction] = useFormState(postOrderMessageAction, init);
+  const [st, formAction] = useActionState(postOrderMessageAction, init);
   return (
     <form action={formAction} className="space-y-1 text-sm text-slate-800">
       <input name="orderId" type="hidden" value={orderId} readOnly />

@@ -12,7 +12,7 @@ import { getAdmin2faEntryPath } from "@/lib/auth/mfa-routing";
 import { rateLimitOrThrow } from "@/lib/rate-limit";
 import { sendMailIfConfigured, parseAdminRecipientList } from "@/lib/mail/send";
 import { strongPasswordSchema, emailSchema, nameOptionalSchema } from "@/lib/validation/user";
-import { verifyMathCaptchaForm } from "@/lib/captcha/math-challenge";
+import { verifyRegistrationAntiSpam } from "@/lib/captcha/verify-registration-antispam";
 import { verifyUserTotpCode } from "@/lib/auth/totp-app";
 import {
   createClientSessionForUserId,
@@ -61,9 +61,9 @@ export async function registerClientAction(
   _prev: AuthFormState,
   formData: FormData
 ): Promise<AuthFormState> {
-  const cap = verifyMathCaptchaForm(formData);
-  if (cap.ok === false) {
-    return { error: cap.error };
+  const spam = await verifyRegistrationAntiSpam(formData);
+  if (spam.ok === false) {
+    return { error: spam.error };
   }
   const parsed = registerSchema.safeParse({
     name: formData.get("name") ?? undefined,
@@ -126,10 +126,6 @@ export type LoginState = { error?: string; ok?: boolean } | void;
  * Logowanie pary (cookie `wa_s_client`).
  */
 export async function loginClientAction(_: LoginState, formData: FormData): Promise<LoginState> {
-  const cap = verifyMathCaptchaForm(formData);
-  if (cap.ok === false) {
-    return { error: cap.error };
-  }
   const parsed = loginSchema.safeParse({
     email: formData.get("email") ?? "",
     password: formData.get("password") ?? "",
@@ -145,6 +141,11 @@ export async function loginClientAction(_: LoginState, formData: FormData): Prom
   const u = await prisma.user.findUnique({ where: { email: parsed.data.email } });
   if (!u || u.role !== UserRole.CLIENT) {
     return { error: "Nieprawidłowe dane logowania." };
+  }
+  if (!u.passwordHash) {
+    return {
+      error: "To konto loguje się przez Google — użyj przycisku „Kontynuuj z Google” nad formularzem.",
+    };
   }
   if (!(await verifyPassword(parsed.data.password, u.passwordHash))) {
     return { error: "Nieprawidłowe dane logowania." };
@@ -162,10 +163,6 @@ export async function loginClientAction(_: LoginState, formData: FormData): Prom
  * Logowanie hasłem w obsłudze (2FA w kolejnych krokach — cookie `wa_s_admin`, mfa niedomknięte).
  */
 export async function loginAdminAction(_: LoginState, formData: FormData): Promise<LoginState> {
-  const cap = verifyMathCaptchaForm(formData);
-  if (cap.ok === false) {
-    return { error: cap.error };
-  }
   const parsed = loginSchema.safeParse({
     email: formData.get("email") ?? "",
     password: formData.get("password") ?? "",
@@ -180,6 +177,9 @@ export async function loginAdminAction(_: LoginState, formData: FormData): Promi
   }
   const u = await prisma.user.findUnique({ where: { email: parsed.data.email } });
   if (!u || u.role !== UserRole.ADMIN) {
+    return { error: "Nieprawidłowe dane logowania (obsługa)." };
+  }
+  if (!u.passwordHash) {
     return { error: "Nieprawidłowe dane logowania (obsługa)." };
   }
   if (!(await verifyPassword(parsed.data.password, u.passwordHash))) {

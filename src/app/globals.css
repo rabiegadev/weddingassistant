@@ -15,12 +15,22 @@
     height: 100%;
   }
   :root {
-    /* Szerokość paska = to samo, co `h-[var(--wa-sticky-offset)]` w (marketing)/layout. Trzymaj zgodne z wysokością fixed header. */
-    --wa-sticky-offset: 5rem; /* 80px */
+    /* Offset kotwic / scroll-margin pod sticky header marketingu — zgodny z rzeczywistą wysokością górnej belki. */
+    --wa-sticky-offset: 3.5rem; /* ~56px */
+    --wa-dash-bg: #f8f9fc;
+    --wa-dash-dot: rgba(116, 141, 196, 0.2);
+    --wa-dash-text: #222b45;
+    --wa-dash-muted: #667091;
+    --wa-dash-surface: rgba(255, 255, 255, 0.9);
+    --wa-dash-border: #d8dfef;
+    --wa-dash-shadow: rgba(28, 35, 58, 0.12);
+    --wa-dash-navy: #2f3b67;
+    --wa-dash-gold: #b8955c;
+    --wa-dash-gold-soft: #f2e7d6;
   }
   @media (min-width: 640px) {
     :root {
-      --wa-sticky-offset: 5.5rem; /* 88px */
+      --wa-sticky-offset: 3.625rem; /* ~58px */
     }
   }
 }
@@ -41,5 +51,25 @@
   }
   .scroll-mt-wa {
     scroll-margin-top: var(--wa-sticky-offset);
+  }
+  .bg-dashboard-pattern {
+    background-color: var(--wa-dash-bg);
+    background-image: radial-gradient(circle at 1px 1px, var(--wa-dash-dot) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+
+  @keyframes wa-scroll-arrow {
+    0%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.65;
+    }
+    50% {
+      transform: translateY(6px);
+      opacity: 1;
+    }
+  }
+  .animate-wa-scroll-arrow {
+    animation: wa-scroll-arrow 2.2s ease-in-out infinite;
   }
 }

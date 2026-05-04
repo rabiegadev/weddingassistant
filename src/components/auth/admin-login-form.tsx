@@ -1,9 +1,8 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { loginAdminAction, type LoginState } from "@/app/actions/auth";
-import { MathCaptchaField } from "./math-captcha-field";
-import type { MathChallengeClient } from "@/lib/captcha/math-challenge";
 
 const initial: LoginState = undefined;
 
@@ -20,10 +19,10 @@ function Submit() {
   );
 }
 
-export function AdminLoginForm({ challenge }: { challenge: MathChallengeClient }) {
-  const [state, formAction] = useFormState(loginAdminAction, initial);
+export function AdminLoginForm() {
+  const [state, formAction] = useActionState(loginAdminAction, initial);
   return (
-    <form action={formAction} className="mt-4 space-y-3">
+    <form action={formAction} className="mt-0 space-y-3">
       <p className="text-xs text-slate-500">Wymaga potwierdzonego e-maila i 2FA po pierwszym logowaniu.</p>
       <div>
         <label className="text-sm text-slate-700" htmlFor="a-email">
@@ -51,7 +50,6 @@ export function AdminLoginForm({ challenge }: { challenge: MathChallengeClient }
           className="mt-1 w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm"
         />
       </div>
-      <MathCaptchaField challenge={challenge} inputId="a-math" />
       {state && "error" in state && state.error ? <p className="text-sm text-rose-600">{state.error}</p> : null}
       <Submit />
     </form>
