@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { type MarketingFeature, marketingFeatures } from "@/data/marketing-features";
 
 function useSectionRevealOnce() {
@@ -58,6 +58,7 @@ function FeatureListItem({
   reveal,
   onActivate,
   onHoverStart,
+  onHoverEnd,
 }: {
   feature: MarketingFeature;
   index: number;
@@ -66,15 +67,20 @@ function FeatureListItem({
   reveal: boolean;
   onActivate: () => void;
   onHoverStart: () => void;
+  onHoverEnd: () => void;
 }) {
+  const label = String(index + 1).padStart(2, "0");
+
   return (
     <button
       type="button"
       onMouseEnter={onHoverStart}
       onFocus={onHoverStart}
+      onMouseLeave={onHoverEnd}
+      onBlur={onHoverEnd}
       onClick={onActivate}
       aria-pressed={active}
-      className={`group relative z-10 flex w-full items-center gap-3 rounded-2xl border px-3 py-2.5 text-left transition duration-200 ease-out sm:gap-3.5 ${
+      className={`group relative z-10 flex w-full items-center gap-3 rounded-2xl border px-3 py-2.5 text-left transition duration-300 ease-out sm:gap-3.5 ${
         active || hovered
           ? "border-[#dcccad] bg-[#fdfaf5]"
           : "border-transparent bg-transparent hover:border-[#e6d9c6]/80 hover:bg-[#fefbf6]/80"
@@ -85,15 +91,18 @@ function FeatureListItem({
       }`}
       style={{ transitionDelay: `${Math.min(index, 8) * 34}ms` }}
     >
-      <Image
-        src={feature.imageSrc}
-        alt=""
-        width={26}
-        height={26}
-        className="h-[1.62rem] w-[1.62rem] shrink-0 object-contain sm:h-7 sm:w-7"
-      />
+      <span
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl transition ${
+          active ? "bg-[#efe2cc]" : "bg-[#f5efe5]"
+        }`}
+      >
+        <Image src={feature.imageSrc} alt="" width={18} height={18} className="h-[18px] w-[18px] object-contain" />
+      </span>
       <span className="min-w-0 flex-1 pr-1">
-        <span className="font-wa-display text-[1rem] font-semibold text-[#1f1c19] sm:text-[1.08rem]">{feature.title}</span>
+        <span className="flex items-baseline gap-2">
+          <span className="font-mono text-[0.62rem] font-medium tracking-[0.14em] text-[#bdaf9d]">{label}</span>
+          <span className="font-wa-display text-[0.96rem] font-semibold text-[#1f1c19] sm:text-[1.01rem]">{feature.title}</span>
+        </span>
       </span>
     </button>
   );
@@ -109,10 +118,11 @@ function DevicePreview({
   const activeFeature = features[activeIndex];
 
   return (
-    <div className="mx-auto w-full max-w-[58rem]">
-      <div className="relative flex min-h-[24.5rem] items-end justify-center gap-3 pb-2 sm:min-h-[31rem] sm:gap-6">
-        <div className="relative h-[16.4rem] w-[92%] max-w-[42rem] rounded-[1rem] border border-[#3b404a] bg-[#2f3540] p-2 shadow-[0_24px_56px_-42px_rgba(12,14,19,0.9)] sm:h-[23rem] sm:rounded-[1.2rem] sm:p-2.5">
-          <div className="relative h-full w-full overflow-hidden rounded-[0.56rem] border border-[#4a525e] bg-[#1c212b] sm:rounded-[0.72rem]">
+    <div className="relative mx-auto w-full max-w-[48rem] rounded-[1.9rem] border border-[#ebdfcd] bg-[linear-gradient(180deg,#fbf8f3_0%,#f5efe5_100%)] p-4 shadow-[0_30px_70px_-54px_rgba(37,25,8,0.95)] sm:p-5">
+      <div className="pointer-events-none absolute inset-0 rounded-[1.9rem] ring-1 ring-white/65" />
+      <div className="relative flex min-h-[18.5rem] items-end justify-center gap-2.5 pb-2 pl-1 pr-1 sm:min-h-[22.5rem] sm:gap-4">
+        <div className="relative h-[12.5rem] w-[86%] max-w-[31rem] rounded-[0.9rem] border border-[#d6c6ab] bg-[#d7c6aa] p-2 shadow-[0_20px_40px_-32px_rgba(38,25,6,0.95)] sm:h-[16rem] sm:rounded-[1rem] sm:p-2.5">
+          <div className="relative h-full w-full overflow-hidden rounded-[0.5rem] border border-[#c4b291] bg-[#ece4d6]">
             {features.map((feature, i) => {
               const pair = getFeaturePreviewPair(feature, i);
               return (
@@ -128,12 +138,12 @@ function DevicePreview({
               );
             })}
           </div>
-          <span className="absolute -bottom-4 left-1/2 h-3.5 w-[35%] -translate-x-1/2 rounded-full bg-[#29303b] sm:h-4.5" />
-          <span className="absolute -bottom-8 left-1/2 h-2.5 w-[57%] -translate-x-1/2 rounded-full bg-[#404958]" />
+          <span className="absolute -bottom-4 left-1/2 h-3.5 w-[34%] -translate-x-1/2 rounded-full bg-[#c6b290] sm:h-4" />
+          <span className="absolute -bottom-7 left-1/2 h-2.5 w-[58%] -translate-x-1/2 rounded-full bg-[#d8c8ae]" />
         </div>
 
-        <div className="relative -ml-8 h-[14.2rem] w-[7.15rem] rounded-[1.34rem] border border-[#4a505c] bg-[#2f3540] p-[0.32rem] shadow-[0_26px_42px_-34px_rgba(7,8,12,0.9)] sm:-ml-16 sm:h-[19.8rem] sm:w-[9.95rem] sm:rounded-[1.7rem] sm:p-[0.45rem]">
-          <div className="relative h-full w-full overflow-hidden rounded-[1rem] border border-[#555e6d] bg-[#1b2029] sm:rounded-[1.24rem]">
+        <div className="relative -ml-8 h-[10.8rem] w-[5.35rem] rounded-[1.15rem] border border-[#d6c6ab] bg-[#f7f1e7] p-[0.28rem] shadow-[0_24px_36px_-30px_rgba(31,20,4,0.95)] sm:-ml-14 sm:h-[14.2rem] sm:w-[6.9rem] sm:rounded-[1.4rem] sm:p-[0.35rem]">
+          <div className="relative h-full w-full overflow-hidden rounded-[0.92rem] border border-[#ccb998] bg-[#ece4d6] sm:rounded-[1.15rem]">
             {features.map((feature, i) => {
               const pair = getFeaturePreviewPair(feature, i);
               return (
@@ -148,17 +158,15 @@ function DevicePreview({
               );
             })}
           </div>
-          <span className="absolute left-1/2 top-[0.3rem] h-[0.22rem] w-[2.3rem] -translate-x-1/2 rounded-full bg-[#717a8a] sm:top-[0.4rem] sm:w-[2.9rem]" />
+          <span className="absolute left-1/2 top-[0.24rem] h-[0.2rem] w-[2.1rem] -translate-x-1/2 rounded-full bg-[#cbb793] sm:top-[0.33rem] sm:w-[2.7rem]" />
         </div>
       </div>
 
-      <div className="mx-auto mt-7 h-px w-[72%] bg-[linear-gradient(90deg,rgba(43,48,57,0)_0%,rgba(43,48,57,0.7)_16%,rgba(43,48,57,0.92)_50%,rgba(43,48,57,0.7)_84%,rgba(43,48,57,0)_100%)] sm:mt-8 sm:w-[68%]" />
-
-      <div className="mt-7 text-center sm:mt-9">
-        <p className="font-wa-display text-[1.55rem] font-semibold tracking-[0.01em] text-[#2f2a25] sm:text-[2rem]">
+      <div className="mt-10 text-center sm:mt-11">
+        <p className="font-wa-display text-xl font-semibold tracking-[0.01em] text-[#3b332c] sm:text-2xl">
           {activeFeature?.title}
         </p>
-        <p className="mx-auto mt-3 max-w-2xl text-pretty text-[0.9rem] leading-relaxed text-[#685f55] sm:text-[1rem]">
+        <p className="mx-auto mt-2 max-w-2xl text-pretty text-[0.84rem] leading-relaxed text-[#746a5f] sm:text-[0.92rem]">
           {activeFeature?.description}
         </p>
       </div>
@@ -169,10 +177,9 @@ function DevicePreview({
 export function HomeFeaturesSection() {
   const { ref, visible } = useSectionRevealOnce();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const hoverDelayRef = useRef<number | null>(null);
   const [highlightRect, setHighlightRect] = useState<HighlightRect>({ top: 0, height: 0 });
 
   const highlightIndex = hoveredIndex ?? activeIndex;
@@ -210,44 +217,21 @@ export function HomeFeaturesSection() {
     };
   }, [highlightIndex]);
 
-  useEffect(() => {
-    return () => {
-      if (hoverDelayRef.current != null) {
-        window.clearTimeout(hoverDelayRef.current);
-      }
-    };
-  }, []);
-
-  const scheduleHoverIndex = (index: number) => {
-    if (hoverDelayRef.current != null) {
-      window.clearTimeout(hoverDelayRef.current);
-    }
-    hoverDelayRef.current = window.setTimeout(() => {
-      setHoveredIndex(index);
-    }, 80);
-  };
+  const listItems = useMemo(() => marketingFeatures, []);
 
   return (
     <div ref={ref} className="w-full border-t border-[#ebe7e0]/90 pb-10 pt-3 sm:pb-12 sm:pt-5">
       <div className="mx-auto w-[min(100%,96vw)] max-w-[1800px] px-4 sm:px-6 lg:px-10">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:items-start lg:gap-10">
-          <div className={`order-1 ${visible ? "opacity-100" : "opacity-0"} transition-opacity duration-500 lg:order-2`}>
-            <DevicePreview features={marketingFeatures} activeIndex={activeIndex} />
-          </div>
-
-          <div
-            ref={listRef}
-            onMouseLeave={() => scheduleHoverIndex(activeIndex)}
-            className="order-2 relative space-y-2.5 rounded-3xl bg-[#fcfaf6] p-2 sm:space-y-2 sm:p-2.5 lg:order-1"
-          >
+          <div ref={listRef} className="relative space-y-2.5 rounded-3xl bg-[#fcfaf6] p-2 sm:space-y-2 sm:p-2.5">
             <div
-              className={`pointer-events-none absolute left-2 right-2 rounded-2xl border border-[#d7c6aa] bg-[#fbf7f0] shadow-[0_10px_26px_-22px_rgba(52,40,20,0.95)] transition-[top,height,opacity] duration-320 ease-[cubic-bezier(0.22,1,0.36,1)] sm:left-2.5 sm:right-2.5 ${
+              className={`pointer-events-none absolute left-2 right-2 rounded-2xl border border-[#d7c6aa] bg-[#fbf7f0] shadow-[0_10px_26px_-22px_rgba(52,40,20,0.95)] transition-[top,height,opacity] duration-300 ease-out sm:left-2.5 sm:right-2.5 ${
                 visible ? "opacity-100" : "opacity-0"
               }`}
               style={{ top: `${highlightRect.top}px`, height: `${highlightRect.height}px` }}
               aria-hidden
             />
-            {marketingFeatures.map((feature, index) => (
+            {listItems.map((feature, index) => (
               <div
                 key={feature.id}
                 ref={(node: HTMLDivElement | null) => {
@@ -261,10 +245,15 @@ export function HomeFeaturesSection() {
                   hovered={index === hoveredIndex}
                   reveal={visible}
                   onActivate={() => setActiveIndex(index)}
-                  onHoverStart={() => scheduleHoverIndex(index)}
+                  onHoverStart={() => setHoveredIndex(index)}
+                  onHoverEnd={() => setHoveredIndex(null)}
                 />
               </div>
             ))}
+          </div>
+
+          <div className={`${visible ? "opacity-100" : "opacity-0"} transition-opacity duration-500`}>
+            <DevicePreview features={marketingFeatures} activeIndex={activeIndex} />
           </div>
         </div>
       </div>
