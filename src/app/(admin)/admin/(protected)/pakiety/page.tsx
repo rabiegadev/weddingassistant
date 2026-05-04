@@ -33,6 +33,8 @@ export default async function AdminPakietyPage() {
                   features: p.featuresJson,
                   sortOrder: p.sortOrder,
                   isPublished: p.isPublished,
+                  planTier: p.planTier,
+                  postWeddingAccessMonths: p.postWeddingAccessMonths,
                 }}
               />
             </div>

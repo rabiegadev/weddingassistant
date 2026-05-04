@@ -1,5 +1,4 @@
 import { createHash, randomBytes } from "node:crypto";
-import { getAppPublicUrl } from "@/lib/env/public";
 import type { GoogleOAuthSecrets } from "@/lib/auth/google-config";
 
 const AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -22,8 +21,12 @@ export function pkceChallengeFromVerifier(verifier: string): string {
   return base64Url(createHash("sha256").update(verifier, "utf8").digest());
 }
 
-export function buildGoogleAuthorizeUrl(secrets: GoogleOAuthSecrets, state: string, codeVerifier: string): string {
-  const redirectUri = `${getAppPublicUrl()}/api/auth/google/callback`;
+export function buildGoogleAuthorizeUrl(
+  secrets: GoogleOAuthSecrets,
+  state: string,
+  codeVerifier: string,
+  redirectUri: string
+): string {
   const challenge = pkceChallengeFromVerifier(codeVerifier);
   const params = new URLSearchParams({
     client_id: secrets.clientId,
@@ -49,9 +52,9 @@ export type GoogleUserInfo = {
 export async function exchangeGoogleCode(
   secrets: GoogleOAuthSecrets,
   code: string,
-  codeVerifier: string
+  codeVerifier: string,
+  redirectUri: string
 ): Promise<{ access_token: string } | { error: string }> {
-  const redirectUri = `${getAppPublicUrl()}/api/auth/google/callback`;
   const body = new URLSearchParams({
     client_id: secrets.clientId,
     client_secret: secrets.clientSecret,

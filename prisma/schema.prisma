@@ -23,11 +23,41 @@ enum SessionScope {
 enum OrderStatus {
   DRAFT
   SUBMITTED
+  /// Zamówienie płatne — klient powinien uiścić bramkę (Przelewy24 / PayU).
+  AWAITING_PAYMENT
   PENDING_REVIEW
   APPROVED
   IN_PROGRESS
   COMPLETED
   CANCELLED
+}
+
+/// Pakiet z katalogu (cennik + zamówienia). `planTier` + `postWeddingAccessMonths` sterują dostępem.
+enum PlanTier {
+  FREE
+  ASSIST_BASIC
+  WWW_TEMPLATE
+  ASSIST_BASIC_WWW_TEMPLATE
+  ASSIST_PREMIUM_WWW_TEMPLATE
+  ASSIST_PREMIUM_WWW_CUSTOM
+}
+
+enum PaymentProvider {
+  PAYU
+  PRZELEWY24
+  MANUAL
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum ContactInquiryStatus {
+  NEW
+  READ
+  ARCHIVED
 }
 
 /// Po logowaniu hasłem admin: false do czasu weryfikacji TOTP lub dokończenia setupu. Klient: zawsze true.
@@ -59,6 +89,12 @@ model User {
 
   orderEvents  OrderEvent[] @relation("EventActor")
   auditEntries AuditLog[]
+  weddingPageRequests WeddingPageRequest[]
+
+  clientProfile     ClientProfile?
+  plannerGuests     PlannerGuest[]
+  plannerBudgetLines PlannerBudgetLine[]
+  subscriptions     UserSubscription[]
 }
 
 model Session {
@@ -109,6 +145,69 @@ model RateLimitEntry {
   createdAt    DateTime @default(now())
 }
 
+/// Dane profilowe pary pod workflow (data ślubu, reset planera Free).
+model ClientProfile {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Data ślubu — kotwica do wyliczania końca dostępu płatnych pakietów.
+  weddingDate DateTime?
+
+  /// Ostatni automatyczny reset danych planera (plan Free, co tydzień).
+  lastFreePlannerResetAt DateTime?
+
+  /// Pola strukturalne „bazy informacji” (JSON) — rozszerzane bez migracji.
+  infoJson String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Goście w module planera (plan Free: usuwane przy tygodniowym resecie).
+model PlannerGuest {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  displayName String   @db.VarChar(200)
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+/// Wydatki w prostym planerze budżetu (plan Free: usuwane przy resecie).
+model PlannerBudgetLine {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String   @db.VarChar(200)
+  amountCents Int
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+/// Aktywny dostęp po opłaceniu zamówienia — ważny do `endsAt` (wg pakietu i daty ślubu).
+model UserSubscription {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  packageId String
+  package   Package @relation(fields: [packageId], references: [id])
+
+  /// Zamówienie, z którego powstała subskrypcja (opcjonalnie).
+  sourceOrderId String? @unique
+  order         Order?  @relation(fields: [sourceOrderId], references: [id], onDelete: SetNull)
+
+  startedAt DateTime @default(now())
+  endsAt    DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([endsAt])
+}
+
 /// Pakiet / szablon ofertowy; jeden katalog: publiczny cennik + wybór klienta
 model Package {
   id           String   @id @default(cuid())
@@ -116,13 +215,19 @@ model Package {
   slug         String   @unique
   description  String   @db.Text
   priceCents   Int
-  /// JSON: np. { "weddingPage": true, "subdomain": true, "rsvp": true }
+  /// JSON: np. { "weddingPage": true, "gallery": false, "qr": "limited" } — rozszerzamy w seedzie.
   featuresJson String   @db.Text
+
+  planTier                 PlanTier @default(FREE)
+  /// null = brak okna „po ślubie” (Free); 6 = pakiety 2–4; 12 = pakiety 5–6 (z możliwością przedłużenia — osobno).
+  postWeddingAccessMonths Int?
+
   sortOrder    Int      @default(0)
   isPublished  Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   orders       Order[]
+  subscriptions UserSubscription[]
 
   @@index([isPublished, sortOrder])
 }
@@ -142,10 +247,27 @@ model Order {
   updatedAt     DateTime       @updatedAt
   events        OrderEvent[]
   messages      OrderMessage[]
+  payment       Payment?
+  subscription  UserSubscription?
 
   @@index([userId, status])
   @@index([status])
   @@index([packageId])
+}
+
+model Payment {
+  id        String          @id @default(cuid())
+  orderId   String          @unique
+  order     Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  provider  PaymentProvider
+  /// Id transakcji u operatora (PayU / Przelewy24).
+  externalOrderId String?   @db.VarChar(191)
+  status    PaymentStatus   @default(PENDING)
+  amountCents Int
+  currency  String          @default("PLN") @db.VarChar(8)
+  rawNotifyJson String?     @db.Text
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
 }
 
 model OrderEvent {
@@ -183,4 +305,58 @@ model AuditLog {
   targetId    String   @db.VarChar(64)
   detailsJson String?  @db.Text
   createdAt   DateTime @default(now())
+}
+
+/// Zapytania z formularza kontaktowego (publiczny endpoint).
+model ContactInquiry {
+  id        String               @id @default(cuid())
+  name      String                 @db.VarChar(200)
+  email     String                 @db.VarChar(320)
+  phone     String?                @db.VarChar(40)
+  message   String                 @db.VarChar(8000)
+  status    ContactInquiryStatus   @default(NEW)
+  sourcePage String?               @db.VarChar(200)
+  createdAt DateTime               @default(now())
+
+  @@index([status, createdAt])
+}
+
+enum WeddingPageRequestStatus {
+  NEW
+  IN_REVIEW
+  IN_PROGRESS
+  AWAITING_CLIENT
+  DONE
+  CANCELLED
+}
+
+/// Zgłoszenie realizacji strony weselnej (workflow operacyjny).
+model WeddingPageRequest {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  status      WeddingPageRequestStatus @default(NEW)
+  /// Notatka wewnętrzna obsługi (niewidoczna dla pary w MVP).
+  internalNote String? @db.VarChar(8000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+/// Rejestr wysłanych powiadomień (e-mail / później SMS).
+model NotificationLog {
+  id          String   @id @default(cuid())
+  channel     String   @db.VarChar(32)
+  templateKey String?  @db.VarChar(80)
+  toEmail     String?  @db.VarChar(320)
+  subject     String?  @db.VarChar(500)
+  bodyPreview String?  @db.VarChar(600)
+  metaJson    String?  @db.Text
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
 }

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { PlanTier } from "@prisma/client";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getFullAdminSession } from "@/lib/auth/session";
@@ -29,6 +30,8 @@ const pkg = z.object({
     ),
   sortOrder: z.coerce.number().int().min(0).max(9999),
   isPublished: z.coerce.boolean().optional().default(true),
+  planTier: z.nativeEnum(PlanTier),
+  postWeddingAccessMonths: z.number().int().min(0).max(36).nullable(),
 });
 
 export type PkgState = { error?: string; ok?: boolean } | void;
@@ -51,6 +54,15 @@ export async function savePackageAction(_: PkgState, formData: FormData): Promis
   }
   const pub = formData.get("isPublished");
   const isOn = pub === "on" || pub === "true" || pub === "1";
+  const postM = ((formData.get("postWeddingAccessMonths") as string) || "").trim();
+  let postWeddingAccessMonths: number | null = null;
+  if (postM !== "") {
+    const n = Number.parseInt(postM, 10);
+    if (!Number.isFinite(n)) {
+      return { error: "Miesiące po ślubie: podaj liczbę całkowitą lub zostaw puste." };
+    }
+    postWeddingAccessMonths = n;
+  }
   const raw = {
     id: (formData.get("id") as string) || undefined,
     name: (formData.get("name") as string) || "",
@@ -60,6 +72,8 @@ export async function savePackageAction(_: PkgState, formData: FormData): Promis
     features: (formData.get("features") as string) || "{}",
     sortOrder: (formData.get("sortOrder") as string) || "0",
     isPublished: isOn,
+    planTier: ((formData.get("planTier") as string) || "FREE") as PlanTier,
+    postWeddingAccessMonths,
   };
   const p = pkg.safeParse(raw);
   if (!p.success) {
@@ -84,6 +98,8 @@ export async function savePackageAction(_: PkgState, formData: FormData): Promis
         featuresJson: fe,
         sortOrder: p.data.sortOrder,
         isPublished: p.data.isPublished,
+        planTier: p.data.planTier,
+        postWeddingAccessMonths: p.data.postWeddingAccessMonths,
       },
     });
   } else {
@@ -96,6 +112,8 @@ export async function savePackageAction(_: PkgState, formData: FormData): Promis
         featuresJson: fe,
         sortOrder: p.data.sortOrder,
         isPublished: p.data.isPublished,
+        planTier: p.data.planTier,
+        postWeddingAccessMonths: p.data.postWeddingAccessMonths,
       },
     });
   }

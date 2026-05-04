@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus, PlanTier } from "@prisma/client";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getClientSession, getFullAdminSession } from "@/lib/auth/session";
@@ -11,6 +11,7 @@ import {
   notifyClientOnOrderUpdate,
   orderStatusPl,
 } from "@/lib/mail/order-notify";
+import { activateSubscriptionFromPaidOrder } from "@/lib/subscriptions/activate-from-order";
 
 const msg = z.string().min(1, "Wpisz treść").max(8000, "Zbyt długa wiadomość");
 
@@ -44,11 +45,14 @@ export async function createOrderForClientAction(
   } catch {
     return { error: "Nieprawidłowe dane formularza (JSON)." };
   }
+  const initialStatus =
+    p.planTier !== PlanTier.FREE && p.priceCents > 0 ? OrderStatus.AWAITING_PAYMENT : OrderStatus.SUBMITTED;
+
   const o = await prisma.order.create({
     data: {
       userId: c.user.id,
       packageId: p.id,
-      status: OrderStatus.SUBMITTED,
+      status: initialStatus,
       totalCents: p.priceCents,
       selectionJson: sel,
     },
@@ -57,8 +61,11 @@ export async function createOrderForClientAction(
     data: {
       orderId: o.id,
       fromStatus: null,
-      toStatus: OrderStatus.SUBMITTED,
-      message: "Zamówienie złożone z panelu klienta (wstęp, bez płatności).",
+      toStatus: initialStatus,
+      message:
+        initialStatus === OrderStatus.AWAITING_PAYMENT
+          ? "Zamówienie utworzone — oczekuje na płatność online."
+          : "Zamówienie złożone z panelu klienta.",
     },
   });
   revalidatePath("/dashboard");
@@ -179,6 +186,9 @@ export async function updateOrderStatusAction(
       },
     }),
   ]);
+  if (p.data.status === OrderStatus.APPROVED) {
+    await activateSubscriptionFromPaidOrder(o.id);
+  }
   await writeAuditLog(a.user.id, "order.status", "Order", o.id, { to: p.data.status });
   await notifyClientOnOrderUpdate(
     o.userId,

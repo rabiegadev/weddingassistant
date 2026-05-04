@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { OrderStatus } from "@prisma/client";
 import { updateOrderStatusAction, type OrderActionState } from "@/app/actions/orders";
+import { orderStatusPl } from "@/lib/mail/order-notify";
 
 const init: OrderActionState = undefined;
 
@@ -20,15 +21,7 @@ function Submit() {
   );
 }
 
-const all: OrderStatus[] = [
-  "DRAFT",
-  "SUBMITTED",
-  "PENDING_REVIEW",
-  "APPROVED",
-  "IN_PROGRESS",
-  "COMPLETED",
-  "CANCELLED",
-];
+const all = Object.values(OrderStatus) as OrderStatus[];
 
 export function AdminOrderStatusForm({ orderId, current }: { orderId: string; current: OrderStatus }) {
   const [st, formAction] = useActionState(updateOrderStatusAction, init);
@@ -45,7 +38,7 @@ export function AdminOrderStatusForm({ orderId, current }: { orderId: string; cu
         >
           {all.map((x) => (
             <option value={x} key={x}>
-              {x}
+              {orderStatusPl(x)} ({x})
             </option>
           ))}
         </select>

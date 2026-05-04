@@ -32,7 +32,9 @@ export default async function ZamowieniaPage() {
       {packs.length > 0 ? (
         <div className="mt-6 rounded-lg border border-[#D0C8BE] bg-white/80 p-4">
           <h3 className="text-sm font-medium">Nowe zamówienie (krok wstępny)</h3>
-          <p className="mt-0.5 text-xs text-[#4A4A4A]">Płatności podłączymy w kolejnej wersji — na start zapisz intencję + szczegóły w JSON poniżej (domyślnie {}).</p>
+          <p className="mt-0.5 text-xs text-[#4A4A4A]">
+            Po złożeniu pakiet płatny otrzymasz status „oczekuje na płatność” — na stronie zamówienia uruchomisz Przelewy24 lub PayU (gdy skonfigurowane).
+          </p>
           <div className="mt-2">
             <CreateOrderForm action={createOrderForClientAction} packages={packs.map((p) => ({ id: p.id, name: p.name, priceCents: p.priceCents }))} />
           </div>

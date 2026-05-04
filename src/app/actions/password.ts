@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { hashSessionTokenToHex, createOpaqueSessionToken } from "@/lib/crypto/session-token";
-import { getAppPublicUrl } from "@/lib/env/public";
+import { getSiteUrlFromHeaders } from "@/lib/env/public";
 import { sendMailIfConfigured } from "@/lib/mail/send";
 import { strongPasswordSchema, emailSchema } from "@/lib/validation/user";
 import { rateLimitOrThrow } from "@/lib/rate-limit";
@@ -49,7 +49,8 @@ export async function requestPasswordResetAction(
     await prisma.passwordResetToken.create({
       data: { userId: u.id, tokenHash: th, expiresAt: new Date(Date.now() + H) },
     });
-    const link = `${getAppPublicUrl()}/nowe-haslo?token=${encodeURIComponent(raw)}`;
+    const site = await getSiteUrlFromHeaders();
+    const link = `${site}/nowe-haslo?token=${encodeURIComponent(raw)}`;
     await sendMailIfConfigured({
       to: u.email,
       subject: "Reset hasła — Weddingassistant",

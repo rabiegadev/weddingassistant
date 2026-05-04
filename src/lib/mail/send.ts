@@ -1,6 +1,17 @@
 import nodemailer from "nodemailer";
+import { logNotificationSent } from "@/lib/notifications/log";
 
 type SendOpts = { to: string; subject: string; text: string; html?: string; replyTo?: string };
+
+/** Minimalny HTML z treści tekstowej (paragrafy po \n\n). */
+function simpleHtmlFromText(text: string): string {
+  const escaped = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  const body = escaped.split(/\n\n+/).map((p) => `<p style="margin:0 0 12px;">${p.replace(/\n/g, "<br/>")}</p>`).join("");
+  return `<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;font-size:15px;color:#1a1a1a;">${body}</body></html>`;
+}
 
 type Transport = ReturnType<typeof nodemailer.createTransport>;
 
@@ -66,8 +77,15 @@ export async function sendMailIfConfigured(
       to: o.to,
       subject: o.subject,
       text: o.text,
-      html: o.html,
+      html: o.html ?? simpleHtmlFromText(o.text),
       replyTo: o.replyTo,
+    });
+    void logNotificationSent({
+      channel: "email",
+      templateKey: "sendMailIfConfigured",
+      toEmail: o.to,
+      subject: o.subject,
+      bodyPreview: o.text.slice(0, 400),
     });
     return { sent: true };
   } catch (e) {

@@ -3,14 +3,24 @@ import {
   type DashboardSubcategory,
   buildSubcategoryPath,
 } from "@/lib/client-dashboard-menu";
+import type { ModuleGate } from "@/lib/dashboard/module-gate";
 import Link from "next/link";
 
 type DashboardWorkspaceProps = {
   category: DashboardCategory;
   subcategory?: DashboardSubcategory;
+  /** Płatny moduł zablokowany — komunikat zamiast treści roboczej. */
+  gate?: ModuleGate | null;
+  /** Informacja o limitach planu (bez pełnej blokady). */
+  limitBanner?: string | null;
 };
 
-export function DashboardWorkspace({ category, subcategory }: DashboardWorkspaceProps) {
+export function DashboardWorkspace({
+  category,
+  subcategory,
+  gate,
+  limitBanner,
+}: DashboardWorkspaceProps) {
   const title = subcategory ? `${category.label} / ${subcategory.label}` : category.label;
   const pathKey = `${category.slug}/${subcategory?.slug ?? "widok"}`;
   const suggestions: Record<string, { tip: string; actions: string[] }> = {
@@ -49,14 +59,34 @@ export function DashboardWorkspace({ category, subcategory }: DashboardWorkspace
 
   return (
     <div className="space-y-4">
+      {limitBanner ? (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+          {limitBanner}
+        </div>
+      ) : null}
       <header className="rounded-xl border border-[var(--wa-dash-border)] bg-[#f7f9ff] p-4">
         <h1 className="text-lg font-semibold text-[var(--wa-dash-navy)] sm:text-xl">{title}</h1>
         <p className="mt-1 text-sm text-[var(--wa-dash-muted)]">
-          To jest wizualny widok roboczy. W kolejnych etapach podłączymy dane i logikę biznesową.
+          {gate
+            ? "Ten moduł jest niedostępny przy obecnym pakiecie — zaktualizuj plan lub przedłuż dostęp."
+            : "To jest wizualny widok roboczy. W kolejnych etapach podłączymy dane i logikę biznesową."}
         </p>
       </header>
 
-      <div className="grid gap-3 lg:grid-cols-3">
+      {gate ? (
+        <div className="rounded-xl border border-rose-200 bg-rose-50 p-6 text-center shadow-sm">
+          <h2 className="text-base font-semibold text-rose-950">{gate.title}</h2>
+          <p className="mt-2 text-sm text-rose-900/90">{gate.body}</p>
+          <Link
+            href={gate.ctaHref}
+            className="mt-4 inline-flex rounded-lg bg-[#B8955C] px-4 py-2 text-sm font-medium text-white hover:brightness-105"
+          >
+            {gate.ctaLabel}
+          </Link>
+        </div>
+      ) : null}
+
+      <div className={`grid gap-3 lg:grid-cols-3 ${gate ? "pointer-events-none opacity-40" : ""}`}>
         <article className="rounded-xl border border-[var(--wa-dash-border)] bg-white p-4 shadow-[0_8px_20px_rgba(56,72,120,0.08)]">
           <h2 className="text-sm font-semibold text-[var(--wa-dash-navy)]">Status modułu</h2>
           <p className="mt-1 text-sm text-[var(--wa-dash-muted)]">Szkielet UI gotowy. Treści i formularze są placeholderowe.</p>
@@ -80,7 +110,7 @@ export function DashboardWorkspace({ category, subcategory }: DashboardWorkspace
         </article>
       </div>
 
-      {quickLinks.length > 0 ? (
+      {quickLinks.length > 0 && !gate ? (
         <section className="rounded-xl border border-[var(--wa-dash-border)] bg-white p-4 shadow-[0_8px_20px_rgba(56,72,120,0.08)]">
           <h2 className="text-sm font-semibold text-[var(--wa-dash-navy)]">Szybkie przejścia</h2>
           <div className="mt-2 flex flex-wrap gap-2">

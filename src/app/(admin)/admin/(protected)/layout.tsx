@@ -10,29 +10,46 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
   const full = await getFullAdminSession();
   if (full) {
     return (
-      <div className="min-h-0 flex-1">
-        <div className="mb-0 border-b border-slate-200/80 bg-white shadow-sm">
-          <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4">
-            <h1 className="font-sans text-base font-semibold tracking-tight text-slate-800 sm:text-lg">
-              Weddingassistant — obsługa
-            </h1>
-            <p className="text-xs text-slate-500" title={full.user.email}>
-              {full.user.email}
-            </p>
-            <nav className="flex flex-wrap items-center gap-1 text-sm" aria-label="Nawigacja admina">
-              <Link className="rounded-md px-2 py-1.5 text-slate-700 hover:bg-slate-100" href="/admin">
+      <div className="flex min-h-screen flex-1 flex-col bg-gradient-to-b from-slate-100 via-slate-50 to-white">
+        <div className="border-b border-slate-800/20 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white shadow-md">
+          <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div>
+              <h1 className="font-sans text-lg font-semibold tracking-tight text-white">
+                Weddingassistant — panel obsługi
+              </h1>
+              <p className="mt-0.5 text-xs text-slate-300" title={full.user.email}>
+                {full.user.email}
+              </p>
+            </div>
+            <nav
+              className="flex flex-wrap items-center gap-1 text-sm font-medium"
+              aria-label="Nawigacja admina"
+            >
+              <Link className="rounded-lg px-3 py-2 text-slate-100 hover:bg-white/10" href="/admin">
                 Kokpit
               </Link>
-              <Link className="rounded-md px-2 py-1.5 text-slate-700 hover:bg-slate-100" href="/admin/pakiety">
+              <Link className="rounded-lg px-3 py-2 text-slate-100 hover:bg-white/10" href="/admin/uzytkownicy">
+                Pary
+              </Link>
+              <Link className="rounded-lg px-3 py-2 text-slate-100 hover:bg-white/10" href="/admin/pakiety">
                 Pakiety
               </Link>
-              <Link className="rounded-md px-2 py-1.5 text-slate-700 hover:bg-slate-100" href="/admin/zamowienia">
+              <Link className="rounded-lg px-3 py-2 text-slate-100 hover:bg-white/10" href="/admin/zamowienia">
                 Zamówienia
+              </Link>
+              <Link className="rounded-lg px-3 py-2 text-slate-100 hover:bg-white/10" href="/admin/kontakt">
+                Kontakt
+              </Link>
+              <Link className="rounded-lg px-3 py-2 text-slate-100 hover:bg-white/10" href="/admin/strony-weselne">
+                Strony WWW
+              </Link>
+              <Link className="rounded-lg px-3 py-2 text-slate-100 hover:bg-white/10" href="/admin/powiadomienia">
+                Powiadomienia
               </Link>
               <form action={logoutAdminAction} className="inline">
                 <button
                   type="submit"
-                  className="rounded-md px-2 py-1.5 text-slate-600 underline decoration-slate-300 decoration-1 underline-offset-2 hover:bg-slate-100"
+                  className="rounded-lg px-3 py-2 text-amber-100/90 underline decoration-amber-300/50 underline-offset-2 hover:bg-white/10"
                 >
                   Wyloguj
                 </button>
@@ -40,7 +57,7 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
             </nav>
           </div>
         </div>
-        {children}
+        <div className="flex-1">{children}</div>
       </div>
     );
   }

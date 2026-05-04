@@ -11,10 +11,18 @@ import {
 } from "@/lib/client-dashboard-menu";
 import { DashboardIcon } from "@/components/client/dashboard-icon";
 
+type PlanStrip = {
+  label: string;
+  hasPaid: boolean;
+  endsLabel: string | null;
+  freePlannerNote: boolean;
+};
+
 type DashboardShellProps = {
   userDisplayName: string;
   children: React.ReactNode;
   logoutAction: () => Promise<void>;
+  planStrip?: PlanStrip;
 };
 
 const STORAGE_COLLAPSED = "wa.dashboard.submenu.collapsed";
@@ -41,7 +49,7 @@ function readStoredLastSubcategories(): LastSubByCategory {
   }
 }
 
-export function DashboardShell({ userDisplayName, children, logoutAction }: DashboardShellProps) {
+export function DashboardShell({ userDisplayName, children, logoutAction, planStrip }: DashboardShellProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -219,6 +227,24 @@ export function DashboardShell({ userDisplayName, children, logoutAction }: Dash
       </header>
 
       <main className="mx-auto mt-4 w-[96vw] max-w-[3200px] pb-10">
+        {planStrip ? (
+          <div className="mb-3 rounded-2xl border border-[var(--wa-dash-border)] bg-[#f4f7ff] px-4 py-3 text-sm text-[var(--wa-dash-navy)] shadow-sm sm:px-5">
+            <p>
+              <span className="font-semibold">Twój plan:</span> {planStrip.label}
+              {planStrip.hasPaid && planStrip.endsLabel ? (
+                <span className="text-[var(--wa-dash-muted)]">
+                  {" "}
+                  · dostęp do {planStrip.endsLabel}
+                </span>
+              ) : null}
+            </p>
+            {planStrip.freePlannerNote ? (
+              <p className="mt-1 text-xs text-[var(--wa-dash-muted)]">
+                Plan darmowy: lista gości, budżet i dane planera są zerowane co tydzień (konto pozostaje).
+              </p>
+            ) : null}
+          </div>
+        ) : null}
         <div className="flex items-start gap-3">
           {activeCategory?.subcategories?.length ? (
             <aside

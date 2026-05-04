@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Playfair_Display, DM_Sans } from "next/font/google";
+import { getAppPublicUrl } from "@/lib/env/public";
 import "./globals.css";
 
 /** Nagłówki marketingu — lekki, „weselny” charakter */
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
   },
   description:
     "Jedno miejsce na plan wesela, gości, RSVP, harmonogram, budżet i wspomnienia — w rozwijanej, spójnej marce od Weddingassistant i Weddinfo.",
-  metadataBase: new URL("https://weddingassistant.pl"),
+  metadataBase: new URL(getAppPublicUrl()),
   openGraph: { siteName: "Weddingassistant.pl" },
   robots: { index: true, follow: true },
 };

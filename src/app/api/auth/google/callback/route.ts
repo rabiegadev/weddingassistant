@@ -1,7 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { Prisma, SessionScope } from "@prisma/client";
-import { getAppPublicUrl } from "@/lib/env/public";
 import { getGoogleOAuthSecrets } from "@/lib/auth/google-config";
 import {
   GOOGLE_OAUTH_PKCE_COOKIE,
@@ -18,10 +17,10 @@ import {
 
 function redirectWithCookieClear(
   path: string,
+  origin: string,
   clearPkce: boolean
 ): NextResponse {
-  const base = getAppPublicUrl();
-  const res = NextResponse.redirect(new URL(path, base));
+  const res = NextResponse.redirect(new URL(path, origin));
   if (clearPkce) {
     res.cookies.delete(GOOGLE_OAUTH_PKCE_COOKIE);
   }
@@ -29,22 +28,23 @@ function redirectWithCookieClear(
 }
 
 export async function GET(req: Request) {
-  const base = getAppPublicUrl();
+  const origin = new URL(req.url).origin;
+  const redirectUri = `${origin}/api/auth/google/callback`;
   const secrets = getGoogleOAuthSecrets();
   if (!secrets) {
-    return redirectWithCookieClear("/logowanie?k=client&ge=cfg", true);
+    return redirectWithCookieClear("/logowanie?k=client&ge=cfg", origin, true);
   }
 
   const url = new URL(req.url);
   const oauthError = url.searchParams.get("error");
   if (oauthError === "access_denied") {
-    return redirectWithCookieClear("/logowanie?k=client&ge=denied", true);
+    return redirectWithCookieClear("/logowanie?k=client&ge=denied", origin, true);
   }
 
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
   if (!code || !state) {
-    return redirectWithCookieClear("/logowanie?k=client&ge=state", true);
+    return redirectWithCookieClear("/logowanie?k=client&ge=state", origin, true);
   }
 
   const jar = await cookies();
@@ -52,27 +52,27 @@ export async function GET(req: Request) {
 
   const payload = raw ? unpackGooglePkceCookie(raw, secrets.cookieSecret) : null;
   if (!payload || payload.state !== state) {
-    return redirectWithCookieClear("/logowanie?k=client&ge=state", true);
+    return redirectWithCookieClear("/logowanie?k=client&ge=state", origin, true);
   }
 
   try {
-    const exchanged = await exchangeGoogleCode(secrets, code, payload.codeVerifier);
+    const exchanged = await exchangeGoogleCode(secrets, code, payload.codeVerifier, redirectUri);
     if ("error" in exchanged) {
-      return redirectWithCookieClear("/logowanie?k=client&ge=token", true);
+      return redirectWithCookieClear("/logowanie?k=client&ge=token", origin, true);
     }
 
     const profile = await fetchGoogleUserInfo(exchanged.access_token);
     if (!profile) {
-      return redirectWithCookieClear("/logowanie?k=client&ge=profile", true);
+      return redirectWithCookieClear("/logowanie?k=client&ge=profile", origin, true);
     }
 
     const auth = await upsertClientUserFromGoogle(profile);
     if (!auth.ok) {
-      return redirectWithCookieClear(`/logowanie?k=client&ge=${auth.redirectCode}`, true);
+      return redirectWithCookieClear(`/logowanie?k=client&ge=${auth.redirectCode}`, origin, true);
     }
 
     const { token } = await createClientSessionForUserId(auth.userId);
-    const res = NextResponse.redirect(new URL("/dashboard", base));
+    const res = NextResponse.redirect(new URL("/dashboard", origin));
     res.cookies.delete(GOOGLE_OAUTH_PKCE_COOKIE);
     res.cookies.set(
       COOKIE_NAME_CLIENT,
@@ -83,8 +83,8 @@ export async function GET(req: Request) {
   } catch (err) {
     console.error("[api/auth/google/callback]", err);
     if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
-      return redirectWithCookieClear("/logowanie?k=client&ge=duplicate", true);
+      return redirectWithCookieClear("/logowanie?k=client&ge=duplicate", origin, true);
     }
-    return redirectWithCookieClear("/logowanie?k=client&ge=server", true);
+    return redirectWithCookieClear("/logowanie?k=client&ge=server", origin, true);
   }
 }

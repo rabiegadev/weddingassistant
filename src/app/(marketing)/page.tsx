@@ -6,6 +6,7 @@ import { HomeOfferSection } from "@/components/marketing/home-offer-section";
 import { HomeRegisterCta } from "@/components/marketing/home-register-cta";
 import { HomeToolDemoSection } from "@/components/marketing/home-tool-demo-section";
 import { HomeWeddingSitesSection } from "@/components/marketing/home-wedding-sites-section";
+import { HomeContactForm } from "@/components/marketing/home-contact-form";
 
 function OfferSectionFallback() {
   return (
@@ -193,6 +194,7 @@ export default function HomePage() {
               </a>
             </li>
           </ul>
+          <HomeContactForm />
         </div>
       </section>
 

@@ -7,7 +7,7 @@ import { z } from "zod";
 import { hashPassword, verifyPassword } from "@/lib/auth/password";
 import { prisma } from "@/lib/db";
 import { hashSessionTokenToHex, createOpaqueSessionToken } from "@/lib/crypto/session-token";
-import { getAppPublicUrl } from "@/lib/env/public";
+import { getSiteUrlFromHeaders } from "@/lib/env/public";
 import { getAdmin2faEntryPath } from "@/lib/auth/mfa-routing";
 import { rateLimitOrThrow } from "@/lib/rate-limit";
 import { sendMailIfConfigured, parseAdminRecipientList } from "@/lib/mail/send";
@@ -89,6 +89,7 @@ export async function registerClientAction(
       name: parsed.data.name,
       passwordHash,
       role: UserRole.CLIENT,
+      clientProfile: { create: {} },
     },
   });
   const raw = createOpaqueSessionToken();
@@ -97,7 +98,8 @@ export async function registerClientAction(
   await prisma.emailVerificationToken.create({
     data: { userId: u.id, tokenHash: th, expiresAt: expires },
   });
-  const link = `${getAppPublicUrl()}/api/auth/verify-email?token=${encodeURIComponent(raw)}`;
+  const site = await getSiteUrlFromHeaders();
+  const link = `${site}/api/auth/verify-email?token=${encodeURIComponent(raw)}`;
   const mail = await sendMailIfConfigured({
     to: u.email,
     subject: "Potwierdź rejestrację — Weddingassistant",

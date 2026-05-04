@@ -1,6 +1,5 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { getAppPublicUrl } from "@/lib/env/public";
 import { getGoogleOAuthSecrets } from "@/lib/auth/google-config";
 import {
   COOKIE_MAX_AGE_SEC,
@@ -10,11 +9,11 @@ import {
 import { buildGoogleAuthorizeUrl, randomUrlSafeString } from "@/lib/auth/google-oauth-flow";
 import { rateLimitOrThrow } from "@/lib/rate-limit";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const origin = new URL(request.url).origin;
   const secrets = getGoogleOAuthSecrets();
-  const base = getAppPublicUrl();
   if (!secrets) {
-    return NextResponse.redirect(new URL("/logowanie?k=client&ge=cfg", base));
+    return NextResponse.redirect(new URL("/logowanie?k=client&ge=cfg", origin));
   }
 
   const h = await headers();
@@ -22,7 +21,7 @@ export async function GET() {
   try {
     await rateLimitOrThrow(`go:${ip}`, "googleOAuth");
   } catch {
-    return NextResponse.redirect(new URL("/logowanie?k=client&ge=limit", base));
+    return NextResponse.redirect(new URL("/logowanie?k=client&ge=limit", origin));
   }
 
   const state = randomUrlSafeString(24);
@@ -36,7 +35,8 @@ export async function GET() {
     secrets.cookieSecret
   );
 
-  const authorize = buildGoogleAuthorizeUrl(secrets, state, codeVerifier);
+  const redirectUri = `${origin}/api/auth/google/callback`;
+  const authorize = buildGoogleAuthorizeUrl(secrets, state, codeVerifier, redirectUri);
   const res = NextResponse.redirect(authorize);
   res.cookies.set(GOOGLE_OAUTH_PKCE_COOKIE, packed, {
     httpOnly: true,

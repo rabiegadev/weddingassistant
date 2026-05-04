@@ -1,5 +1,6 @@
 "use client";
 
+import { PlanTier } from "@prisma/client";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import type { savePackageAction } from "@/app/actions/packages";
@@ -17,6 +18,8 @@ type Pkg = {
   features: string;
   sortOrder: number;
   isPublished: boolean;
+  planTier: PlanTier;
+  postWeddingAccessMonths: number | null;
 };
 
 type Props = {
@@ -76,6 +79,38 @@ export function PackageForm({ action, initial: init }: Props) {
             name="description"
             defaultValue={init?.description ?? ""}
             required
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-slate-600" htmlFor="tier">
+            Tier planu (workflow)
+          </label>
+          <select
+            id="tier"
+            name="planTier"
+            className="mt-0.5 w-full max-w-md rounded border border-slate-300 bg-white px-2 py-1.5 text-slate-900 shadow-sm"
+            defaultValue={init?.planTier ?? PlanTier.FREE}
+          >
+            {Object.values(PlanTier).map((v) => (
+              <option value={v} key={v}>
+                {v}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-slate-600" htmlFor="pwm">
+            Miesiące dostępu po dacie ślubu (puste = brak / Free)
+          </label>
+          <input
+            className="mt-0.5 w-32 rounded border border-slate-300 bg-white px-2 py-1.5 text-slate-900 shadow-sm"
+            id="pwm"
+            name="postWeddingAccessMonths"
+            type="number"
+            min={0}
+            max={36}
+            placeholder="np. 6"
+            defaultValue={init?.postWeddingAccessMonths ?? ""}
           />
         </div>
         <div>

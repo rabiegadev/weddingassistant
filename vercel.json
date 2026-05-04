@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/free-planner-reset",
+      "schedule": "0 4 * * 0"
+    }
+  ]
+}

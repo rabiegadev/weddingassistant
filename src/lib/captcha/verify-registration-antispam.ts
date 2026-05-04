@@ -15,7 +15,8 @@ export async function verifyRegistrationAntiSpam(
 
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
   const turnstileSecret = process.env.TURNSTILE_SECRET_KEY?.trim();
-  if (siteKey && turnstileSecret) {
+  /** Na localhost klucze produkcyjnego Turnstile zwykle nie przechodzą (domena). */
+  if (siteKey && turnstileSecret && process.env.NODE_ENV !== "development") {
     const response = (formData.get("cf-turnstile-response") as string | null)?.trim() ?? "";
     if (!response) {
       return { ok: false, error: "Potwierdź pole weryfikacji (Cloudflare) poniżej formularza." };

@@ -1,4 +1,5 @@
 import { UserRole } from "@prisma/client";
+import { ensureClientProfile } from "@/lib/client-profile/ensure";
 import { prisma } from "@/lib/db";
 import type { GoogleUserInfo } from "@/lib/auth/google-oauth-flow";
 
@@ -26,6 +27,7 @@ export async function upsertClientUserFromGoogle(profile: GoogleUserInfo): Promi
         emailVerifiedAt: bySub.emailVerifiedAt ?? new Date(),
       },
     });
+    await ensureClientProfile(bySub.id);
     return { ok: true, userId: bySub.id };
   }
 
@@ -45,6 +47,7 @@ export async function upsertClientUserFromGoogle(profile: GoogleUserInfo): Promi
         name: byEmail.name ?? profile.name ?? undefined,
       },
     });
+    await ensureClientProfile(byEmail.id);
     return { ok: true, userId: byEmail.id };
   }
 
@@ -56,6 +59,7 @@ export async function upsertClientUserFromGoogle(profile: GoogleUserInfo): Promi
       googleSub: profile.sub,
       passwordHash: null,
       emailVerifiedAt: new Date(),
+      clientProfile: { create: {} },
     },
   });
   return { ok: true, userId: created.id };

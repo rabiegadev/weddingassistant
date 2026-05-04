@@ -5,6 +5,7 @@ import { getFullAdminSession } from "@/lib/auth/session";
 import { orderStatusPl } from "@/lib/mail/order-notify";
 import { OrderMessageForm } from "@/components/shared/order-message-form";
 import { AdminOrderStatusForm } from "@/components/admin/order-status-form";
+import { AdminOrderEditForm } from "@/components/admin/order-edit-form";
 
 export const dynamic = "force-dynamic";
 
@@ -20,18 +21,21 @@ export default async function AdminZamowieniePage({ params }: P) {
     return null;
   }
   const { id } = await params;
-  const o = await prisma.order.findUnique({
-    where: { id },
-    include: {
-      user: { select: { email: true, name: true } },
-      package: true,
-      messages: {
-        orderBy: { createdAt: "asc" },
-        include: { author: { select: { email: true, name: true } } },
+  const [o, packages] = await Promise.all([
+    prisma.order.findUnique({
+      where: { id },
+      include: {
+        user: { select: { email: true, name: true } },
+        package: true,
+        messages: {
+          orderBy: { createdAt: "asc" },
+          include: { author: { select: { email: true, name: true } } },
+        },
+        events: { orderBy: { createdAt: "asc" } },
       },
-      events: { orderBy: { createdAt: "asc" } },
-    },
-  });
+    }),
+    prisma.package.findMany({ orderBy: { sortOrder: "asc" } }),
+  ]);
   if (!o) {
     notFound();
   }
@@ -45,6 +49,18 @@ export default async function AdminZamowieniePage({ params }: P) {
       <h2 className="mt-1 font-sans text-lg font-semibold text-slate-800">{o.package.name}</h2>
       <p className="text-sm text-slate-600">Klient: {o.user.email} · {fmt(o.totalCents)}</p>
       <p className="text-xs text-slate-500">Aktualny: {orderStatusPl(o.status)}</p>
+      <section className="mt-6 max-w-2xl rounded border border-slate-200 bg-white p-4 shadow-sm">
+        <h3 className="text-sm font-medium text-slate-800">Korekta kwoty / pakietu (operacyjnie)</h3>
+        <p className="mt-1 text-xs text-slate-500">
+          Nie zmienia rekordu płatności u operatora — używaj świadomie przy rabatach lub korektach.
+        </p>
+        <AdminOrderEditForm
+          orderId={o.id}
+          totalCents={o.totalCents}
+          packageId={o.packageId}
+          packages={packages.map((p) => ({ id: p.id, name: p.name }))}
+        />
+      </section>
       <section className="mt-6 max-w-2xl rounded border border-slate-200 bg-white p-4 shadow-sm">
         <h3 className="text-sm font-medium text-slate-800">Zmień status</h3>
         <AdminOrderStatusForm orderId={o.id} current={o.status} />
