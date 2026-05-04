@@ -17,7 +17,7 @@ export {
   ADMIN_SESSION_MAX_AGE_SEC,
 } from "@/lib/auth/session-constants";
 
-type UserPublic = { id: string; email: string; role: UserRole };
+export type UserPublic = { id: string; email: string; name: string | null; role: UserRole };
 
 export type AppSession = {
   id: string;
@@ -27,7 +27,7 @@ export type AppSession = {
 };
 
 function toUserPublic(u: User): UserPublic {
-  return { id: u.id, email: u.email, role: u.role };
+  return { id: u.id, email: u.email, name: u.name, role: u.role };
 }
 
 async function findSessionByToken(

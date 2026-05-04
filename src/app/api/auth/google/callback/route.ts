@@ -23,7 +23,7 @@ function redirectWithCookieClear(
   const base = getAppPublicUrl();
   const res = NextResponse.redirect(new URL(path, base));
   if (clearPkce) {
-    res.cookies.delete(GOOGLE_OAUTH_PKCE_COOKIE, { path: "/" });
+    res.cookies.delete(GOOGLE_OAUTH_PKCE_COOKIE);
   }
   return res;
 }
@@ -72,7 +72,7 @@ export async function GET(req: Request) {
 
   const { token } = await createClientSessionForUserId(auth.userId);
   const res = NextResponse.redirect(new URL("/dashboard", base));
-  res.cookies.delete(GOOGLE_OAUTH_PKCE_COOKIE, { path: "/" });
+  res.cookies.delete(GOOGLE_OAUTH_PKCE_COOKIE);
   res.cookies.set(
     COOKIE_NAME_CLIENT,
     token,
