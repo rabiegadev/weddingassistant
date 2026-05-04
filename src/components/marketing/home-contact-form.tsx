@@ -2,7 +2,15 @@
 
 import { useState } from "react";
 
-export function HomeContactForm() {
+type HomeContactFormProps = {
+  /** Kotwica / ścieżka zapisana przy zapytaniu (np. strona główna #kontakt). */
+  sourcePage?: string;
+  className?: string;
+  /** Mniejsze pola — układ obok kolumny z telefonem. */
+  compact?: boolean;
+};
+
+export function HomeContactForm({ sourcePage = "/", className = "", compact = false }: HomeContactFormProps) {
   const [pending, setPending] = useState(false);
   const [msg, setMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
 
@@ -16,7 +24,7 @@ export function HomeContactForm() {
       email: String(fd.get("email") ?? "").trim(),
       phone: String(fd.get("phone") ?? "").trim() || undefined,
       message: String(fd.get("message") ?? "").trim(),
-      sourcePage: "/",
+      sourcePage,
     };
     try {
       const res = await fetch("/api/contact", {
@@ -39,7 +47,10 @@ export function HomeContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-6 max-w-xl space-y-3 text-left text-sm text-[#2B2B2B]">
+    <form
+      onSubmit={onSubmit}
+      className={`space-y-3 text-left text-sm text-[#2B2B2B] ${compact ? "max-w-none" : "mt-6 max-w-xl"} ${className}`}
+    >
       <div>
         <label className="block text-xs font-medium text-[#5A5A5A]" htmlFor="hc-name">
           Imię i nazwisko / para
@@ -85,7 +96,7 @@ export function HomeContactForm() {
           id="hc-msg"
           name="message"
           required
-          rows={4}
+          rows={compact ? 3 : 4}
           maxLength={8000}
           className="mt-1 w-full rounded-lg border border-[#e8e2dc] bg-white px-3 py-2 outline-none ring-[#B8955C]/25 focus:ring-2"
         />

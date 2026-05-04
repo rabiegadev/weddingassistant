@@ -161,40 +161,46 @@ export default function HomePage() {
 
       <section
         id="kontakt"
-        className="flex min-h-wa-section flex-col scroll-mt-wa border-b border-[#e8e2dc]/70 bg-white"
+        className="scroll-mt-wa border-b border-[#e8e2dc]/70 bg-white"
         aria-labelledby="sekcja-kontakt"
       >
-        <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 sm:py-14">
+        <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
           <h2 className="font-wa-display text-xl font-medium tracking-[0.02em] text-[#2E2A26] sm:text-2xl" id="sekcja-kontakt">
             Kontakt
           </h2>
-          <p className="mt-2 text-sm text-[#4A4A4A] sm:text-base">Masz pytania o pakiety lub współpracę? Napisz lub zadzwoń.</p>
-          <ul className="mt-4 space-y-2 text-sm text-[#2B2B2B]">
-            <li>
-              <span className="text-[#5A5A5A]">E-mail: </span>
-              <a className="font-medium text-[#6B5427] underline" href="mailto:kontakt@weddingassistant.pl">
-                kontakt@weddingassistant.pl
-              </a>
-            </li>
-            <li>
-              <span className="text-[#5A5A5A]">Telefon: </span>
-              <a className="font-medium text-[#2B2B2B] underline" href="tel:+48793745717">
-                +48 793 745 717
-              </a>
-            </li>
-            <li>
-              <span className="text-[#5A5A5A]">Studio: </span>
-              <a
-                className="font-medium text-[#6B5427] underline"
-                href="https://rabiegadevelopment.pl"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                rabiegadevelopment.pl
-              </a>
-            </li>
-          </ul>
-          <HomeContactForm />
+          <p className="mt-2 max-w-2xl text-sm text-[#4A4A4A] sm:text-base">
+            Masz pytania o pakiety lub współpracę? Napisz przez formularz lub bezpośrednio — odpowiadamy możliwie szybko.
+          </p>
+          <div className="mt-6 grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-10">
+            <div>
+              <ul className="space-y-2.5 text-sm text-[#2B2B2B]">
+                <li className="flex flex-wrap items-baseline gap-x-2">
+                  <span className="shrink-0 text-[#5A5A5A]">E-mail</span>
+                  <a className="font-medium text-[#6B5427] underline break-all" href="mailto:kontakt@weddingassistant.pl">
+                    kontakt@weddingassistant.pl
+                  </a>
+                </li>
+                <li className="flex flex-wrap items-baseline gap-x-2">
+                  <span className="shrink-0 text-[#5A5A5A]">Telefon</span>
+                  <a className="font-medium text-[#2B2B2B] underline" href="tel:+48793745717">
+                    +48 793 745 717
+                  </a>
+                </li>
+                <li className="flex flex-wrap items-baseline gap-x-2">
+                  <span className="shrink-0 text-[#5A5A5A]">Studio</span>
+                  <a
+                    className="font-medium text-[#6B5427] underline"
+                    href="https://rabiegadevelopment.pl"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    rabiegadevelopment.pl
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <HomeContactForm sourcePage="/#kontakt" compact className="rounded-xl border border-[#ece6dc] bg-[#fdfcfa] p-4 sm:p-5" />
+          </div>
         </div>
       </section>
 
