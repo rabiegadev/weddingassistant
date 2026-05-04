@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { OrderStatus } from "@prisma/client";
 import { updateOrderStatusAction, type OrderActionState } from "@/app/actions/orders";
-import { orderStatusPl } from "@/lib/mail/order-notify";
+import { orderStatusPl } from "@/lib/orders/order-status-pl";
 
 const init: OrderActionState = undefined;
 

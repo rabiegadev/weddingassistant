@@ -1,4 +1,3 @@
-import { OrderStatus } from "@prisma/client";
 import { getAppPublicUrl } from "@/lib/env/public";
 import { sendMailIfConfigured, parseAdminRecipientList } from "@/lib/mail/send";
 import { prisma } from "@/lib/db";
@@ -49,16 +48,3 @@ export async function notifyClientOnOrderUpdate(
   });
 }
 
-export function orderStatusPl(s: OrderStatus): string {
-  const m: Record<OrderStatus, string> = {
-    DRAFT: "Szkic",
-    SUBMITTED: "Złożone (w kolejce obsługi)",
-    AWAITING_PAYMENT: "Oczekuje na płatność",
-    PENDING_REVIEW: "Oczekuje na decyzję obsługi",
-    APPROVED: "Zatwierdzone / opłacone",
-    IN_PROGRESS: "W trakcie realizacji",
-    COMPLETED: "Zamknięte",
-    CANCELLED: "Anulowane",
-  };
-  return m[s] ?? s;
-}

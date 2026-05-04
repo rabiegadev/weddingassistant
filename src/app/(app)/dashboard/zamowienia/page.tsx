@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { getClientSession } from "@/lib/auth/session";
-import { orderStatusPl } from "@/lib/mail/order-notify";
+import { orderStatusPl } from "@/lib/orders/order-status-pl";
 import { CreateOrderForm } from "@/components/client/create-order-form";
 import { redirect } from "next/navigation";
 import { createOrderForClientAction } from "@/app/actions/orders";

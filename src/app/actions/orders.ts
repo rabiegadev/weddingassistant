@@ -6,11 +6,8 @@ import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getClientSession, getFullAdminSession } from "@/lib/auth/session";
 import { writeAuditLog } from "./audit";
-import {
-  notifyAdminsOnClientMessage,
-  notifyClientOnOrderUpdate,
-  orderStatusPl,
-} from "@/lib/mail/order-notify";
+import { notifyAdminsOnClientMessage, notifyClientOnOrderUpdate } from "@/lib/mail/order-notify";
+import { orderStatusPl } from "@/lib/orders/order-status-pl";
 import { activateSubscriptionFromPaidOrder } from "@/lib/subscriptions/activate-from-order";
 
 const msg = z.string().min(1, "Wpisz treść").max(8000, "Zbyt długa wiadomość");

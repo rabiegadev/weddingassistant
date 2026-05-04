@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { getFullAdminSession } from "@/lib/auth/session";
-import { orderStatusPl } from "@/lib/mail/order-notify";
+import { orderStatusPl } from "@/lib/orders/order-status-pl";
 
 export const dynamic = "force-dynamic";
 

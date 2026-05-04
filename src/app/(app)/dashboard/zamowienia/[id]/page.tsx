@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { OrderStatus, PaymentStatus, PlanTier } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { getClientSession } from "@/lib/auth/session";
-import { orderStatusPl } from "@/lib/mail/order-notify";
+import { orderStatusPl } from "@/lib/orders/order-status-pl";
 import { isPrzelewy24Configured } from "@/lib/payments/przelewy24/config";
 import { isPayuConfigured } from "@/lib/payments/payu/config";
 import { StartPrzelewy24Payment } from "@/components/client/start-przelewy24-payment";

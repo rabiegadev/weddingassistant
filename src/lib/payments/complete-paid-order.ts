@@ -1,6 +1,7 @@
 import { OrderStatus, PaymentStatus, PaymentProvider } from "@prisma/client";
 import { prisma } from "@/lib/db";
-import { notifyClientOnOrderUpdate, orderStatusPl } from "@/lib/mail/order-notify";
+import { notifyClientOnOrderUpdate } from "@/lib/mail/order-notify";
+import { orderStatusPl } from "@/lib/orders/order-status-pl";
 import { activateSubscriptionFromPaidOrder } from "@/lib/subscriptions/activate-from-order";
 
 /**

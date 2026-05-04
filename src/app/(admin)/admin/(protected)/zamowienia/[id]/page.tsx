@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { getFullAdminSession } from "@/lib/auth/session";
-import { orderStatusPl } from "@/lib/mail/order-notify";
+import { orderStatusPl } from "@/lib/orders/order-status-pl";
 import { OrderMessageForm } from "@/components/shared/order-message-form";
 import { AdminOrderStatusForm } from "@/components/admin/order-status-form";
 import { AdminOrderEditForm } from "@/components/admin/order-edit-form";
