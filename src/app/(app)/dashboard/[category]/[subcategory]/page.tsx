@@ -8,6 +8,12 @@ import { MojPakietView, WszystkiePakietyView } from "@/components/client/moj-pak
 import { getClientSession } from "@/lib/auth/session";
 import { getClientEntitlements } from "@/lib/entitlements/resolve";
 import { getModuleGateForPath, planLimitsBanner } from "@/lib/dashboard/module-gate";
+import { prisma } from "@/lib/db";
+import { BasicInfoForm } from "@/components/client/basic-info-form";
+import {
+  countBasicInfoProgress,
+  parseBasicInfoFromInfoJson,
+} from "@/lib/client-profile/basic-info";
 
 type PageProps = {
   params: Promise<{ category: string; subcategory: string }>;
@@ -45,6 +51,71 @@ export default async function DashboardSubcategoryPage({ params }: PageProps) {
         <WszystkiePakietyView />
       </div>
     );
+  }
+
+  if (categorySlug === "baza-informacji" && subcategorySlug === "widok-glowny") {
+    const profile = await prisma.clientProfile.findUnique({
+      where: { userId: session.user.id },
+      select: { infoJson: true },
+    });
+    const basic = parseBasicInfoFromInfoJson(profile?.infoJson);
+    const progress = countBasicInfoProgress(basic);
+    const tips: string[] = [];
+    if (basic.weddingDate.trim() === "") {
+      tips.push("ustaw datę ślubu");
+    }
+    if (basic.ceremonyTime.trim() === "") {
+      tips.push("uzupełnij godzinę ślubu");
+    }
+    if (basic.weddingPartyTime.trim() === "") {
+      tips.push("uzupełnij godzinę wesela");
+    }
+    if (basic.weddingVenueName.trim() === "" || basic.weddingVenueAddress.trim() === "") {
+      tips.push("uzupełnij lokalizację wesela");
+    }
+
+    return (
+      <div className="space-y-4">
+        <header className="rounded-xl border border-[var(--wa-dash-border)] bg-[#f7f9ff] p-4">
+          <h1 className="text-lg font-semibold text-[var(--wa-dash-navy)] sm:text-xl">Baza informacji</h1>
+          <p className="mt-1 text-sm text-[var(--wa-dash-muted)]">
+            Tu docelowo zobaczysz statystyki kompletności formularzy informacyjnych oraz podsumowanie braków.
+          </p>
+        </header>
+        <div className="grid gap-3 lg:grid-cols-3">
+          <article className="rounded-xl border border-[var(--wa-dash-border)] bg-white p-4 shadow-[0_8px_20px_rgba(56,72,120,0.08)]">
+            <h2 className="text-sm font-semibold text-[var(--wa-dash-navy)]">Wypełnienie formularzy</h2>
+            <p className="mt-2 text-2xl font-semibold text-[var(--wa-dash-text)]">{progress.percent}%</p>
+            <p className="mt-1 text-sm text-[var(--wa-dash-muted)]">
+              Wypełniono {progress.filled} z {progress.total} kluczowych pól.
+            </p>
+          </article>
+          <article className="rounded-xl border border-[var(--wa-dash-border)] bg-white p-4 shadow-[0_8px_20px_rgba(56,72,120,0.08)] lg:col-span-2">
+            <h2 className="text-sm font-semibold text-[var(--wa-dash-navy)]">Co pozostało</h2>
+            {progress.remaining > 0 ? (
+              <p className="mt-2 text-sm text-[var(--wa-dash-muted)]">
+                Pozostało do uzupełnienia około {progress.remaining} pól. Najbliższe kroki:{" "}
+                <span className="font-medium text-[var(--wa-dash-text)]">{tips.join(", ") || "przejdź do informacji podstawowych"}</span>.
+              </p>
+            ) : (
+              <p className="mt-2 text-sm text-emerald-700">
+                Świetnie — podstawowe informacje są kompletne. Możesz przejść do kolejnych sekcji i doprecyzować szczegóły.
+              </p>
+            )}
+          </article>
+        </div>
+      </div>
+    );
+  }
+
+  if (categorySlug === "baza-informacji" && subcategorySlug === "informacje-podstawowe") {
+    const profile = await prisma.clientProfile.findUnique({
+      where: { userId: session.user.id },
+      select: { infoJson: true },
+    });
+    const basic = parseBasicInfoFromInfoJson(profile?.infoJson);
+    const hasSavedData = profile?.infoJson != null && profile.infoJson.trim() !== "";
+    return <BasicInfoForm initialData={basic} hasSavedData={hasSavedData} />;
   }
 
   const ent = await getClientEntitlements(session.user.id);

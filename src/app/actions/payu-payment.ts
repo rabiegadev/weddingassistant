@@ -59,10 +59,7 @@ export async function startPayuPaymentAction(_prev: PayuStartState, formData: Fo
   if (order.package.planTier === PlanTier.FREE || order.totalCents <= 0) {
     return { error: "Ten pakiet nie wymaga płatności online." };
   }
-  const payable =
-    order.status === OrderStatus.AWAITING_PAYMENT ||
-    order.status === OrderStatus.SUBMITTED ||
-    order.status === OrderStatus.PENDING_REVIEW;
+  const payable = order.status === OrderStatus.AWAITING_PAYMENT;
   if (!payable) {
     return { error: "To zamówienie nie oczekuje już na płatność (sprawdź status)." };
   }

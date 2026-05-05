@@ -11,8 +11,8 @@ const THUMB = ["/images/weddingweb.png", "/images/domain2.png", "/images/checkli
 
 export default function RealizacjePage() {
   return (
-    <div className="min-h-0 border-b border-[#e8e2dc]/70 bg-[#f9f6f0]">
-      <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+    <main className="border-b border-[#e8e2dc]/70 bg-[#f9f6f0]">
+      <div className="mx-auto w-full max-w-6xl px-4 py-10 pb-20 sm:px-6 sm:py-14 sm:pb-24">
         <nav className="text-sm text-[#6b645c]">
           <Link href="/" className="font-medium text-[#6B5427] underline-offset-2 hover:underline">
             Strona główna
@@ -75,6 +75,6 @@ export default function RealizacjePage() {
           </a>
         </p>
       </div>
-    </div>
+    </main>
   );
 }

@@ -27,6 +27,49 @@ export async function notifyAdminsOnClientMessage(
 }
 
 /**
+ * Nowe zamówienie klienta — powiadomienie do adminów.
+ */
+export async function notifyAdminsOnNewOrder(
+  orderId: string,
+  orderLabel: string,
+  client: { email: string; name: string | null },
+  statusLabel: string
+): Promise<void> {
+  const to = parseAdminRecipientList();
+  if (to.length === 0) {
+    return;
+  }
+  const link = `${getAppPublicUrl()}/admin/zamowienia/${orderId}`;
+  const sub = `Nowe zamówienie — ${orderLabel}`;
+  const text = `Klient: ${fromLabel(client)}\nStatus: ${statusLabel}\n\nOtwórz: ${link}`;
+  await Promise.all(to.map((e) => sendMailIfConfigured({ to: e, subject: sub, text, replyTo: client.email })));
+}
+
+/**
+ * Potwierdzenie złożenia zamówienia — mail do klienta.
+ */
+export async function notifyClientOnOrderCreated(
+  userId: string,
+  orderId: string,
+  orderLabel: string,
+  statusLabel: string
+): Promise<void> {
+  const u = await prisma.user.findUnique({ where: { id: userId } });
+  if (!u) {
+    return;
+  }
+  const link = `${getAppPublicUrl()}/dashboard/zamowienia/${orderId}`;
+  await sendMailIfConfigured({
+    to: u.email,
+    subject: `Potwierdzenie zamówienia — ${orderLabel}`,
+    text:
+      `Dziękujemy, Twoje zamówienie zostało przyjęte.\n` +
+      `Aktualny status: ${statusLabel}\n\n` +
+      `Szczegóły: ${link}`,
+  });
+}
+
+/**
  * Odpowiedź admina / zmiana statusu: e-mail do klienta.
  */
 export async function notifyClientOnOrderUpdate(

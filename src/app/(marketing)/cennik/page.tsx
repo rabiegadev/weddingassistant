@@ -17,6 +17,22 @@ function parseFeatures(f: string): { label: string; on: boolean }[] {
   }
 }
 
+function featureLabelPl(raw: string): string {
+  const map: Record<string, string> = {
+    maxGuests: "Limit gości wg pakietu",
+    maxTables: "Limit stołów wg pakietu",
+    qr: "QR dla gości",
+    gallery: "Galeria",
+    weddingPage: "Strona weselna",
+    rsvp: "RSVP",
+    requiresTemplateId: "Wybór szablonu",
+    fulfillmentType: "Tryb realizacji",
+    revisionsMajorMax: "Duże poprawki w cenie",
+    revisionsMinorFree: "Drobne poprawki bez dopłat",
+  };
+  return map[raw] ?? raw;
+}
+
 function formatCents(n: number): string {
   return (n / 100).toLocaleString("pl-PL", { style: "currency", currency: "PLN" });
 }
@@ -27,8 +43,8 @@ export default async function CennikPage() {
     orderBy: { sortOrder: "asc" },
   });
   return (
-    <div className="min-h-0 border-b border-[#e8e2dc]/70 bg-white">
-      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
+    <main className="border-b border-[#dcc9ab]/70 bg-[#f2e8da]">
+      <div className="mx-auto w-full max-w-6xl px-4 py-8 pb-20 sm:px-6 sm:py-10 sm:pb-24">
         <h1 className="font-wa-display text-balance text-2xl font-semibold tracking-[0.02em] text-[#2E2A26] sm:text-3xl">
           Cennik
         </h1>
@@ -48,15 +64,17 @@ export default async function CennikPage() {
               return (
                 <li
                   key={p.id}
-                  className="flex flex-col rounded-2xl border border-[#e8e2dc] bg-gradient-to-b from-white to-[#fdfcfa] p-5 shadow-sm"
+                  className="group flex flex-col rounded-2xl border border-[#d6c1a1]/75 bg-gradient-to-b from-[#fffdf9] to-[#f8f0e5] p-5 shadow-[0_12px_28px_-22px_rgba(62,44,18,0.82)] transition hover:-translate-y-1 hover:shadow-[0_22px_38px_-22px_rgba(62,44,18,0.82)]"
                 >
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#7f6a4c]">Oferta</p>
                   <h2 className="font-wa-display text-lg font-semibold text-[#2E2A26]">{p.name}</h2>
+                  <div className="my-3 h-px bg-gradient-to-r from-[#ccb08b]/80 via-[#e5d5bf]/80 to-transparent" />
                   <p className="mt-2 font-wa-display text-2xl font-semibold text-[#6B5427]">{formatCents(p.priceCents)}</p>
-                  <p className="mt-2 line-clamp-4 text-sm leading-relaxed text-[#4A4A4A]">{p.description}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-[#4A4A4A]">{p.description}</p>
                   {feats.length > 0 ? (
-                    <ul className="mt-3 list-disc space-y-0.5 pl-4 text-sm text-[#2B2B2B]">
+                    <ul className="mt-3 space-y-1.5 text-sm text-[#2B2B2B]">
                       {feats.map((f) => (
-                        <li key={f.label}>{f.label}</li>
+                        <li key={f.label}>- {featureLabelPl(f.label)}</li>
                       ))}
                     </ul>
                   ) : null}
@@ -69,6 +87,6 @@ export default async function CennikPage() {
           </ul>
         )}
       </div>
-    </div>
+    </main>
   );
 }

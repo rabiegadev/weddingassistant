@@ -3,32 +3,22 @@ import Image from "next/image";
 import { Suspense } from "react";
 import { HomeFeaturesSection } from "@/components/marketing/home-features-section";
 import { HomeOfferSection } from "@/components/marketing/home-offer-section";
-import { HomeRegisterCta } from "@/components/marketing/home-register-cta";
 import { HomeToolDemoSection } from "@/components/marketing/home-tool-demo-section";
 import { HomeWeddingSitesSection } from "@/components/marketing/home-wedding-sites-section";
 import { HomeContactForm } from "@/components/marketing/home-contact-form";
 
 function OfferSectionFallback() {
   return (
-    <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {[1, 2, 3].map((i) => (
+    <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-5">
+      {[1, 2, 3, 4, 5].map((i) => (
         <div
           key={i}
-          className="h-64 animate-pulse rounded-2xl border border-[#e8e2dc]/60 bg-[#f3f1eb]"
+          className="h-[560px] animate-pulse rounded-2xl border border-[#d9c5a5]/60 bg-[#f3eadf]"
         />
       ))}
     </div>
   );
 }
-
-const heroPrepItems = [
-  "wypisywanie zaproszeń",
-  "rozdawanie zaproszeń",
-  "rozmieszczanie gości przy stolikach",
-  "dopinanie umów z usługodawcami",
-  "wybieranie dekoracji",
-  "spotkania z wykonawcami i tak dalej",
-] as const;
 
 function HeroBackground() {
   const blurMask =
@@ -45,7 +35,7 @@ function HeroBackground() {
         sizes="100vw"
       />
       <div
-        className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.93)_0%,rgba(255,255,255,0.78)_14%,rgba(255,255,255,0.48)_36%,rgba(255,255,255,0.18)_62%,rgba(255,255,255,0.05)_82%,rgba(255,255,255,0)_100%)]"
+        className="absolute inset-0 bg-[linear-gradient(to_right,rgba(94,72,48,0.62)_0%,rgba(120,92,62,0.48)_16%,rgba(145,111,77,0.28)_38%,rgba(170,132,91,0.16)_62%,rgba(201,161,114,0.07)_82%,rgba(255,255,255,0)_100%)]"
         aria-hidden
       />
       <div
@@ -57,8 +47,9 @@ function HeroBackground() {
   );
 }
 
-/** Lekki beż naprzemiennie z białym — bez grafik tła. */
-const SECTION_BEIGE = "bg-[#f9f6f0]";
+const SECTION_A = "bg-[#f7f1e7]"; // lekko beżowy
+const SECTION_B = "bg-[#fdfbf7]"; // brudna biel
+const SECTION_C = "bg-[#e9dccb]"; // średnio jasny brązowy
 
 export default function HomePage() {
   return (
@@ -113,7 +104,7 @@ export default function HomePage() {
 
       <section
         id="funkcje"
-        className="scroll-mt-wa border-b border-[#e8e2dc]/70 bg-white"
+        className={`scroll-mt-wa border-b border-[#e1d2bc]/70 ${SECTION_A}`}
         aria-labelledby="sekcja-funkcje"
       >
         <div className="mx-auto w-[min(100%,96vw)] max-w-[1800px] px-4 pb-4 pt-6 text-center sm:px-6 sm:pb-5 sm:pt-7 lg:text-left">
@@ -136,10 +127,10 @@ export default function HomePage() {
 
       <section
         id="oferta"
-        className={`flex min-h-wa-section flex-col scroll-mt-wa border-b border-[#e8e2dc]/70 ${SECTION_BEIGE}`}
+        className={`scroll-mt-wa border-b border-[#dcc9ab]/70 ${SECTION_A}`}
         aria-labelledby="sekcja-oferta"
       >
-        <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 sm:py-14">
+        <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14">
           <h2
             className="font-wa-display text-xl font-medium tracking-[0.02em] text-[#2E2A26] sm:text-2xl"
             id="sekcja-oferta"
@@ -161,7 +152,7 @@ export default function HomePage() {
 
       <section
         id="kontakt"
-        className="scroll-mt-wa border-b border-[#e8e2dc]/70 bg-white"
+        className={`scroll-mt-wa border-b border-[#e1d2bc]/70 ${SECTION_B}`}
         aria-labelledby="sekcja-kontakt"
       >
         <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
@@ -171,25 +162,25 @@ export default function HomePage() {
           <p className="mt-2 max-w-2xl text-sm text-[#4A4A4A] sm:text-base">
             Masz pytania o pakiety lub współpracę? Napisz przez formularz lub bezpośrednio — odpowiadamy możliwie szybko.
           </p>
-          <div className="mt-6 grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-10">
-            <div>
-              <ul className="space-y-2.5 text-sm text-[#2B2B2B]">
-                <li className="flex flex-wrap items-baseline gap-x-2">
-                  <span className="shrink-0 text-[#5A5A5A]">E-mail</span>
-                  <a className="font-medium text-[#6B5427] underline break-all" href="mailto:kontakt@weddingassistant.pl">
+          <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-stretch lg:gap-8">
+            <div className="rounded-xl border border-[#ece6dc] bg-[#fcfaf6] p-4 sm:p-5">
+              <ul className="space-y-4 text-sm text-[#2B2B2B] sm:text-base">
+                <li>
+                  <p className="text-xs font-medium uppercase tracking-wide text-[#75695d]">E-mail</p>
+                  <a className="mt-1 inline-block font-medium text-[#6B5427] underline break-all" href="mailto:kontakt@weddingassistant.pl">
                     kontakt@weddingassistant.pl
                   </a>
                 </li>
-                <li className="flex flex-wrap items-baseline gap-x-2">
-                  <span className="shrink-0 text-[#5A5A5A]">Telefon</span>
-                  <a className="font-medium text-[#2B2B2B] underline" href="tel:+48793745717">
+                <li>
+                  <p className="text-xs font-medium uppercase tracking-wide text-[#75695d]">Telefon</p>
+                  <a className="mt-1 inline-block font-medium text-[#2B2B2B] underline" href="tel:+48793745717">
                     +48 793 745 717
                   </a>
                 </li>
-                <li className="flex flex-wrap items-baseline gap-x-2">
-                  <span className="shrink-0 text-[#5A5A5A]">Studio</span>
+                <li>
+                  <p className="text-xs font-medium uppercase tracking-wide text-[#75695d]">Studio</p>
                   <a
-                    className="font-medium text-[#6B5427] underline"
+                    className="mt-1 inline-block font-medium text-[#6B5427] underline"
                     href="https://rabiegadevelopment.pl"
                     rel="noopener noreferrer"
                     target="_blank"
@@ -199,72 +190,64 @@ export default function HomePage() {
                 </li>
               </ul>
             </div>
-            <HomeContactForm sourcePage="/#kontakt" compact className="rounded-xl border border-[#ece6dc] bg-[#fdfcfa] p-4 sm:p-5" />
+            <HomeContactForm
+              sourcePage="/#kontakt"
+              compact
+              className="h-full rounded-xl border border-[#ece6dc] bg-[#fdfcfa] p-4 sm:p-5"
+            />
           </div>
         </div>
       </section>
 
-      <section
-        className={`flex min-h-wa-section flex-col border-b border-[#e8e2dc]/70 ${SECTION_BEIGE}`}
-        aria-label="Zaproszenie do rejestracji"
-      >
-        <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col items-stretch justify-center gap-3 px-4 py-10 text-center sm:px-6 sm:py-12">
-          <p className="text-sm text-[#4A4A4A] sm:text-base">Możesz zacząć od darmowego konta — bez karty płatniczej.</p>
-          <div className="pt-1">
-            <HomeRegisterCta />
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="historia"
-        className={`scroll-mt-wa border-t border-[#e8e2dc]/70 ${SECTION_BEIGE}`}
-        aria-labelledby="sekcja-historia"
-      >
-        <div className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
-          <h2
-            className="font-wa-display text-balance text-xl font-semibold tracking-[0.02em] text-[#2E2A26] sm:text-2xl"
-            id="sekcja-historia"
-          >
-            Nasza historia
+      <section className={`border-b border-[#d8c5a7]/70 ${SECTION_C}`} aria-labelledby="sekcja-faq">
+        <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+          <h2 className="font-wa-display text-xl font-medium tracking-[0.02em] text-[#2E2A26] sm:text-2xl" id="sekcja-faq">
+            FAQ
           </h2>
-          <div className="mt-6 space-y-5 text-[0.8125rem] leading-[1.68] text-[#4F4A45] sm:text-sm">
-            <p className="text-pretty font-medium text-[#3d3834]">
-              Weddingassistant — Twoje wsparcie przedweselne online
-            </p>
-            <p className="text-pretty">
-              Dziękujemy za wizytę na naszej stronie — a skoro już tutaj się widzimy… to najpewniej planujecie
-              wielkimi krokami ten piękny i&nbsp;wyczekiwany dzień!
-            </p>
-            <p className="text-pretty">
-              Tak się składa, że wraz z&nbsp;moją jeszcze wtedy narzeczoną byliśmy rok temu w&nbsp;tym samym miejscu:
-            </p>
-            <ul
-              className="list-none space-y-1.5 border-l-2 border-[#B8955C]/30 py-0.5 pl-4 text-[0.8rem] text-[#5A534C] sm:text-[0.8125rem]"
-              aria-label="Przykładowe zadania przed ślubem"
+          <p className="mt-2 max-w-2xl text-sm text-[#4f463d] sm:text-base">
+            Najczęstsze pytania o działanie pakietów, konfigurację strony weselnej i start współpracy.
+          </p>
+          <div className="mt-6 grid grid-cols-1 gap-4">
+            {[
+              {
+                q: "Czy mogę zacząć od darmowego planu i później przejść wyżej?",
+                a: "Tak. Możesz zacząć bez kosztów, a gdy będziesz gotowy, przejść na pakiet płatny bez zakładania nowego konta.",
+              },
+              {
+                q: "Czy wizytówkę weselną można dopasować do naszych danych?",
+                a: "Tak. Imiona, zdjęcia, harmonogram, adresy i najważniejsze sekcje są konfigurowane pod Waszą parę.",
+              },
+              {
+                q: "Ile trwa uruchomienie strony weselnej?",
+                a: "Dla szablonu zwykle trwa to krótko po zebraniu danych, a projekt personalizowany realizujemy według briefu i ustalonego harmonogramu.",
+              },
+              {
+                q: "Czy mogę liczyć na pomoc po starcie?",
+                a: "Tak. W ramach obsługi pomagamy we wdrożeniu, zmianach treści i bieżących pytaniach dotyczących panelu.",
+              },
+            ].map((item) => (
+              <details key={item.q} className="group rounded-xl border border-[#d0b693]/75 bg-[#f8f2e9] p-0 shadow-sm">
+                <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-left">
+                  <span className="font-wa-display text-base font-semibold text-[#2f2923]">{item.q}</span>
+                  <span className="shrink-0 text-lg leading-none text-[#8a6f48] transition group-open:rotate-45">+</span>
+                </summary>
+                <div className="border-t border-[#e2d1b8] px-4 py-3">
+                  <p className="text-sm leading-relaxed text-[#554a3f]">{item.a}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+          <div className="mt-6 flex justify-center">
+            <Link
+              href="/faq"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#B8955C] bg-white px-7 py-2.5 text-sm font-semibold text-[#4a3820] shadow-sm transition hover:bg-[#faf6ef]"
             >
-              {heroPrepItems.map((line) => (
-                <li key={line} className="flex gap-2.5 text-pretty">
-                  <span className="mt-[0.55em] h-1 w-1 shrink-0 rounded-full bg-[#B8955C]/55" aria-hidden />
-                  <span>{line}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="text-pretty">
-              Było tego tak dużo, że zdarzało się o&nbsp;czymś zapomnieć, spóźnić się, na&nbsp;ostatnią chwilę zamawiać
-              i&nbsp;tracić bardzo dużo czasu. Sprawdzałem różne aplikacje oraz serwisy, żeby wygenerować sobie
-              checklisty, zrobić nieco bardziej rozbudowany spis gości czy rozłożyć gości przy stołach — ale wszystko
-              kończyło się brakiem możliwości dopasowania do&nbsp;naszych wymagań.
-            </p>
-            <p className="text-pretty">
-              W&nbsp;związku z&nbsp;nieubłaganie pędzącym czasem postanowiłem wykorzystać swoje zainteresowania
-              i&nbsp;doświadczenie, żeby przygotować różnego rodzaju „helpery” weselne na&nbsp;własny użytek. Własny
-              użytek zmienił się w&nbsp;przesyłanie aplikacji znajomym i&nbsp;naturalną siłą rzeczy pojawił się pomysł
-              na&nbsp;udostępnienie tych narzędzi online szerszej grupie odbiorców.
-            </p>
+              Pełna lista FAQ
+            </Link>
           </div>
         </div>
       </section>
+
     </main>
   );
 }

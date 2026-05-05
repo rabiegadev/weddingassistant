@@ -6,7 +6,12 @@ import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getClientSession, getFullAdminSession } from "@/lib/auth/session";
 import { writeAuditLog } from "./audit";
-import { notifyAdminsOnClientMessage, notifyClientOnOrderUpdate } from "@/lib/mail/order-notify";
+import {
+  notifyAdminsOnClientMessage,
+  notifyAdminsOnNewOrder,
+  notifyClientOnOrderCreated,
+  notifyClientOnOrderUpdate,
+} from "@/lib/mail/order-notify";
 import { orderStatusPl } from "@/lib/orders/order-status-pl";
 import { activateSubscriptionFromPaidOrder } from "@/lib/subscriptions/activate-from-order";
 
@@ -43,7 +48,7 @@ export async function createOrderForClientAction(
     return { error: "Nieprawidłowe dane formularza (JSON)." };
   }
   const initialStatus =
-    p.planTier !== PlanTier.FREE && p.priceCents > 0 ? OrderStatus.AWAITING_PAYMENT : OrderStatus.SUBMITTED;
+    p.planTier !== PlanTier.FREE && p.priceCents > 0 ? OrderStatus.PENDING_REVIEW : OrderStatus.SUBMITTED;
 
   const o = await prisma.order.create({
     data: {
@@ -60,11 +65,13 @@ export async function createOrderForClientAction(
       fromStatus: null,
       toStatus: initialStatus,
       message:
-        initialStatus === OrderStatus.AWAITING_PAYMENT
-          ? "Zamówienie utworzone — oczekuje na płatność online."
+        initialStatus === OrderStatus.PENDING_REVIEW
+          ? "Zamówienie utworzone — oczekuje na decyzję obsługi."
           : "Zamówienie złożone z panelu klienta.",
     },
   });
+  await notifyClientOnOrderCreated(c.user.id, o.id, p.name, orderStatusPl(initialStatus));
+  await notifyAdminsOnNewOrder(o.id, p.name, { email: c.user.email, name: c.user.name }, orderStatusPl(initialStatus));
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/zamowienia", "page");
   revalidatePath("/admin/zamowienia", "page");

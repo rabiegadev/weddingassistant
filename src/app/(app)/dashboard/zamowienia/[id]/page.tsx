@@ -35,9 +35,7 @@ export default async function ZamowienieClientPage({ params }: P) {
   const eligibleForOnlinePay =
     o.package.planTier !== PlanTier.FREE &&
     o.totalCents > 0 &&
-    (o.status === OrderStatus.AWAITING_PAYMENT ||
-      o.status === OrderStatus.SUBMITTED ||
-      o.status === OrderStatus.PENDING_REVIEW) &&
+    o.status === OrderStatus.AWAITING_PAYMENT &&
     o.payment?.status !== PaymentStatus.COMPLETED;
 
   const showPrzelewy24 = eligibleForOnlinePay && isPrzelewy24Configured();

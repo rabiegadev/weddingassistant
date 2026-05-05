@@ -8,6 +8,7 @@ import {
 } from "@/lib/auth/google-oauth-pkce-cookie";
 import { exchangeGoogleCode, fetchGoogleUserInfo } from "@/lib/auth/google-oauth-flow";
 import { upsertClientUserFromGoogle } from "@/lib/auth/google-oauth-user";
+import { sendMailIfConfigured } from "@/lib/mail/send";
 import {
   COOKIE_NAME_CLIENT,
   buildSessionCookieOptions,
@@ -69,6 +70,17 @@ export async function GET(req: Request) {
     const auth = await upsertClientUserFromGoogle(profile);
     if (!auth.ok) {
       return redirectWithCookieClear(`/logowanie?k=client&ge=${auth.redirectCode}`, origin, true);
+    }
+
+    if (auth.shouldSendWelcome) {
+      await sendMailIfConfigured({
+        to: profile.email,
+        subject: "Witamy w Weddingassistant",
+        text:
+          "Dziękujemy za rejestrację przez Google.\n\n" +
+          "Twoje konto jest aktywne i możesz od razu korzystać z panelu klienta.\n\n" +
+          `Przejdź do panelu: ${origin}/dashboard`,
+      });
     }
 
     const { token } = await createClientSessionForUserId(auth.userId);

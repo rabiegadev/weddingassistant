@@ -72,4 +72,18 @@
   .animate-wa-scroll-arrow {
     animation: wa-scroll-arrow 2.2s ease-in-out infinite;
   }
+
+  @keyframes wa-offer-card-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  .animate-wa-offer-card-in {
+    animation: wa-offer-card-in 520ms ease-out both;
+  }
 }

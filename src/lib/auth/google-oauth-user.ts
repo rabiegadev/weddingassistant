@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 import type { GoogleUserInfo } from "@/lib/auth/google-oauth-flow";
 
 export type GoogleClientAuthResult =
-  | { ok: true; userId: string }
+  | { ok: true; userId: string; shouldSendWelcome: boolean }
   | { ok: false; redirectCode: "admin" | "email" | "link" };
 
 /**
@@ -28,7 +28,7 @@ export async function upsertClientUserFromGoogle(profile: GoogleUserInfo): Promi
       },
     });
     await ensureClientProfile(bySub.id);
-    return { ok: true, userId: bySub.id };
+    return { ok: true, userId: bySub.id, shouldSendWelcome: false };
   }
 
   const byEmail = await prisma.user.findUnique({ where: { email: profile.email } });
@@ -36,6 +36,7 @@ export async function upsertClientUserFromGoogle(profile: GoogleUserInfo): Promi
     if (byEmail.role !== UserRole.CLIENT) {
       return { ok: false, redirectCode: "admin" };
     }
+    const firstGoogleLinkForExistingEmail = byEmail.googleSub == null;
     if (byEmail.googleSub != null && byEmail.googleSub !== profile.sub) {
       return { ok: false, redirectCode: "link" };
     }
@@ -48,7 +49,7 @@ export async function upsertClientUserFromGoogle(profile: GoogleUserInfo): Promi
       },
     });
     await ensureClientProfile(byEmail.id);
-    return { ok: true, userId: byEmail.id };
+    return { ok: true, userId: byEmail.id, shouldSendWelcome: firstGoogleLinkForExistingEmail };
   }
 
   const created = await prisma.user.create({
@@ -62,5 +63,5 @@ export async function upsertClientUserFromGoogle(profile: GoogleUserInfo): Promi
       clientProfile: { create: {} },
     },
   });
-  return { ok: true, userId: created.id };
+  return { ok: true, userId: created.id, shouldSendWelcome: true };
 }

@@ -51,7 +51,7 @@ async function main() {
       name: "Darmowy",
       description:
         "Lista gości (do 25 osób), planer z tygodniowym resetem danych, wybrane narzędzia w trybie ograniczonym. Galeria w panelu niedostępna.",
-      priceCents: 0,
+      priceCents: 10_00,
       sortOrder: 0,
       planTier: PlanTier.FREE,
       postWeddingAccessMonths: null,
@@ -64,10 +64,10 @@ async function main() {
     },
     {
       slug: "asystent-podstawowy",
-      name: "Asystent podstawowy",
+      name: "Pakiet asystent",
       description:
         "Większość narzędzi asystenta (część modułów premium lub z niższymi limitami wg konfiguracji). Dostęp od wykupienia do 6 miesięcy po dacie ślubu.",
-      priceCents: 2_99_00,
+      priceCents: 20_00,
       sortOrder: 10,
       planTier: PlanTier.ASSIST_BASIC,
       postWeddingAccessMonths: 6,
@@ -80,10 +80,10 @@ async function main() {
     },
     {
       slug: "www-wizytowka-szablon",
-      name: "Wizytówka WWW (szablon)",
+      name: "Pakiet wizytówka weselna z szablonu",
       description:
         "Strona weselna z gotowego szablonu + domena. Bez galerii na stronie, RSVP podstawowy. Wybór szablonu przy zamówieniu. Dostęp do 6 miesięcy po ślubie.",
-      priceCents: 4_99_00,
+      priceCents: 30_00,
       sortOrder: 20,
       planTier: PlanTier.WWW_TEMPLATE,
       postWeddingAccessMonths: 6,
@@ -96,10 +96,10 @@ async function main() {
     },
     {
       slug: "asystent-www-szablon",
-      name: "Asystent podstawowy + wizytówka WWW (szablon)",
+      name: "Pakiet Asystent + wizytówka weselna z szablonu",
       description:
         "Pakiet asystenta podstawowego oraz strona WWW z szablonu + domena. Wybór szablonu przy zamówieniu. Dostęp do 6 miesięcy po ślubie.",
-      priceCents: 6_99_00,
+      priceCents: 40_00,
       sortOrder: 30,
       planTier: PlanTier.ASSIST_BASIC_WWW_TEMPLATE,
       postWeddingAccessMonths: 6,
@@ -113,30 +113,12 @@ async function main() {
       }),
     },
     {
-      slug: "asystent-premium-www-szablon",
-      name: "Asystent premium + wizytówka WWW (szablon)",
-      description:
-        "Wszystkie narzędzia z najwyższymi limitami + strona z gotowego szablonu. Wybór szablonu obowiązkowy. Dostęp do 12 miesięcy po ślubie (możliwość przedłużenia).",
-      priceCents: 9_99_00,
-      sortOrder: 40,
-      planTier: PlanTier.ASSIST_PREMIUM_WWW_TEMPLATE,
-      postWeddingAccessMonths: 12,
-      featuresJson: feat({
-        maxGuests: 10_000,
-        maxTables: 500,
-        weddingPage: true,
-        gallery: true,
-        rsvp: "full",
-        requiresTemplateId: true,
-      }),
-    },
-    {
       slug: "asystent-premium-www-custom",
-      name: "Asystent premium + wizytówka WWW (projekt indywidualny)",
+      name: "Pakiet asystent + personalizowana wizytówka",
       description:
         "Jak pakiet premium + szablon, lecz strona projektowana pod klienta (brief, inspiracje, zdjęcia). Poprawki wg polityki projektowej. Dostęp do 12 miesięcy po ślubie (przedłużenie opcjonalnie).",
-      priceCents: 14_99_00,
-      sortOrder: 50,
+      priceCents: 50_00,
+      sortOrder: 40,
       planTier: PlanTier.ASSIST_PREMIUM_WWW_CUSTOM,
       postWeddingAccessMonths: 12,
       featuresJson: feat({
@@ -171,6 +153,12 @@ async function main() {
       },
     });
   }
+
+  const activeSlugs = packs.map((p) => p.slug);
+  await prisma.package.updateMany({
+    where: { slug: { notIn: activeSlugs } },
+    data: { isPublished: false },
+  });
 
   const demoUser = process.env.SEED_DEMO_USER_EMAIL;
   if (demoUser) {

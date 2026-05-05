@@ -3,17 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { logoutAdminAction, logoutClientAction } from "@/app/actions/auth";
 import { useAuthModal } from "@/components/auth/auth-modal-context";
 
 const nav = [
   { href: "/#funkcje", label: "Funkcje" },
-  { href: "/#narzedzie-testowe", label: "Test narzędzia" },
   { href: "/#strona-wesela", label: "Strona wesela" },
   { href: "/#oferta", label: "Oferta" },
-  { href: "/cennik", label: "Cennik" },
-  { href: "/realizacje", label: "Realizacje" },
   { href: "/#kontakt", label: "Kontakt" },
 ] as const;
 
@@ -92,14 +89,9 @@ export function SiteHeaderClient({
   const pathname = usePathname();
   const { openLogin, openRegister } = useAuthModal();
   const [open, setOpen] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [visible] = useState(true);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
-  const lastY = useRef(0);
   const showAuthButtons = !isClient && !isAdminFull && !isAdmin2faPending;
-
-  useEffect(() => {
-    lastY.current = typeof window !== "undefined" ? window.scrollY : 0;
-  }, []);
 
   useEffect(() => {
     if (pathname !== "/") {
@@ -129,36 +121,14 @@ export function SiteHeaderClient({
     };
   }, [pathname]);
 
-  useEffect(() => {
-    const hideBar = () => {
-      setVisible(false);
-      setOpen(false);
-    };
-
-    const onScroll = () => {
-      const y = window.scrollY;
-      const delta = y - lastY.current;
-      lastY.current = y;
-
-      if (y <= 6) {
-        hideBar();
-      } else if (delta > 1.5) {
-        setVisible(true);
-      }
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 w-full border-b transition-[opacity,transform,background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-out ${
         visible
-          ? "pointer-events-auto translate-y-0 border-white/[0.22] bg-[#ebe6df]/34 opacity-100 shadow-[0_12px_40px_-22px_rgba(38,32,26,0.35)] backdrop-blur-xl backdrop-saturate-[1.12]"
+          ? "pointer-events-auto translate-y-0 border-[#c9baa4]/55 bg-[#dfd3c3]/78 opacity-100 shadow-[0_12px_40px_-22px_rgba(38,32,26,0.35)] backdrop-blur-xl backdrop-saturate-[1.08]"
           : "pointer-events-none -translate-y-2 border-transparent bg-transparent opacity-0 backdrop-blur-none"
       }`}
-      aria-hidden={!visible}
+      aria-hidden={false}
     >
       <div className="flex w-full items-center gap-3 px-4 py-2 sm:gap-4 sm:px-6 sm:py-2.5">
         <Link href="/" className="flex min-w-0 shrink-0 items-center gap-2.5 lg:gap-3">

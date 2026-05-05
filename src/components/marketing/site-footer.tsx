@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { SiteFooterAuthLogin } from "@/components/auth/site-footer-auth-login";
 
 type SiteFooterProps = {
   className?: string;
@@ -19,7 +18,8 @@ export function SiteFooter({ className }: SiteFooterProps) {
         <div>
           <h2 className="font-serif text-lg font-semibold tracking-wide text-[#f0e4c8]">Weddingassistant.pl</h2>
           <p className="mt-2 text-sm leading-relaxed text-[#c9bba8]">
-            Planowanie, lista gości, RSVP, harmonogram, budżet i wspomnienia w jednej spójnej platformie.
+            To rozwiązanie, które przygotowaliśmy dla siebie będąc na tym samym etapie, na którym teraz jesteście Wy - i
+            chcemy się nim z wami podzielić.
           </p>
           <p className="mt-4 text-sm text-[#b8a896]">
             Strony weselne:{" "}
@@ -33,7 +33,7 @@ export function SiteFooter({ className }: SiteFooterProps) {
             </a>
           </p>
           <p className="mt-2 text-sm text-[#b8a896]">
-            Studio:{" "}
+            Created by:{" "}
             <a
               href="https://rabiegadevelopment.pl/"
               target="_blank"
@@ -44,12 +44,16 @@ export function SiteFooter({ className }: SiteFooterProps) {
             </a>
           </p>
         </div>
-        <div className="md:text-right">
-          <p className="text-sm text-[#c9bba8]">Dołącz, gdy będziesz gotowy.</p>
-          <p className="mt-1 text-sm">
-            <SiteFooterAuthLogin />
+        <div className="flex flex-col justify-end md:items-end md:text-right">
+          <p className="mt-1 text-xs text-[#9a8c78]">
+            <Link
+              className="text-[#d4b87a] underline decoration-[#c9a050]/50 underline-offset-2 hover:text-[#f5e6bc]"
+              href="/nasza-historia"
+            >
+              Nasza historia
+            </Link>
           </p>
-          <p className="mt-3 text-xs text-[#9a8c78]">
+          <p className="mt-2 text-xs text-[#9a8c78]">
             <Link
               className="text-[#d4b87a] underline decoration-[#c9a050]/50 underline-offset-2 hover:text-[#f5e6bc]"
               href="/prawo/regulamin"
@@ -71,7 +75,7 @@ export function SiteFooter({ className }: SiteFooterProps) {
               RODO
             </Link>
           </p>
-          <p className="mt-4 text-xs text-[#7d7062]">© {new Date().getFullYear()} Weddingassistant</p>
+          <p className="mt-3 text-xs text-[#7d7062]">© {new Date().getFullYear()} Weddingassistant</p>
         </div>
       </div>
     </footer>

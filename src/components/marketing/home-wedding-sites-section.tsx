@@ -1,42 +1,37 @@
 import Link from "next/link";
-import { getAppPublicUrl } from "@/lib/env/public";
-import {
-  IconGlobeDemo,
-  IconGalleryDemo,
-  IconRsvpDemo,
-  IconSoonPlaceholder,
-} from "@/components/marketing/wedding-demo-icons";
+import Image from "next/image";
+import { IconSoonPlaceholder } from "@/components/marketing/wedding-demo-icons";
 
 type Example = {
   href: string;
   title: string;
   caption: string;
-  Icon: typeof IconGlobeDemo;
+  imageSrc: string;
+  imageAlt: string;
 };
 
-/**
- * Strony weselne — trzy działające podglądy (localhost w dev / domena w prod) + zapowiedzi.
- */
 export function HomeWeddingSitesSection() {
-  const base = getAppPublicUrl();
   const examples: Example[] = [
     {
-      href: `${base}/`,
-      title: "Przykład 1 — witryna startowa",
-      caption: "Podgląd strony głównej Weddingassistant",
-      Icon: IconGlobeDemo,
+      href: "https://example1.weddinfo.pl",
+      title: "Przykład 1 — klasyczna strona ślubna",
+      caption: "Elegancki układ z harmonogramem dnia, sekcją dla gości i jasnym CTA do potwierdzenia obecności.",
+      imageSrc: "/images/example1-weddinfo.png",
+      imageAlt: "Podgląd przykładu 1 strony ślubnej",
     },
     {
-      href: `${base}/cennik`,
-      title: "Przykład 2 — oferta i pakiety",
-      caption: "Układ sekcji cennika (jak u gości)",
-      Icon: IconRsvpDemo,
+      href: "https://example2.weddinfo.pl",
+      title: "Przykład 2 — nowoczesny styl premium",
+      caption: "Większe zdjęcia, sekcje opowieści o parze i wyeksponowane informacje organizacyjne dla gości.",
+      imageSrc: "/images/example2-weddinfo.png",
+      imageAlt: "Podgląd przykładu 2 strony ślubnej",
     },
     {
-      href: `${base}/realizacje`,
-      title: "Przykład 3 — realizacje",
-      caption: "Galeria motywów i inspiracji",
-      Icon: IconGalleryDemo,
+      href: "https://example3.weddinfo.pl",
+      title: "Przykład 3 — lekki motyw romantyczny",
+      caption: "Delikatna estetyka, czytelna mapa dojazdu i przyjazny układ na telefonie i komputerze.",
+      imageSrc: "/images/example3-weddinfo.png",
+      imageAlt: "Podgląd przykładu 3 strony ślubnej",
     },
   ];
 
@@ -45,7 +40,7 @@ export function HomeWeddingSitesSection() {
   return (
     <section
       id="strona-wesela"
-      className="scroll-mt-wa border-b border-[#e8e2dc]/70 bg-white"
+      className="scroll-mt-wa border-b border-[#d8c5a7]/70 bg-[#e9dccb]"
       aria-labelledby="sekcja-strona-wesela"
     >
       <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
@@ -56,9 +51,8 @@ export function HomeWeddingSitesSection() {
           Strona internetowa wesela
         </h2>
         <p className="mt-2 max-w-3xl text-pretty text-sm leading-relaxed text-[#5a534c] sm:text-base">
-          Każda para może mieć dedykowaną stronę dla gości: harmonogram, RSVP, mapa, kontakt. Poniżej działające
-          podglądy w tej samej aplikacji — w środowisku developerskim otwierają się na{" "}
-          <span className="font-medium text-[#4a4036]">localhost:3000</span>, na produkcji pod adresem serwisu.
+          Poniżej znajdziesz trzy gotowe przykłady stron ślubnych, które możesz otworzyć i sprawdzić na żywo.
+          Każdy wariant można później dopasować pod Wasze imiona, zdjęcia, harmonogram, lokalizację i styl wesela.
         </p>
 
         <ul className="mt-8 grid list-none grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -70,8 +64,14 @@ export function HomeWeddingSitesSection() {
                 rel="noopener noreferrer"
                 className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#e8e2dc] bg-[#fdfcfa] shadow-sm transition hover:border-[#d4c4a8] hover:shadow-md"
               >
-                <div className="flex items-center justify-center border-b border-[#efe8df] bg-gradient-to-b from-[#faf7f2] to-[#f3ece4] px-4 py-8">
-                  <item.Icon className="h-24 w-24 transition duration-300 group-hover:scale-105" />
+                <div className="relative h-44 overflow-hidden border-b border-[#efe8df] bg-[#f8f3ec] sm:h-48">
+                  <Image
+                    src={item.imageSrc}
+                    alt={item.imageAlt}
+                    fill
+                    className="object-cover object-top transition duration-300 group-hover:scale-[1.02]"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
                 </div>
                 <div className="flex flex-1 flex-col p-4">
                   <p className="font-wa-display text-base font-semibold text-[#2E2A26]">{item.title}</p>
@@ -100,21 +100,13 @@ export function HomeWeddingSitesSection() {
           ))}
         </ul>
 
-        <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+        <div className="mt-8 flex justify-center">
           <Link
             href="/realizacje"
             className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#B8955C] bg-white px-8 py-2.5 text-sm font-semibold text-[#4a3820] shadow-sm transition hover:bg-[#faf6ef]"
           >
             Więcej realizacji
           </Link>
-          <a
-            href="https://weddinfo.pl/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm font-medium text-[#6B5427] underline underline-offset-2"
-          >
-            weddinfo.pl — hosting stron weselnych
-          </a>
         </div>
       </div>
     </section>
