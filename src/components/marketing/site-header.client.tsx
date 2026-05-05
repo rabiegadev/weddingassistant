@@ -55,7 +55,7 @@ function MarketingNavLink({
     <Link
       href={href}
       onClick={onNavigate}
-      className={`group relative font-normal text-[#3a3530] tracking-[0.028em] transition-colors ${
+      className={`group relative font-medium text-[#fff2de] tracking-[0.02em] transition-colors hover:text-[#fffaf2] ${
         variant === "desktop" ? "whitespace-nowrap px-3 py-2 text-sm" : "block px-3 py-2.5 text-sm"
       }`}
     >
@@ -125,7 +125,7 @@ export function SiteHeaderClient({
     <header
       className={`fixed inset-x-0 top-0 z-50 w-full border-b transition-[opacity,transform,background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-out ${
         visible
-          ? "pointer-events-auto translate-y-0 border-[#c9baa4]/55 bg-[#dfd3c3]/78 opacity-100 shadow-[0_12px_40px_-22px_rgba(38,32,26,0.35)] backdrop-blur-xl backdrop-saturate-[1.08]"
+          ? "pointer-events-auto translate-y-0 border-[#8a6a47]/55 bg-[#3f2f21]/62 opacity-100 shadow-[0_12px_40px_-22px_rgba(20,14,9,0.62)] backdrop-blur-xl backdrop-saturate-[1.08]"
           : "pointer-events-none -translate-y-2 border-transparent bg-transparent opacity-0 backdrop-blur-none"
       }`}
       aria-hidden={false}
@@ -142,7 +142,7 @@ export function SiteHeaderClient({
               priority
             />
           </span>
-          <span className="truncate font-serif text-lg font-light tracking-[0.06em] text-[#2e2926] sm:text-xl">
+          <span className="truncate font-serif text-lg font-light tracking-[0.06em] text-[#f8ecdc] sm:text-xl">
             Weddingassistant
           </span>
         </Link>
@@ -171,7 +171,7 @@ export function SiteHeaderClient({
                 <form action={logoutAdminAction}>
                   <button
                     type="submit"
-                    className="rounded-md px-3 py-1.5 text-sm font-medium tracking-[0.02em] text-[#5c544c] underline decoration-[#b8955c]/65 underline-offset-2 hover:decoration-[#9a7a45]"
+                    className="rounded-md px-3 py-1.5 text-sm font-semibold tracking-[0.02em] text-[#f6e9d6] underline decoration-[#d5b47a]/80 underline-offset-2 hover:text-[#fff8ec] hover:decoration-[#e6c88f]"
                   >
                     Wyloguj
                   </button>
@@ -189,7 +189,7 @@ export function SiteHeaderClient({
                 <form action={logoutAdminAction}>
                   <button
                     type="submit"
-                    className="rounded-md px-3 py-1.5 text-sm font-medium tracking-[0.02em] text-[#5c544c] underline decoration-[#b8955c]/65 underline-offset-2 hover:decoration-[#9a7a45]"
+                    className="rounded-md px-3 py-1.5 text-sm font-semibold tracking-[0.02em] text-[#f6e9d6] underline decoration-[#d5b47a]/80 underline-offset-2 hover:text-[#fff8ec] hover:decoration-[#e6c88f]"
                   >
                     Wyloguj
                   </button>
@@ -199,7 +199,7 @@ export function SiteHeaderClient({
             {isClient && !isAdminFull ? (
               <>
                 <Link
-                  className="rounded-md border border-[#b8955c]/65 bg-white/55 px-3 py-1.5 text-sm font-medium tracking-[0.02em] text-[#2e2926] transition hover:bg-white/85"
+                  className="rounded-md border border-[#e5c48c]/70 bg-[#fff4e2] px-3 py-1.5 text-sm font-semibold tracking-[0.02em] text-[#2e2926] shadow-sm transition hover:bg-[#fff9f0]"
                   href="/dashboard"
                 >
                   Moje konto
@@ -207,7 +207,7 @@ export function SiteHeaderClient({
                 <form action={logoutClientAction}>
                   <button
                     type="submit"
-                    className="rounded-md px-3 py-1.5 text-sm font-medium tracking-[0.02em] text-[#5c544c] underline decoration-[#b8955c]/65 underline-offset-2 hover:decoration-[#9a7a45]"
+                    className="rounded-md px-3 py-1.5 text-sm font-semibold tracking-[0.02em] text-[#f6e9d6] underline decoration-[#d5b47a]/80 underline-offset-2 hover:text-[#fff8ec] hover:decoration-[#e6c88f]"
                   >
                     Wyloguj
                   </button>
@@ -218,14 +218,14 @@ export function SiteHeaderClient({
               <>
                 <button
                   type="button"
-                  className="rounded-md border border-[#b8955c]/70 bg-white/55 px-3 py-1.5 text-sm font-medium tracking-[0.02em] text-[#2e2926] transition hover:bg-white/85"
+                  className="rounded-md border border-[#e5c48c]/75 bg-[#fff4e2] px-3 py-1.5 text-sm font-semibold tracking-[0.02em] text-[#2e2926] shadow-sm transition hover:bg-[#fff9f0]"
                   onClick={() => openLogin()}
                 >
                   Zaloguj się
                 </button>
                 <button
                   type="button"
-                  className="rounded-md bg-[#B8955C] px-3 py-1.5 text-sm font-medium tracking-[0.02em] text-[#1c1612] shadow-sm transition hover:brightness-110"
+                  className="rounded-md border border-[#d9b57a]/70 bg-[#c69a58] px-3 py-1.5 text-sm font-semibold tracking-[0.02em] text-[#1e140a] shadow-sm transition hover:brightness-110"
                   onClick={() => openRegister()}
                   aria-label="Załóż darmowe konto"
                 >
@@ -279,7 +279,7 @@ export function SiteHeaderClient({
                   <form action={logoutAdminAction} className="mb-2">
                     <button
                       type="submit"
-                      className="w-full rounded-md py-2.5 text-center text-sm text-[#5c544c] underline decoration-[#b8955c]/60"
+                      className="w-full rounded-md py-2.5 text-center text-sm font-semibold text-[#f6e9d6] underline decoration-[#d5b47a]/75"
                     >
                       Wyloguj
                     </button>
@@ -298,7 +298,7 @@ export function SiteHeaderClient({
                   <form action={logoutAdminAction} className="mb-2">
                     <button
                       type="submit"
-                      className="w-full rounded-md py-2.5 text-center text-sm text-[#5c544c] underline decoration-[#b8955c]/60"
+                      className="w-full rounded-md py-2.5 text-center text-sm font-semibold text-[#f6e9d6] underline decoration-[#d5b47a]/75"
                     >
                       Wyloguj
                     </button>
@@ -309,7 +309,7 @@ export function SiteHeaderClient({
                 <>
                   <Link
                     onClick={() => setOpen(false)}
-                    className="mb-2 block w-full rounded-md border border-[#b8955c]/70 bg-white/75 py-2.5 text-center text-sm text-[#2e2926]"
+                    className="mb-2 block w-full rounded-md border border-[#e5c48c]/70 bg-[#fff4e2] py-2.5 text-center text-sm font-semibold text-[#2e2926]"
                     href="/dashboard"
                   >
                     Moje konto
@@ -317,7 +317,7 @@ export function SiteHeaderClient({
                   <form action={logoutClientAction} className="mb-2">
                     <button
                       type="submit"
-                      className="w-full rounded-md py-2.5 text-center text-sm text-[#5c544c] underline decoration-[#b8955c]/60"
+                      className="w-full rounded-md py-2.5 text-center text-sm font-semibold text-[#f6e9d6] underline decoration-[#d5b47a]/75"
                     >
                       Wyloguj
                     </button>
@@ -332,7 +332,7 @@ export function SiteHeaderClient({
                       setOpen(false);
                       openLogin();
                     }}
-                    className="mb-2 block w-full rounded-md border border-[#b8955c]/70 bg-white/75 px-4 py-2.5 text-center text-sm font-medium text-[#2e2926]"
+                    className="mb-2 block w-full rounded-md border border-[#e5c48c]/70 bg-[#fff4e2] px-4 py-2.5 text-center text-sm font-semibold text-[#2e2926]"
                   >
                     Zaloguj się
                   </button>
@@ -342,7 +342,7 @@ export function SiteHeaderClient({
                       setOpen(false);
                       openRegister();
                     }}
-                    className="block w-full rounded-md bg-[#B8955C] px-4 py-2.5 text-center text-sm font-medium text-[#1c1612]"
+                    className="block w-full rounded-md border border-[#d9b57a]/70 bg-[#c69a58] px-4 py-2.5 text-center text-sm font-semibold text-[#1c1612]"
                   >
                     Załóż konto
                   </button>

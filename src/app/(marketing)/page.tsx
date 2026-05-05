@@ -35,7 +35,7 @@ function HeroBackground() {
         sizes="100vw"
       />
       <div
-        className="absolute inset-0 bg-[linear-gradient(to_right,rgba(94,72,48,0.62)_0%,rgba(120,92,62,0.48)_16%,rgba(145,111,77,0.28)_38%,rgba(170,132,91,0.16)_62%,rgba(201,161,114,0.07)_82%,rgba(255,255,255,0)_100%)]"
+        className="absolute inset-0 bg-[linear-gradient(to_right,rgba(52,38,25,0.72)_0%,rgba(76,56,36,0.62)_16%,rgba(104,77,49,0.44)_38%,rgba(140,106,70,0.28)_62%,rgba(186,146,100,0.14)_82%,rgba(255,255,255,0)_100%)]"
         aria-hidden
       />
       <div
@@ -61,19 +61,19 @@ export default function HomePage() {
         <HeroBackground />
         <div className="relative z-10 flex flex-1 flex-col justify-center px-4 pb-8 pt-10 sm:px-8 lg:px-14 lg:pb-12 lg:pt-14">
           <div className="max-w-xl lg:max-w-2xl">
-            <h1 className="font-wa-display text-balance text-3xl font-semibold tracking-[0.02em] text-[#2E2A26] sm:text-4xl lg:text-5xl">
+            <h1 className="font-wa-display text-balance text-3xl font-semibold tracking-[0.02em] text-[#f6efe6] drop-shadow-[0_1px_8px_rgba(15,11,7,0.45)] sm:text-4xl lg:text-5xl">
               Weddingassistant
             </h1>
-            <p className="mt-4 font-wa-display text-balance text-lg font-medium leading-snug text-[#3d3834] sm:text-xl lg:text-2xl">
+            <p className="mt-4 font-wa-display text-balance text-lg font-medium leading-snug text-[#f0e3d2] sm:text-xl lg:text-2xl">
               Zaplanujcie ten wyjątkowy dzień z maksymalną starannością dzięki naszemu wsparciu
             </p>
-            <p className="mt-5 max-w-xl text-pretty text-[0.9375rem] leading-relaxed text-[#4b4540] sm:text-base">
+            <p className="mt-5 max-w-xl text-pretty text-[0.9375rem] leading-relaxed text-[#eadbca] sm:text-base">
               Nasza platforma powstała aby ułatwić proces planowania wesela oraz zebrać wszystkie niezbędne informacje w
               jednym miejscu, które jest dla Was dostępne w każdej chwili.
             </p>
             <p className="mt-8">
               <Link
-                className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#B8955C] px-7 py-2.5 text-sm font-semibold text-white shadow-[0_12px_36px_-18px_rgba(62,44,18,0.55)] transition hover:brightness-105"
+                className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#d2b27e]/70 bg-[#d7b173] px-7 py-2.5 text-sm font-semibold text-[#2b2117] shadow-[0_12px_36px_-18px_rgba(32,23,14,0.65)] transition hover:brightness-105"
                 href="/#oferta"
               >
                 Sprawdź możliwości, które oferuje Weddingassistant
