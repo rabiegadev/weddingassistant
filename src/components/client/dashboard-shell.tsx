@@ -77,6 +77,18 @@ export function DashboardShell({ userDisplayName, children, logoutAction, planSt
     }
   }, [activeCategory, subcategorySlug]);
 
+  useEffect(() => {
+    for (const category of dashboardCategories) {
+      if (!category.subcategories || category.subcategories.length === 0) {
+        router.prefetch(buildCategoryPath(category));
+        continue;
+      }
+      for (const subcategory of category.subcategories) {
+        router.prefetch(buildSubcategoryPath(category.slug, subcategory.slug));
+      }
+    }
+  }, [router]);
+
   const navigateMainCategory = (slug: string) => {
     const category = findCategoryBySlug(slug);
     if (!category) {

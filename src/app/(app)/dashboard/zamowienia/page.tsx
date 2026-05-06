@@ -12,11 +12,16 @@ function fmt(n: number) {
   return (n / 100).toLocaleString("pl-PL", { style: "currency", currency: "PLN" });
 }
 
-export default async function ZamowieniaPage() {
+type ZamowieniaPageProps = {
+  searchParams: Promise<{ packageId?: string }>;
+};
+
+export default async function ZamowieniaPage({ searchParams }: ZamowieniaPageProps) {
   const s = await getClientSession();
   if (!s) {
     redirect("/logowanie?k=client");
   }
+  const query = await searchParams;
   const [orders, packs] = await Promise.all([
     prisma.order.findMany({
       where: { userId: s.user.id },
@@ -25,6 +30,7 @@ export default async function ZamowieniaPage() {
     }),
     prisma.package.findMany({ where: { isPublished: true }, orderBy: { sortOrder: "asc" } }),
   ]);
+  const initialPackageId = query.packageId && packs.some((p) => p.id === query.packageId) ? query.packageId : undefined;
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
       <h2 className="font-sans text-lg font-semibold">Moje zamówienia</h2>
@@ -33,10 +39,19 @@ export default async function ZamowieniaPage() {
         <div className="mt-6 rounded-lg border border-[#D0C8BE] bg-white/80 p-4">
           <h3 className="text-sm font-medium">Nowe zamówienie (krok wstępny)</h3>
           <p className="mt-0.5 text-xs text-[#4A4A4A]">
-            Po złożeniu pakiet płatny otrzymasz status „oczekuje na płatność” — na stronie zamówienia uruchomisz Przelewy24 lub PayU (gdy skonfigurowane).
+            Po złożeniu pakiet płatny otrzymuje status „oczekuje na decyzję administratora”. Po akceptacji uruchomisz płatność na stronie zamówienia.
           </p>
           <div className="mt-2">
-            <CreateOrderForm action={createOrderForClientAction} packages={packs.map((p) => ({ id: p.id, name: p.name, priceCents: p.priceCents }))} />
+            <CreateOrderForm
+              action={createOrderForClientAction}
+              initialPackageId={initialPackageId}
+              packages={packs.map((p) => ({
+                id: p.id,
+                name: p.name,
+                priceCents: p.priceCents,
+                description: p.description,
+              }))}
+            />
           </div>
         </div>
       ) : null}

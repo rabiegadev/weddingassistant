@@ -17,8 +17,23 @@ type Transport = ReturnType<typeof nodemailer.createTransport>;
 
 let cached: Transport | null = null;
 
+function smtpTimeoutMs(): number {
+  const raw = process.env.SMTP_TIMEOUT_MS;
+  const parsed = raw ? Number.parseInt(raw, 10) : NaN;
+  if (Number.isFinite(parsed) && parsed >= 1000) {
+    return parsed;
+  }
+  return 8000;
+}
+
 function fromConnectionString(smtpUrl: string): Transport {
-  return nodemailer.createTransport(smtpUrl);
+  const timeout = smtpTimeoutMs();
+  return nodemailer.createTransport({
+    url: smtpUrl,
+    connectionTimeout: timeout,
+    greetingTimeout: timeout,
+    socketTimeout: timeout,
+  });
 }
 
 function fromEnvParts(): Transport | null {
@@ -30,6 +45,9 @@ function fromEnvParts(): Transport | null {
     host: h,
     port: Number.parseInt(process.env.SMTP_PORT ?? "587", 10) || 587,
     secure: process.env.SMTP_SECURE === "1" || process.env.SMTP_SECURE === "true",
+    connectionTimeout: smtpTimeoutMs(),
+    greetingTimeout: smtpTimeoutMs(),
+    socketTimeout: smtpTimeoutMs(),
     auth:
       process.env.SMTP_USER && process.env.SMTP_PASS
         ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }

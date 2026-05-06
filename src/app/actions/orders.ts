@@ -16,6 +16,7 @@ import { orderStatusPl } from "@/lib/orders/order-status-pl";
 import { activateSubscriptionFromPaidOrder } from "@/lib/subscriptions/activate-from-order";
 
 const msg = z.string().min(1, "Wpisz treść").max(8000, "Zbyt długa wiadomość");
+const orderNoteSchema = z.string().trim().max(2000, "Notatka jest za długa (max 2000 znaków).");
 
 export type OrderActionState = { error?: string; ok?: boolean } | void;
 
@@ -40,13 +41,12 @@ export async function createOrderForClientAction(
   if (!p) {
     return { error: "Pakiet niedostępny." };
   }
-  const extra = (formData.get("selection") as string) || "{}";
-  let sel = "{}";
-  try {
-    sel = JSON.stringify(JSON.parse(extra) as object);
-  } catch {
-    return { error: "Nieprawidłowe dane formularza (JSON)." };
+  const noteParsed = orderNoteSchema.safeParse((formData.get("selection") as string) || "");
+  if (!noteParsed.success) {
+    return { error: noteParsed.error.issues[0]?.message ?? "Nieprawidłowe dane formularza." };
   }
+  const note = noteParsed.data;
+  const sel = JSON.stringify({ note });
   const initialStatus =
     p.planTier !== PlanTier.FREE && p.priceCents > 0 ? OrderStatus.PENDING_REVIEW : OrderStatus.SUBMITTED;
 
@@ -70,8 +70,10 @@ export async function createOrderForClientAction(
           : "Zamówienie złożone z panelu klienta.",
     },
   });
-  await notifyClientOnOrderCreated(c.user.id, o.id, p.name, orderStatusPl(initialStatus));
-  await notifyAdminsOnNewOrder(o.id, p.name, { email: c.user.email, name: c.user.name }, orderStatusPl(initialStatus));
+  await Promise.allSettled([
+    notifyClientOnOrderCreated(c.user.id, o.id, p.name, orderStatusPl(initialStatus)),
+    notifyAdminsOnNewOrder(o.id, p.name, { email: c.user.email, name: c.user.name }, orderStatusPl(initialStatus)),
+  ]);
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/zamowienia", "page");
   revalidatePath("/admin/zamowienia", "page");

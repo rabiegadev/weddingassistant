@@ -19,7 +19,7 @@ import {
   createAdminSessionForUserId,
   setClientSessionCookie,
   setAdminSessionCookie,
-  logoutByScopeAndSessionId,
+  logoutByScopeUsingCookieToken,
   setSessionMfaCompleteById,
 } from "@/lib/auth/session";
 import {
@@ -253,22 +253,12 @@ export async function verifyAdminTotpAfterPasswordAction(
 }
 
 export async function logoutClientAction(): Promise<void> {
-  const s = await getClientSession();
-  if (s) {
-    await logoutByScopeAndSessionId(s.id, SessionScope.CLIENT);
-  } else {
-    await clearClientSessionCookie();
-  }
+  await logoutByScopeUsingCookieToken(SessionScope.CLIENT);
   redirect("/");
 }
 
 export async function logoutAdminAction(): Promise<void> {
-  const s = await getAnyAdminSession();
-  if (s) {
-    await logoutByScopeAndSessionId(s.id, SessionScope.ADMIN);
-  } else {
-    await clearAdminSessionCookie();
-  }
+  await logoutByScopeUsingCookieToken(SessionScope.ADMIN);
   redirect("/");
 }
 

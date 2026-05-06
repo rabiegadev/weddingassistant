@@ -123,7 +123,7 @@ export async function WszystkiePakietyView() {
             <div className="mt-4">
               <Link
                 className="inline-flex rounded-lg bg-[#B8955C] px-4 py-2 text-sm font-medium text-white hover:brightness-105"
-                href="/dashboard/zamowienia"
+                href={`/dashboard/zamowienia?packageId=${encodeURIComponent(p.id)}`}
               >
                 Zamów w panelu
               </Link>

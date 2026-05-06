@@ -205,3 +205,15 @@ export async function logoutByScopeAndSessionId(
     await clearClientSessionCookie();
   }
 }
+
+export async function logoutByScopeUsingCookieToken(scope: SessionScope): Promise<void> {
+  const c = await cookies();
+  const cookieName = getCookieNameForScope(scope);
+  const raw = c.get(cookieName)?.value;
+  c.delete(cookieName);
+  if (!raw) {
+    return;
+  }
+  const tokenHash = hashSessionTokenToHex(raw);
+  await prisma.session.deleteMany({ where: { tokenHash, scope } });
+}
