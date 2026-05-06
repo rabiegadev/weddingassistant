@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import { useAuthModal } from "@/components/auth/auth-modal-context";
 import { ClientLoginForm } from "@/components/auth/client-login-form";
 import { RegisterForm } from "@/components/auth/register-form";
-import Link from "next/link";
 
 function ModalGoogleBlock({ enabled }: { enabled: boolean }) {
   if (!enabled) {
@@ -54,7 +53,7 @@ function GoogleGlyph() {
 }
 
 export function AuthModalDialog() {
-  const { mode, close, openLogin, openRegister, registrationPreflight, googleOAuthEnabled } = useAuthModal();
+  const { mode, close, registrationPreflight, googleOAuthEnabled } = useAuthModal();
   const backdropRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -109,8 +108,8 @@ export function AuthModalDialog() {
         ref={panelRef}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="wa-auth-modal-title"
-        className="relative max-h-[min(92vh,44rem)] w-full max-w-md overflow-y-auto rounded-2xl border border-[#d9cfc3]/95 bg-[#fffefb] p-5 shadow-[0_24px_60px_-24px_rgba(35,28,20,0.45)] sm:p-6"
+        aria-label={mode === "login" ? "Logowanie" : "Rejestracja"}
+        className="relative w-full max-w-md rounded-2xl border border-[#d9cfc3]/95 bg-[#fffefb] p-5 shadow-[0_24px_60px_-24px_rgba(35,28,20,0.45)] sm:p-6"
         onPointerDown={(e) => e.stopPropagation()}
       >
         <button
@@ -122,46 +121,7 @@ export function AuthModalDialog() {
           ×
         </button>
 
-        <div className="pr-10">
-          <h2
-            id="wa-auth-modal-title"
-            className="font-sans text-xl font-semibold tracking-tight text-[#1f1c19]"
-          >
-            {mode === "login" ? "Logowanie" : "Rejestracja"}
-          </h2>
-          <p className="mt-1 text-sm text-[#5c564f]">
-            {mode === "login"
-              ? "Konto pary — po zalogowaniu przejdziesz do panelu."
-              : "Konto pary — bez karty płatniczej."}
-          </p>
-        </div>
-
-        <div className="mt-4 flex gap-1 rounded-xl border border-[#e8e2dc] bg-[#f6f2ec]/80 p-1">
-          <button
-            type="button"
-            onClick={openLogin}
-            className={`min-h-10 flex-1 rounded-lg px-3 text-sm font-medium transition ${
-              mode === "login"
-                ? "bg-white text-[#1f1c19] shadow-sm"
-                : "text-[#5c564f] hover:text-[#2e2a26]"
-            }`}
-          >
-            Logowanie
-          </button>
-          <button
-            type="button"
-            onClick={openRegister}
-            className={`min-h-10 flex-1 rounded-lg px-3 text-sm font-medium transition ${
-              mode === "register"
-                ? "bg-white text-[#1f1c19] shadow-sm"
-                : "text-[#5c564f] hover:text-[#2e2a26]"
-            }`}
-          >
-            Rejestracja
-          </button>
-        </div>
-
-        <div className="mt-5 space-y-4">
+        <div className="space-y-4 pt-1 pr-10">
           <ModalGoogleBlock enabled={googleOAuthEnabled} />
           {mode === "login" ? (
             <ClientLoginForm />
@@ -169,37 +129,6 @@ export function AuthModalDialog() {
             <RegisterForm key="register" preflight={registrationPreflight} />
           )}
         </div>
-
-        <p className="mt-5 border-t border-[#ebe4dc] pt-4 text-center text-xs text-[#6b645c]">
-          {mode === "login" ? (
-            <>
-              Nie masz konta?{" "}
-              <button type="button" className="font-medium text-[#6B5427] underline" onClick={openRegister}>
-                Zarejestruj się
-              </button>
-              {" · "}
-              <Link className="underline" href="/reset-hasla" onClick={close}>
-                Reset hasła
-              </Link>
-            </>
-          ) : (
-            <>
-              Masz konto?{" "}
-              <button type="button" className="font-medium text-[#6B5427] underline" onClick={openLogin}>
-                Zaloguj się
-              </button>
-            </>
-          )}
-        </p>
-        <p className="mt-2 text-center text-[0.65rem] text-[#8a827a]">
-          <Link href="/logowanie?k=client" className="underline underline-offset-2 hover:text-[#5c544c]" onClick={close}>
-            Pełna strona logowania
-          </Link>
-          {" · "}
-          <Link href="/rejestracja" className="underline underline-offset-2 hover:text-[#5c544c]" onClick={close}>
-            Pełna strona rejestracji
-          </Link>
-        </p>
       </div>
     </div>
   );

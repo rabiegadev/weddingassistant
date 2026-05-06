@@ -27,11 +27,12 @@ export function RegisterForm({ preflight }: { preflight: RegisterPreflight }) {
     <form action={formAction} className="relative mt-0 space-y-3">
       <div>
         <label className="text-sm text-[#3A3A3A]" htmlFor="name">
-          Imię pary (opcjonalne)
+          Imię i nazwisko
         </label>
         <input
           id="name"
           name="name"
+          autoComplete="name"
           className="mt-1 w-full rounded-md border border-[#D9C6A0] bg-white/90 px-3 py-2 text-sm"
         />
       </div>
@@ -49,7 +50,7 @@ export function RegisterForm({ preflight }: { preflight: RegisterPreflight }) {
       </div>
       <div>
         <label className="text-sm text-[#3A3A3A]" htmlFor="password">
-          Silne hasło
+          Hasło
         </label>
         <input
           id="password"
@@ -59,7 +60,22 @@ export function RegisterForm({ preflight }: { preflight: RegisterPreflight }) {
           required
           className="mt-1 w-full rounded-md border border-[#D9C6A0] bg-white/90 px-3 py-2 text-sm"
         />
-        <p className="mt-0.5 text-xs text-[#5A5A5A]">min. 12 znaków, wielka i mała litera, cyfra, znak spec.</p>
+        <p className="mt-0.5 text-xs text-[#5A5A5A]">
+          Hasło musi zawierać min. 12 znaków - w tym wielką literę, małą literę, cyfrę oraz znak specjalny.
+        </p>
+      </div>
+      <div>
+        <label className="text-sm text-[#3A3A3A]" htmlFor="passwordConfirm">
+          Powtórz hasło
+        </label>
+        <input
+          id="passwordConfirm"
+          name="passwordConfirm"
+          type="password"
+          autoComplete="new-password"
+          required
+          className="mt-1 w-full rounded-md border border-[#D9C6A0] bg-white/90 px-3 py-2 text-sm"
+        />
       </div>
       <RegistrationAntispamFields preflight={preflight} />
       {state.error ? <p className="text-sm text-rose-700">{state.error}</p> : null}

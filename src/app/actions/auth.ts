@@ -23,12 +23,7 @@ import {
   logoutByScopeUsingCookieToken,
   setSessionMfaCompleteById,
 } from "@/lib/auth/session";
-import {
-  getAnyAdminSession,
-  getClientSession,
-  clearClientSessionCookie,
-  clearAdminSessionCookie,
-} from "@/lib/auth/session";
+import { getAnyAdminSession } from "@/lib/auth/session";
 import { headers } from "next/headers";
 
 const VERIFY_TOKEN_H = 1000 * 60 * 60 * 24 * 2;
@@ -43,11 +38,22 @@ const loginSchema = z.object({
   password: z.string().min(1, "Hasło wymagane").max(500, "Dane odrzucone"),
 });
 
-const registerSchema = z.object({
-  name: nameOptionalSchema,
-  email: emailSchema,
-  password: strongPasswordSchema,
-});
+const registerSchema = z
+  .object({
+    name: nameOptionalSchema,
+    email: emailSchema,
+    password: strongPasswordSchema,
+    passwordConfirm: z.string(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.password !== data.passwordConfirm) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Hasła muszą być identyczne.",
+        path: ["passwordConfirm"],
+      });
+    }
+  });
 
 function firstZodMessage(err: z.ZodError): string {
   return err.issues[0]?.message ?? "Błąd walidacji";
@@ -70,6 +76,7 @@ export async function registerClientAction(
     name: formData.get("name") ?? undefined,
     email: formData.get("email") ?? "",
     password: formData.get("password") ?? "",
+    passwordConfirm: formData.get("passwordConfirm") ?? "",
   });
   if (!parsed.success) {
     return { error: firstZodMessage(parsed.error) };
