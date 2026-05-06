@@ -4,9 +4,9 @@ import { OrderStatus } from "@prisma/client";
 export function orderStatusPl(s: OrderStatus): string {
   const m: Record<OrderStatus, string> = {
     DRAFT: "Szkic",
-    SUBMITTED: "Złożone (w kolejce obsługi)",
+    SUBMITTED: "Złożone (w kolejce administratora)",
     AWAITING_PAYMENT: "Oczekuje na płatność",
-    PENDING_REVIEW: "Oczekuje na decyzję obsługi",
+    PENDING_REVIEW: "Oczekuje na decyzję administratora",
     APPROVED: "Zatwierdzone / opłacone",
     IN_PROGRESS: "W trakcie realizacji",
     COMPLETED: "Zamknięte",

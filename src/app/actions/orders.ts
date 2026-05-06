@@ -66,7 +66,7 @@ export async function createOrderForClientAction(
       toStatus: initialStatus,
       message:
         initialStatus === OrderStatus.PENDING_REVIEW
-          ? "Zamówienie utworzone — oczekuje na decyzję obsługi."
+          ? "Zamówienie utworzone — oczekuje na decyzję administratora."
           : "Zamówienie złożone z panelu klienta.",
     },
   });
@@ -112,8 +112,8 @@ export async function postOrderMessageAction(
       o.userId,
       o.id,
       o.package.name,
-      `Nowa wiadomość (obsługa) — ${o.package.name}`,
-      `Obsługa napisała: ${p.data.slice(0, 500)}${p.data.length > 500 ? "…" : ""}`
+      `Nowa wiadomość (administrator) — ${o.package.name}`,
+      `Administrator napisał: ${p.data.slice(0, 500)}${p.data.length > 500 ? "…" : ""}`
     );
     revalidatePath(`/admin/zamowienia/${o.id}`);
     revalidatePath(`/dashboard/zamowienia/${o.id}`);
