@@ -23,7 +23,8 @@ function smtpTimeoutMs(): number {
   if (Number.isFinite(parsed) && parsed >= 1000) {
     return parsed;
   }
-  return 8000;
+  /** Domyślnie krótko — unikamy długiego „mielenia” przy nieosiągalnym SMTP (np. z Vercel). */
+  return 4000;
 }
 
 function fromConnectionString(smtpUrl: string): Transport {

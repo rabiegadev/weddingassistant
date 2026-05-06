@@ -1,5 +1,6 @@
 "use server";
 
+import { after } from "next/server";
 import { revalidatePath } from "next/cache";
 import { OrderStatus, PlanTier } from "@prisma/client";
 import { z } from "zod";
@@ -70,10 +71,17 @@ export async function createOrderForClientAction(
           : "Zamówienie złożone z panelu klienta.",
     },
   });
-  await Promise.allSettled([
-    notifyClientOnOrderCreated(c.user.id, o.id, p.name, orderStatusPl(initialStatus)),
-    notifyAdminsOnNewOrder(o.id, p.name, { email: c.user.email, name: c.user.name }, orderStatusPl(initialStatus)),
-  ]);
+  const sendOrderCreatedMails = async (): Promise<void> => {
+    await Promise.allSettled([
+      notifyClientOnOrderCreated(c.user.id, o.id, p.name, orderStatusPl(initialStatus)),
+      notifyAdminsOnNewOrder(o.id, p.name, { email: c.user.email, name: c.user.name }, orderStatusPl(initialStatus)),
+    ]);
+  };
+  try {
+    after(sendOrderCreatedMails);
+  } catch {
+    void sendOrderCreatedMails();
+  }
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/zamowienia", "page");
   revalidatePath("/admin/zamowienia", "page");
