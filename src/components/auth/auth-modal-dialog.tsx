@@ -53,7 +53,7 @@ function GoogleGlyph() {
 }
 
 export function AuthModalDialog() {
-  const { mode, close, registrationPreflight, googleOAuthEnabled } = useAuthModal();
+  const { mode, close, openLogin, openRegister, registrationPreflight, googleOAuthEnabled } = useAuthModal();
   const backdropRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -121,7 +121,34 @@ export function AuthModalDialog() {
           ×
         </button>
 
-        <div className="space-y-4 pt-1 pr-10">
+        <div className="pr-10 pt-1">
+          <div className="flex gap-1 rounded-xl border border-[#e8e2dc] bg-[#f6f2ec]/80 p-1">
+            <button
+              type="button"
+              onClick={openLogin}
+              className={`min-h-10 flex-1 rounded-lg px-3 text-sm font-medium transition ${
+                mode === "login"
+                  ? "bg-white text-[#1f1c19] shadow-sm"
+                  : "text-[#5c564f] hover:text-[#2e2a26]"
+              }`}
+            >
+              Logowanie
+            </button>
+            <button
+              type="button"
+              onClick={openRegister}
+              className={`min-h-10 flex-1 rounded-lg px-3 text-sm font-medium transition ${
+                mode === "register"
+                  ? "bg-white text-[#1f1c19] shadow-sm"
+                  : "text-[#5c564f] hover:text-[#2e2a26]"
+              }`}
+            >
+              Rejestracja
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-5 space-y-4 pr-10">
           <ModalGoogleBlock enabled={googleOAuthEnabled} />
           {mode === "login" ? (
             <ClientLoginForm />
