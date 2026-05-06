@@ -1,7 +1,15 @@
 import nodemailer from "nodemailer";
 import { logNotificationSent } from "@/lib/notifications/log";
 
-type SendOpts = { to: string; subject: string; text: string; html?: string; replyTo?: string };
+type SendOpts = {
+  to: string;
+  subject: string;
+  text: string;
+  html?: string;
+  replyTo?: string;
+  /** Klucz szablonu / scenariusza — trafia do NotificationLog (np. `mail.order-created.client`). */
+  templateKey?: string;
+};
 
 /** Minimalny HTML z treści tekstowej (paragrafy po \n\n). */
 function simpleHtmlFromText(text: string): string {
@@ -85,12 +93,13 @@ export function getFromAddress(): string {
 export async function sendMailIfConfigured(
   o: SendOpts
 ): Promise<{ sent: true } | { sent: false; reason: "no_smtp" | "error" }> {
+  const logKeyBase = o.templateKey ?? "sendMailIfConfigured";
   const t = getTransporter();
   if (!t) {
     console.warn(`[mail] (nie wysłano) do=${o.to} — brak SMTP: ustaw SMTP_URL lub SMTP_HOST w env (Vercel: Production/Preview).`);
     void logNotificationSent({
       channel: "email",
-      templateKey: "sendMailIfConfigured.no_smtp",
+      templateKey: o.templateKey ? `${logKeyBase}.no_smtp` : "sendMailIfConfigured.no_smtp",
       toEmail: o.to,
       subject: o.subject,
       bodyPreview: o.text.slice(0, 400),
@@ -109,7 +118,7 @@ export async function sendMailIfConfigured(
     });
     void logNotificationSent({
       channel: "email",
-      templateKey: "sendMailIfConfigured",
+      templateKey: logKeyBase,
       toEmail: o.to,
       subject: o.subject,
       bodyPreview: o.text.slice(0, 400),
@@ -121,7 +130,7 @@ export async function sendMailIfConfigured(
     console.error("[mail] sendMail failed:", msg);
     void logNotificationSent({
       channel: "email",
-      templateKey: "sendMailIfConfigured.error",
+      templateKey: o.templateKey ? `${logKeyBase}.error` : "sendMailIfConfigured.error",
       toEmail: o.to,
       subject: o.subject,
       bodyPreview: o.text.slice(0, 400),

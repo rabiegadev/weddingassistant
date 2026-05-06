@@ -1,6 +1,7 @@
 import { rateLimitOrThrow } from "@/lib/rate-limit";
 import { prisma } from "@/lib/db";
 import { parseAdminRecipientList, sendMailIfConfigured } from "@/lib/mail/send";
+import { buildContactAdminMail } from "@/lib/mail/templates/presets";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { z } from "zod";
@@ -47,13 +48,22 @@ export async function POST(request: Request) {
     },
   });
   const admins = parseAdminRecipientList();
+  const branded = buildContactAdminMail({
+    name: p.data.name,
+    email: p.data.email,
+    phone: p.data.phone,
+    message: p.data.message,
+    sourcePage: p.data.sourcePage,
+  });
   await Promise.all(
     admins.map((to) =>
       sendMailIfConfigured({
         to,
-        subject: `Zapytanie z www — ${p.data.email}`,
-        text: `Od: ${p.data.name}\nE-mail: ${p.data.email}\nTel.: ${p.data.phone ?? "—"}\n\n${p.data.message}`,
+        subject: branded.subject,
+        text: branded.text,
+        html: branded.html,
         replyTo: p.data.email,
+        templateKey: branded.templateKey,
       })
     )
   );

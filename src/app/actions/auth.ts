@@ -11,6 +11,7 @@ import { getSiteUrlFromHeaders } from "@/lib/env/public";
 import { getAdmin2faEntryPath } from "@/lib/auth/mfa-routing";
 import { rateLimitOrThrow } from "@/lib/rate-limit";
 import { sendMailIfConfigured, parseAdminRecipientList } from "@/lib/mail/send";
+import { buildEmailVerificationMail } from "@/lib/mail/templates/presets";
 import { strongPasswordSchema, emailSchema, nameOptionalSchema } from "@/lib/validation/user";
 import { verifyRegistrationAntiSpam } from "@/lib/captcha/verify-registration-antispam";
 import { verifyUserTotpCode } from "@/lib/auth/totp-app";
@@ -100,10 +101,13 @@ export async function registerClientAction(
   });
   const site = await getSiteUrlFromHeaders();
   const link = `${site}/api/auth/verify-email?token=${encodeURIComponent(raw)}`;
+  const branded = buildEmailVerificationMail(link);
   const mail = await sendMailIfConfigured({
     to: u.email,
-    subject: "Potwierdź rejestrację — Weddingassistant",
-    text: `Otwórz w przeglądarce (2 dni):\n${link}\n\nPozdrowienia, Weddingassistant`,
+    subject: branded.subject,
+    text: branded.text,
+    html: branded.html,
+    templateKey: branded.templateKey,
   });
   if (mail.sent) {
     return {

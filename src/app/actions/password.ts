@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { hashSessionTokenToHex, createOpaqueSessionToken } from "@/lib/crypto/session-token";
 import { getSiteUrlFromHeaders } from "@/lib/env/public";
 import { sendMailIfConfigured } from "@/lib/mail/send";
+import { buildPasswordResetMail } from "@/lib/mail/templates/presets";
 import { strongPasswordSchema, emailSchema } from "@/lib/validation/user";
 import { rateLimitOrThrow } from "@/lib/rate-limit";
 import { hashPassword } from "@/lib/auth/password";
@@ -51,10 +52,13 @@ export async function requestPasswordResetAction(
     });
     const site = await getSiteUrlFromHeaders();
     const link = `${site}/nowe-haslo?token=${encodeURIComponent(raw)}`;
+    const branded = buildPasswordResetMail(link);
     await sendMailIfConfigured({
       to: u.email,
-      subject: "Reset hasła — Weddingassistant",
-      text: `Ustaw nowe hasło (1 h):\n${link}\n\nJeśli to nie Ty, zignoruj tę wiadomość.`,
+      subject: branded.subject,
+      text: branded.text,
+      html: branded.html,
+      templateKey: branded.templateKey,
     });
   }
   return {

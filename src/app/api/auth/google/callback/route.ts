@@ -9,6 +9,7 @@ import {
 import { exchangeGoogleCode, fetchGoogleUserInfo } from "@/lib/auth/google-oauth-flow";
 import { upsertClientUserFromGoogle } from "@/lib/auth/google-oauth-user";
 import { sendMailIfConfigured } from "@/lib/mail/send";
+import { buildWelcomeGoogleMail } from "@/lib/mail/templates/presets";
 import {
   COOKIE_NAME_CLIENT,
   buildSessionCookieOptions,
@@ -73,13 +74,13 @@ export async function GET(req: Request) {
     }
 
     if (auth.shouldSendWelcome) {
+      const mail = buildWelcomeGoogleMail(origin);
       await sendMailIfConfigured({
         to: profile.email,
-        subject: "Witamy w Weddingassistant",
-        text:
-          "Dziękujemy za rejestrację przez Google.\n\n" +
-          "Twoje konto jest aktywne i możesz od razu korzystać z panelu klienta.\n\n" +
-          `Przejdź do panelu: ${origin}/dashboard`,
+        subject: mail.subject,
+        text: mail.text,
+        html: mail.html,
+        templateKey: mail.templateKey,
       });
     }
 
