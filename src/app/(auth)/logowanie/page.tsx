@@ -40,6 +40,16 @@ export default async function LogowaniePage({ searchParams }: P) {
       <div
         className="mx-auto w-full max-w-md rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8"
       >
+        {kontekst === "client" ? (
+          <p className="mb-4 text-center">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-[#6B5427] underline decoration-[#c9a050]/40 underline-offset-4 transition hover:text-[#5a4520]"
+            >
+              ← Strona główna
+            </Link>
+          </p>
+        ) : null}
         <h1
           className="text-center font-sans text-2xl font-semibold text-slate-900"
         >

@@ -22,6 +22,14 @@ export default async function RejestracjaPage({ searchParams }: P) {
   return (
     <div className="min-h-full bg-[#FDF8F0] px-4 py-10 sm:px-6">
       <div className="mx-auto w-full max-w-md rounded-2xl border border-[#E0D0B0]/50 bg-white p-6 shadow-sm sm:p-8">
+        <p className="mb-4 text-center">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-[#6B5427] underline decoration-[#c9a050]/40 underline-offset-4 transition hover:text-[#5a4520]"
+          >
+            ← Strona główna
+          </Link>
+        </p>
         <h1 className="text-center font-serif text-2xl font-semibold text-[#2B2B2B]">Rejestracja</h1>
         <p className="mt-1 text-center text-sm text-[#4A4A4A]">
           Konto pary: Google (od razu aktywne) albo e-mail z silnym hasłem i potwierdzeniem skrzynki.
