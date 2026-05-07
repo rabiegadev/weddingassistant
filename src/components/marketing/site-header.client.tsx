@@ -62,7 +62,7 @@ function MarketingNavLink({
       <span className="relative z-10">{label}</span>
       <span
         aria-hidden
-        className={`pointer-events-none absolute bottom-1 left-1/2 z-[5] h-[2px] ${lineWidth} -translate-x-1/2 rounded-full bg-gradient-to-r from-transparent via-[#ecd9b4] to-transparent shadow-[0_0_10px_rgba(236,217,180,0.48)] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] [transform-origin:center] ${
+        className={`pointer-events-none absolute bottom-1 left-1/2 z-[5] h-[2px] ${lineWidth} -translate-x-1/2 rounded-full bg-gradient-to-r from-transparent via-[#f0dfc4] to-transparent shadow-[0_0_14px_rgba(236,217,180,0.55),0_0_28px_rgba(212,175,130,0.18)] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] [transform-origin:center] ${
           active ? "scale-x-100 opacity-100" : "scale-x-0 opacity-95 group-hover:scale-x-100 group-hover:opacity-100 group-focus-visible:scale-x-100"
         }`}
       />
@@ -125,7 +125,7 @@ export function SiteHeaderClient({
     <header
       className={`fixed inset-x-0 top-0 z-50 w-full border-b transition-[opacity,transform,background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-out ${
         visible
-          ? "pointer-events-auto translate-y-0 border-b border-[#cfb48a]/34 bg-[linear-gradient(180deg,rgba(38,25,14,0.9)_0%,rgba(31,21,12,0.86)_50%,rgba(25,17,10,0.9)_100%)] opacity-100 shadow-[0_18px_46px_-24px_rgba(14,10,7,0.82)] backdrop-blur-[10px] backdrop-saturate-[1.1]"
+          ? "pointer-events-auto translate-y-0 border-b border-[#cfb48a]/38 bg-[linear-gradient(180deg,rgba(34,22,13,0.82)_0%,rgba(28,18,11,0.78)_48%,rgba(22,14,9,0.84)_100%)] opacity-100 shadow-[0_22px_56px_-28px_rgba(12,8,6,0.72)] backdrop-blur-[14px] backdrop-saturate-[1.08]"
           : "pointer-events-none -translate-y-2 border-transparent bg-transparent opacity-0 backdrop-blur-none"
       }`}
       aria-hidden={false}
@@ -229,7 +229,7 @@ export function SiteHeaderClient({
                 </button>
                 <button
                   type="button"
-                  className="rounded-full border border-[#e2c18d]/70 bg-[#d0ab72] px-4 py-2 text-sm font-semibold tracking-[0.02em] text-[#261a10] shadow-[0_10px_26px_-18px_rgba(45,31,16,0.9)] transition hover:brightness-105"
+                  className="rounded-full border border-[#e2c18d]/75 bg-[#d0ab72] px-4 py-2 text-sm font-semibold tracking-[0.02em] text-[#261a10] shadow-[0_12px_32px_-16px_rgba(45,31,16,0.85),inset_0_1px_0_rgba(255,246,228,0.35)] transition duration-300 hover:brightness-[1.07] hover:shadow-[0_16px_38px_-14px_rgba(45,31,16,0.88)]"
                   onClick={() => openRegister()}
                   aria-label="Załóż darmowe konto"
                 >

@@ -1,4 +1,6 @@
-import type { CSSProperties } from "react";
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
 
 type StepItem = {
   id: number;
@@ -38,31 +40,61 @@ const steps: readonly StepItem[] = [
   },
 ];
 
+const listContainer = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.08, delayChildren: 0.04 },
+  },
+};
+
+const listItem = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring" as const, stiffness: 260, damping: 26 },
+  },
+};
+
 export function HomeHowItWorksSection() {
+  const reduce = useReducedMotion();
+
   return (
     <section
-      className="scroll-mt-wa border-b border-[#4d3925]/70 bg-[#2a1d13] bg-[image:repeating-linear-gradient(115deg,rgba(219,190,151,0.04)_0px,rgba(219,190,151,0.04)_1px,transparent_1px,transparent_16px)]"
+      className="wa-marketing-section scroll-mt-wa border-b border-[#4d3925]/70 bg-[#2a1d13] bg-[image:repeating-linear-gradient(115deg,rgba(219,190,151,0.04)_0px,rgba(219,190,151,0.04)_1px,transparent_1px,transparent_16px)]"
       aria-labelledby="sekcja-jak-to-dziala"
     >
-      <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14">
-        <header className="mx-auto max-w-3xl text-center">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[45%] bg-[radial-gradient(ellipse_70%_80%_at_50%_-10%,rgba(200,165,110,0.08),transparent_58%)]" aria-hidden />
+
+      <div className="relative mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
+        <motion.header
+          className="mx-auto max-w-3xl text-center"
+          initial={reduce ? undefined : { opacity: 0, y: 12 }}
+          whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-12% 0px" }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        >
           <h2
             id="sekcja-jak-to-dziala"
             className="font-wa-display text-2xl font-semibold tracking-[0.02em] text-[#f0e4d2] sm:text-3xl"
           >
             Jak to działa?
           </h2>
-          <p className="mt-2 text-sm text-[#d7c5ad] sm:text-base">
-            To bardzo proste, tylko spójrz!
-          </p>
-        </header>
+          <p className="mt-3 text-sm text-[#d7c5ad] sm:text-base">To bardzo proste, tylko spójrz!</p>
+        </motion.header>
 
-        <ol className="mt-8 grid grid-cols-1 gap-4 sm:mt-10 sm:grid-cols-2 xl:grid-cols-4">
+        <motion.ol
+          className="mt-10 grid grid-cols-1 gap-5 sm:mt-12 sm:grid-cols-2 xl:grid-cols-4"
+          variants={listContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-8% 0px" }}
+        >
           {steps.map((step, index) => (
-            <li
+            <motion.li
               key={step.id}
-              className="animate-wa-offer-card-in relative flex min-h-[15.5rem] flex-col items-center p-1 text-center sm:min-h-[17rem] sm:p-2"
-              style={{ animationDelay: `${index * 70}ms` } as CSSProperties}
+              variants={listItem}
+              className="relative flex min-h-[15.5rem] flex-col items-center p-1 text-center sm:min-h-[17rem] sm:p-2"
             >
               {index < steps.length - 1 ? (
                 <span
@@ -71,24 +103,28 @@ export function HomeHowItWorksSection() {
                 />
               ) : null}
               <div className="mb-4 flex w-full flex-col items-center gap-4">
-                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#d7bb90]/60 bg-[#f6e7cc] text-base font-semibold text-[#4a321b]">
+                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#d7bb90]/60 bg-[#f6e7cc] text-base font-semibold text-[#4a321b] shadow-[inset_0_1px_0_rgba(255,252,246,0.65)]">
                   {step.id}
                 </span>
               </div>
               <h3 className="font-wa-display text-xl font-semibold text-[#f2e6d5] sm:text-[1.35rem]">
                 {keepPolishOrphans(step.title)}
               </h3>
-              <p className="mt-3 text-sm leading-relaxed text-[#d8c6ad]">
-                {keepPolishOrphans(step.description)}
-              </p>
-            </li>
+              <p className="mt-3 text-sm leading-relaxed text-[#d8c6ad]">{keepPolishOrphans(step.description)}</p>
+            </motion.li>
           ))}
-        </ol>
-        <p className="mx-auto mt-6 max-w-5xl text-center text-xs leading-relaxed text-[#bca88f] sm:text-sm">
+        </motion.ol>
+        <motion.p
+          className="mx-auto mt-8 max-w-5xl text-center text-xs leading-relaxed text-[#bca88f] sm:mt-10 sm:text-sm"
+          initial={reduce ? undefined : { opacity: 0 }}
+          whileInView={reduce ? undefined : { opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.15, duration: 0.4 }}
+        >
           {keepPolishOrphans(
             "W przypadku planów zawierających stronę internetową (z szablonu lub indywidualną) zostaną przesłane dodatkowe informacje wraz z prośbą o odpowiedź na niezbędne pytania. W wiadomości podamy również szacowany czas realizacji waszej wizytówki weselnej."
           )}
-        </p>
+        </motion.p>
       </div>
     </section>
   );

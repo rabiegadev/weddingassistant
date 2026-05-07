@@ -1,12 +1,13 @@
-import Link from "next/link";
-import Image from "next/image";
 import { Suspense } from "react";
+import { HomeFaqSection } from "@/components/marketing/home-faq-section";
 import { HomeFeaturesSection } from "@/components/marketing/home-features-section";
 import { HomeHowItWorksSection } from "@/components/marketing/home-how-it-works-section";
 import { HomeOfferSection } from "@/components/marketing/home-offer-section";
 import { HomeToolDemoSection } from "@/components/marketing/home-tool-demo-section";
 import { HomeWeddingSitesSection } from "@/components/marketing/home-wedding-sites-section";
-import { HomeContactForm } from "@/components/marketing/home-contact-form";
+import { MarketingHero } from "@/components/marketing/marketing-hero";
+import { MarketingPreFooterCta } from "@/components/marketing/marketing-pre-footer-cta";
+import { HomeContactSection } from "@/components/marketing/home-contact-section";
 
 function OfferSectionFallback() {
   return (
@@ -24,98 +25,15 @@ function OfferSectionFallback() {
   );
 }
 
-function HeroBackground() {
-  const blurMask =
-    "linear-gradient(to right, black 0%, black 14%, rgba(0,0,0,0.4) 26%, rgba(0,0,0,0.12) 34%, rgba(0,0,0,0) 42%, rgba(0,0,0,0) 100%)";
-
-  return (
-    <div className="pointer-events-none absolute inset-0">
-      <Image
-        src="/images/bgnew3.jpg"
-        alt=""
-        fill
-        priority
-        className="object-cover object-center saturate-[1.18] sepia-[0.14]"
-        sizes="100vw"
-      />
-      <div
-        className="absolute inset-0 bg-[linear-gradient(to_right,rgba(22,12,6,0.92)_0%,rgba(34,20,10,0.86)_18%,rgba(62,38,20,0.66)_36%,rgba(106,70,40,0.38)_58%,rgba(162,114,67,0.16)_80%,rgba(255,255,255,0)_100%)]"
-        aria-hidden
-      />
-      <div
-        className="absolute inset-0 bg-[linear-gradient(to_right,rgba(18,10,6,0.88)_0%,rgba(26,15,9,0.7)_10%,rgba(0,0,0,0)_24%,rgba(0,0,0,0)_76%,rgba(26,15,9,0.7)_90%,rgba(18,10,6,0.88)_100%)]"
-        aria-hidden
-      />
-      <div
-        className="absolute inset-0 bg-[radial-gradient(78%_72%_at_25%_38%,rgba(181,132,74,0.26)_0%,rgba(0,0,0,0)_68%)] mix-blend-screen"
-        aria-hidden
-      />
-      <div
-        className="absolute inset-0 backdrop-blur-[min(9px,1.4vw)] backdrop-saturate-[1.03]"
-        style={{ WebkitMaskImage: blurMask, maskImage: blurMask }}
-        aria-hidden
-      />
-    </div>
-  );
-}
-
 const SECTION_A = "bg-[#f7f1e7]"; // lekko beżowy
-const SECTION_B = "bg-[#fdfbf7]"; // brudna biel
-const SECTION_C = "bg-[#e9dccb]"; // średnio jasny brązowy
-
 export default function HomePage() {
   return (
-    <main>
-      <section
-        className="relative -mt-[var(--wa-sticky-offset)] isolate flex min-h-[max(100svh,100dvh)] flex-col overflow-hidden border-b border-[#E8DCC4]/45 pt-[var(--wa-sticky-offset)]"
-        aria-label="Weddingassistant — strona główna"
-      >
-        <HeroBackground />
-        <div className="relative z-10 flex flex-1 flex-col justify-center px-5 pb-8 pt-10 sm:px-10 lg:px-16 lg:pb-12 lg:pt-14">
-          <div className="max-w-xl lg:max-w-2xl">
-            <h1 className="font-wa-display text-balance text-3xl font-semibold leading-tight tracking-[0.02em] text-[#f1e4d3] drop-shadow-[0_1px_8px_rgba(15,11,7,0.45)] sm:text-4xl lg:text-5xl">
-              Zaplanujcie ten wyjątkowy dzień z maksymalną starannością dzięki naszemu wsparciu
-            </h1>
-            <p className="mt-5 max-w-xl text-pretty text-[0.9375rem] leading-relaxed text-[#eadbca] sm:text-base">
-              Nasza platforma powstała aby ułatwić proces planowania wesela oraz zebrać wszystkie niezbędne informacje w
-              jednym miejscu, które jest dla Was dostępne w każdej chwili.
-            </p>
-            <p className="mt-8">
-              <Link
-                className="inline-flex min-h-11 items-center justify-center gap-3 rounded-full border border-[#d2b27e]/70 bg-[#d7b173] px-7 py-2.5 text-sm font-semibold text-[#2b2117] shadow-[0_12px_36px_-18px_rgba(32,23,14,0.65)] transition hover:brightness-105"
-                href="/#oferta"
-              >
-                <span>Sprawdź możliwości</span>
-                <span aria-hidden className="h-4 w-px bg-[#6d5332]/45" />
-                <span aria-hidden className="text-base leading-none">→</span>
-              </Link>
-            </p>
-          </div>
-        </div>
-        <div className="relative z-10 mt-auto flex justify-center pb-7">
-          <a
-            href="#funkcje"
-            className="flex flex-col items-center gap-1 text-[#6b5d4d] transition hover:text-[#4a4036]"
-            aria-label="Przewiń do sekcji Funkcje"
-          >
-            <span className="text-[0.65rem] font-medium uppercase tracking-[0.22em] opacity-80">Dalej</span>
-            <svg
-              className="animate-wa-scroll-arrow h-8 w-8"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              aria-hidden
-            >
-              <path d="M12 5v14M6 13l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </a>
-        </div>
-      </section>
+    <main className="relative">
+      <MarketingHero />
 
       <section
         id="funkcje"
-        className={`scroll-mt-wa border-b border-[#e1d2bc]/70 ${SECTION_A}`}
+        className={`wa-marketing-section scroll-mt-wa border-b border-[#e1d2bc]/70 ${SECTION_A}`}
         aria-label="Sekcja funkcji Weddingassistant"
       >
         <HomeFeaturesSection />
@@ -129,7 +47,7 @@ export default function HomePage() {
 
       <section
         id="oferta"
-        className="scroll-mt-wa overflow-hidden border-b border-[rgba(212,176,122,0.22)] bg-transparent"
+        className="wa-marketing-section scroll-mt-wa overflow-hidden border-b border-[rgba(212,176,122,0.22)] bg-transparent"
         aria-label="Oferta i cennik"
       >
         <Suspense fallback={<OfferSectionFallback />}>
@@ -137,104 +55,11 @@ export default function HomePage() {
         </Suspense>
       </section>
 
-      <section
-        id="kontakt"
-        className={`scroll-mt-wa border-b border-[#e1d2bc]/70 ${SECTION_B}`}
-        aria-labelledby="sekcja-kontakt"
-      >
-        <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-          <h2 className="font-wa-display text-xl font-medium tracking-[0.02em] text-[#2E2A26] sm:text-2xl" id="sekcja-kontakt">
-            Kontakt
-          </h2>
-          <p className="mt-2 max-w-2xl text-sm text-[#4A4A4A] sm:text-base">
-            Masz pytania o pakiety lub współpracę? Napisz przez formularz lub bezpośrednio — odpowiadamy możliwie szybko.
-          </p>
-          <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-stretch lg:gap-8">
-            <div className="rounded-xl border border-[#ece6dc] bg-[#fcfaf6] p-4 sm:p-5">
-              <ul className="space-y-4 text-sm text-[#2B2B2B] sm:text-base">
-                <li>
-                  <p className="text-xs font-medium uppercase tracking-wide text-[#75695d]">E-mail</p>
-                  <a className="mt-1 inline-block font-medium text-[#6B5427] underline break-all" href="mailto:kontakt@weddingassistant.pl">
-                    kontakt@weddingassistant.pl
-                  </a>
-                </li>
-                <li>
-                  <p className="text-xs font-medium uppercase tracking-wide text-[#75695d]">Telefon</p>
-                  <a className="mt-1 inline-block font-medium text-[#2B2B2B] underline" href="tel:+48793745717">
-                    +48 793 745 717
-                  </a>
-                </li>
-                <li>
-                  <p className="text-xs font-medium uppercase tracking-wide text-[#75695d]">Studio</p>
-                  <a
-                    className="mt-1 inline-block font-medium text-[#6B5427] underline"
-                    href="https://rabiegadevelopment.pl"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    rabiegadevelopment.pl
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <HomeContactForm
-              sourcePage="/#kontakt"
-              compact
-              className="h-full rounded-xl border border-[#ece6dc] bg-[#fdfcfa] p-4 sm:p-5"
-            />
-          </div>
-        </div>
-      </section>
+      <HomeContactSection />
 
-      <section className={`border-b border-[#d8c5a7]/70 ${SECTION_C}`} aria-labelledby="sekcja-faq">
-        <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
-          <h2 className="font-wa-display text-xl font-medium tracking-[0.02em] text-[#2E2A26] sm:text-2xl" id="sekcja-faq">
-            FAQ
-          </h2>
-          <p className="mt-2 max-w-2xl text-sm text-[#4f463d] sm:text-base">
-            Najczęstsze pytania o działanie pakietów, konfigurację strony weselnej i start współpracy.
-          </p>
-          <div className="mt-6 grid grid-cols-1 gap-4">
-            {[
-              {
-                q: "Czy mogę zacząć od darmowego planu i później przejść wyżej?",
-                a: "Tak. Możesz zacząć bez kosztów, a gdy będziesz gotowy, przejść na pakiet płatny bez zakładania nowego konta.",
-              },
-              {
-                q: "Czy wizytówkę weselną można dopasować do naszych danych?",
-                a: "Tak. Imiona, zdjęcia, harmonogram, adresy i najważniejsze sekcje są konfigurowane pod Waszą parę.",
-              },
-              {
-                q: "Ile trwa uruchomienie strony weselnej?",
-                a: "Dla szablonu zwykle trwa to krótko po zebraniu danych, a projekt personalizowany realizujemy według briefu i ustalonego harmonogramu.",
-              },
-              {
-                q: "Czy mogę liczyć na pomoc po starcie?",
-                a: "Tak. W ramach obsługi pomagamy we wdrożeniu, zmianach treści i bieżących pytaniach dotyczących panelu.",
-              },
-            ].map((item) => (
-              <details key={item.q} className="group rounded-xl border border-[#d0b693]/75 bg-[#f8f2e9] p-0 shadow-sm">
-                <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-left">
-                  <span className="font-wa-display text-base font-semibold text-[#2f2923]">{item.q}</span>
-                  <span className="shrink-0 text-lg leading-none text-[#8a6f48] transition group-open:rotate-45">+</span>
-                </summary>
-                <div className="border-t border-[#e2d1b8] px-4 py-3">
-                  <p className="text-sm leading-relaxed text-[#554a3f]">{item.a}</p>
-                </div>
-              </details>
-            ))}
-          </div>
-          <div className="mt-6 flex justify-center">
-            <Link
-              href="/faq"
-              className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#B8955C] bg-white px-7 py-2.5 text-sm font-semibold text-[#4a3820] shadow-sm transition hover:bg-[#faf6ef]"
-            >
-              Pełna lista FAQ
-            </Link>
-          </div>
-        </div>
-      </section>
+      <HomeFaqSection />
 
+      <MarketingPreFooterCta />
     </main>
   );
 }

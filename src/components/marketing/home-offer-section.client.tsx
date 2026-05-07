@@ -83,13 +83,13 @@ function IconMobile({ className }: { className?: string }) {
 
 /** Bazowy cień premium + opcjonalny lift na hover */
 const cardShadow =
-  "shadow-[0_25px_60px_rgba(60,40,20,0.08),0_6px_16px_-6px_rgba(50,38,26,0.05)]";
+  "shadow-[0_28px_68px_rgba(60,40,20,0.095),0_8px_22px_-8px_rgba(48,34,22,0.06),inset_0_1px_0_rgba(255,253,249,0.65)]";
 const cardShadowHover =
-  "lg:group-hover/card:shadow-[0_32px_72px_rgba(60,40,20,0.11),0_12px_28px_-8px_rgba(70,48,28,0.07)]";
+  "lg:group-hover/card:shadow-[0_36px_84px_rgba(60,40,20,0.12),0_14px_36px_-10px_rgba(62,44,28,0.08)]";
 const featuredShadow =
-  "shadow-[0_25px_60px_rgba(60,40,20,0.08),0_22px_56px_-12px_rgba(98,72,42,0.12),0_0_0_1px_rgba(212,176,122,0.28)]";
+  "shadow-[0_28px_68px_rgba(60,40,20,0.1),0_26px_62px_-14px_rgba(98,72,42,0.14),0_0_0_1px_rgba(212,176,122,0.32),inset_0_1px_0_rgba(255,251,242,0.55)]";
 const featuredShadowHover =
-  "lg:group-hover/card:shadow-[0_36px_80px_rgba(60,40,20,0.12),0_24px_48px_-10px_rgba(120,88,48,0.14),0_0_0_1px_rgba(212,176,122,0.35)]";
+  "lg:group-hover/card:shadow-[0_42px_92px_rgba(60,40,20,0.13),0_28px_56px_-12px_rgba(120,88,48,0.16),0_0_0_1px_rgba(212,176,122,0.38)]";
 
 export function HomeOfferSectionClient({ packages }: { packages: readonly OfferPackageVm[] }) {
   const [billing, setBilling] = useState<Billing>("one-time");
@@ -156,7 +156,7 @@ export function HomeOfferSectionClient({ packages }: { packages: readonly OfferP
       ) : null}
 
       <motion.div
-        className="relative z-[1] mx-auto max-w-[1500px] px-4 pb-14 pt-14 sm:px-6 md:pb-18 md:pt-16 lg:px-10 lg:pb-[4.75rem] lg:pt-[3.75rem]"
+        className="relative z-[1] mx-auto max-w-[1500px] px-4 pb-14 pt-14 sm:px-6 md:pb-16 md:pt-16 lg:px-10 lg:pb-[4.75rem] lg:pt-[3.75rem]"
         initial={prefersReducedMotion ? undefined : { opacity: 0, y: 14 }}
         whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-8% 0px" }}
@@ -312,7 +312,7 @@ export function HomeOfferSectionClient({ packages }: { packages: readonly OfferP
 
         {/* Pływający panel benefitów */}
         <motion.div
-          className="relative z-[2] mx-auto mt-11 max-w-[1280px] rounded-[2.25rem] border border-[rgba(192,154,106,0.22)] bg-[linear-gradient(180deg,#fffdf9_0%,#f9f3ea_52%,#f6ecdd_100%)] px-7 py-10 shadow-[0_25px_60px_rgba(60,40,20,0.095),0_12px_32px_-12px_rgba(55,40,26,0.08),inset_0_1px_0_rgba(255,253,249,0.85)] backdrop-blur-[6px] sm:px-10 sm:py-11 lg:mt-12"
+          className="relative z-[2] mx-auto mt-11 max-w-[1280px] rounded-[2.25rem] border border-[rgba(192,154,106,0.26)] bg-[linear-gradient(180deg,#fffdf9_0%,#faf4e8_48%,#f4e9da_100%)] px-7 py-10 shadow-[0_32px_72px_rgba(60,40,20,0.11),0_18px_44px_-18px_rgba(52,38,24,0.09),inset_0_1px_0_rgba(255,253,249,0.92)] backdrop-blur-[8px] sm:px-10 sm:py-11 lg:mt-12"
           initial={prefersReducedMotion ? undefined : { opacity: 0, y: 8 }}
           whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true }}

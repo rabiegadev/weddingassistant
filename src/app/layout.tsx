@@ -41,9 +41,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="pl"
-      className={`h-full ${cormorantDisplay.variable} ${playfair.variable} ${dmSans.variable} antialiased`}
+      className={`min-h-svh ${cormorantDisplay.variable} ${playfair.variable} ${dmSans.variable} antialiased`}
     >
-      <body className="flex h-full min-h-svh flex-col bg-[#FDF8F0] font-sans text-[#2B2B2B]">
+      <body className="flex min-h-svh flex-col bg-[#FDF8F0] font-sans text-[#2B2B2B]">
         {children}
       </body>
     </html>

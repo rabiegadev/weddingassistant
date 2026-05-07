@@ -86,4 +86,10 @@
   .animate-wa-offer-card-in {
     animation: wa-offer-card-in 520ms ease-out both;
   }
+
+  /** Sekcje marketingu — delikatna „scena” nad ambientowym tłem */
+  .wa-marketing-section {
+    position: relative;
+    isolation: isolate;
+  }
 }

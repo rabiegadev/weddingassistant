@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { AnimatePresence, LayoutGroup, motion, useMotionValue, useSpring } from "framer-motion";
+import { useMemo, useRef, useState } from "react";
 
 type CardSpec = {
   id: string;
@@ -182,28 +182,51 @@ function FeatureButton({
   onClick: () => void;
 }) {
   return (
-    <button
+    <motion.button
+      layout
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`group flex h-[62px] w-full items-center gap-3 rounded-[20px] border px-4 text-left transition-all duration-300 ${
+      whileHover={{ scale: 1.008 }}
+      whileTap={{ scale: 0.994 }}
+      transition={{ type: "spring", stiffness: 420, damping: 28 }}
+      className={`group relative flex h-[62px] w-full items-center gap-3 overflow-hidden rounded-[20px] border px-4 text-left transition-colors duration-300 ${
         active
-          ? "border-[#cfb48d]/70 bg-[#f9f4ec] shadow-[0_14px_28px_-24px_rgba(105,76,43,0.9)] ring-1 ring-[#d8c09a]/35"
-          : "border-[#ece4d8]/88 bg-[#f5f0e7]/70 hover:border-[#decbb0]/78 hover:bg-[#fbf7f0]"
+          ? "border-[#cfb48d]/72 shadow-[0_18px_38px_-26px_rgba(92,68,42,0.42)] ring-1 ring-[#d8c09a]/38"
+          : "border-[#ece4d8]/88 bg-[#f5f0e7]/72 hover:border-[#decbb0]/78 hover:bg-[#fbf7f0]"
       }`}
     >
-      <span
-        aria-hidden
-        className={`h-7 w-[3px] rounded-full transition-all ${
-          active ? "bg-[#cfb48d] shadow-[0_0_10px_rgba(207,180,141,0.55)]" : "bg-transparent"
-        }`}
-      />
-      <FeatureIcon active={active} />
-      <span className="min-w-0 flex-1 font-wa-display text-[1.02rem] font-medium text-[#342c24]">
+      {active ? (
+        <motion.span
+          aria-hidden
+          layoutId="wa-feature-tab-bg"
+          className="pointer-events-none absolute inset-0 rounded-[20px] bg-[linear-gradient(135deg,#fffdfa_0%,#f9f4ec_48%,#f2e8dc_100%)] shadow-[inset_0_1px_0_rgba(255,253,249,0.9)]"
+          transition={{ type: "spring", stiffness: 320, damping: 30 }}
+        />
+      ) : null}
+      <span aria-hidden className="relative z-[1] flex h-7 w-[3px] shrink-0 justify-center">
+        {active ? (
+          <motion.span
+            layoutId="wa-feature-accent-bar"
+            className="h-7 w-[3px] rounded-full bg-[#cfb48d] shadow-[0_0_14px_rgba(207,180,141,0.55)]"
+            transition={{ type: "spring", stiffness: 400, damping: 32 }}
+          />
+        ) : (
+          <span className="h-7 w-[3px] rounded-full bg-transparent" />
+        )}
+      </span>
+      <span className="relative z-[1]">
+        <FeatureIcon active={active} />
+      </span>
+      <span className="relative z-[1] min-w-0 flex-1 font-wa-display text-[1.02rem] font-medium text-[#342c24]">
         {feature.title}
       </span>
-      <span className={`text-sm transition ${active ? "text-[#7a6144]" : "text-[#9b8a78] group-hover:text-[#7a6144]"}`}>›</span>
-    </button>
+      <span
+        className={`relative z-[1] text-sm transition ${active ? "text-[#7a6144]" : "text-[#9b8a78] group-hover:text-[#7a6144]"}`}
+      >
+        ›
+      </span>
+    </motion.button>
   );
 }
 
@@ -212,9 +235,32 @@ function FloatingCollage({ feature }: { feature: FeatureSpec }) {
    * Cards are absolutely positioned; they don't expand this box.
    * min-height must clear the lowest card (many specs use y ≈ 50–54% + tall aspect ratios).
    */
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 90, damping: 22 });
+  const sy = useSpring(my, { stiffness: 90, damping: 22 });
+
+  const handleMove = (e: import("react").MouseEvent<HTMLDivElement>) => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    mx.set(((e.clientX - r.left) / r.width - 0.5) * 18);
+    my.set(((e.clientY - r.top) / r.height - 0.5) * 14);
+  };
+  const handleLeave = () => {
+    mx.set(0);
+    my.set(0);
+  };
+
   return (
-    <div className="relative min-h-[min(92vw,34rem)] sm:min-h-[40rem] lg:min-h-[42rem]">
-      <div className="pointer-events-none absolute left-[14%] top-[8%] h-56 w-[72%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(215,183,139,0.28)_0%,rgba(215,183,139,0.12)_38%,transparent_74%)] blur-3xl" />
+    <div
+      ref={wrapRef}
+      className="relative min-h-[min(92vw,34rem)] sm:min-h-[40rem] lg:min-h-[42rem]"
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+    >
+      <div className="pointer-events-none absolute left-[14%] top-[8%] h-56 w-[72%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(215,183,139,0.32)_0%,rgba(215,183,139,0.12)_40%,transparent_74%)] blur-3xl" />
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -223,7 +269,8 @@ function FloatingCollage({ feature }: { feature: FeatureSpec }) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -10, scale: 0.985 }}
           transition={{ type: "spring", stiffness: 120, damping: 24, mass: 0.8 }}
-          className="absolute inset-0"
+          style={{ x: sx, y: sy }}
+          className="absolute inset-0 will-change-transform"
         >
           {feature.cards.map((card, index) => (
             <motion.div
@@ -237,7 +284,12 @@ function FloatingCollage({ feature }: { feature: FeatureSpec }) {
                 damping: 26,
                 delay: index * 0.04,
               }}
-              className={`absolute ${card.ratio} overflow-hidden rounded-[26px] shadow-[0_22px_44px_-28px_rgba(45,32,18,0.55)]`}
+              whileHover={{
+                y: -4,
+                boxShadow: "0 28px 52px -22px rgba(45,32,18,0.42)",
+                transition: { type: "spring", stiffness: 260, damping: 22 },
+              }}
+              className={`absolute ${card.ratio} overflow-hidden rounded-[26px] shadow-[0_26px_52px_-26px_rgba(45,32,18,0.52)]`}
               style={{
                 left: card.x,
                 top: card.y,
@@ -272,18 +324,18 @@ export function HomeFeaturesSection() {
   const mobileTabs = useMemo(() => featureSpecs, []);
 
   return (
-    <section id="sekcja-funkcje" className="w-full border-t border-[#ebe3d7]/80 bg-[#f5f1ea] pb-16 pt-7 sm:pb-20 sm:pt-10">
+    <section id="sekcja-funkcje" className="w-full border-t border-[#ebe3d7]/80 bg-[#f5f1ea] pb-20 pt-12 sm:pb-24 sm:pt-14">
       <div className="mx-auto w-[min(100%,96vw)] max-w-[1800px] px-4 sm:px-6 lg:px-10">
-        <header className="mx-auto mb-8 max-w-4xl text-center sm:mb-10">
-          <div className="mx-auto mb-4 flex items-center justify-center gap-3 text-[#b79463]">
+        <header className="mx-auto mb-12 max-w-4xl text-center sm:mb-14">
+          <div className="mx-auto mb-5 flex items-center justify-center gap-3 text-[#b79463]">
             <span className="h-px w-12 bg-gradient-to-r from-transparent to-[#c8a575]/60" />
             <span className="text-[11px] uppercase tracking-[0.24em]">✦</span>
             <span className="h-px w-12 bg-gradient-to-l from-transparent to-[#c8a575]/60" />
           </div>
-          <h2 className="font-wa-display text-balance text-[2rem] font-semibold leading-tight tracking-[0.01em] text-[#2f2720] sm:text-[2.45rem]">
+          <h2 className="font-wa-display text-balance text-[2rem] font-semibold leading-[1.12] tracking-[0.01em] text-[#2f2720] sm:text-[2.45rem]">
             Wszystko, czego potrzebujecie w jednym miejscu
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-pretty text-sm leading-[1.82] text-[#78695b] sm:text-base">
+          <p className="mx-auto mt-5 max-w-2xl text-pretty text-sm leading-[1.85] text-[#78695b] sm:text-base">
             Od pierwszego zaproszenia po plan stołów — Wasze przygotowania płyną spokojnie, elegancko i zawsze w Waszym rytmie.
           </p>
         </header>
@@ -306,16 +358,18 @@ export function HomeFeaturesSection() {
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.6fr)_minmax(0,1.4fr)] lg:items-start lg:gap-12">
           <aside className="hidden lg:block">
-            <div className="space-y-3">
-              {featureSpecs.map((feature, index) => (
-                <FeatureButton
-                  key={feature.id}
-                  feature={feature}
-                  active={index === activeIndex}
-                  onClick={() => setActiveIndex(index)}
-                />
-              ))}
-            </div>
+            <LayoutGroup id="wa-features-tabs">
+              <div className="space-y-3">
+                {featureSpecs.map((feature, index) => (
+                  <FeatureButton
+                    key={feature.id}
+                    feature={feature}
+                    active={index === activeIndex}
+                    onClick={() => setActiveIndex(index)}
+                  />
+                ))}
+              </div>
+            </LayoutGroup>
           </aside>
 
           <div>

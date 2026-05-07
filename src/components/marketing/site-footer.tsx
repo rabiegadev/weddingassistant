@@ -8,13 +8,33 @@ export function SiteFooter({ className }: SiteFooterProps) {
   return (
     <footer
       className={[
-        "mt-auto border-t border-[#c9a050]/50 bg-[#1a1510] text-[#e8dcc8]",
+        "relative z-[1] mt-auto shrink-0 overflow-hidden border-t border-[rgba(201,160,80,0.42)] bg-[#16120e] text-[#e8dcc8] shadow-[0_-32px_80px_-40px_rgba(0,0,0,0.55)]",
         className,
       ]
         .filter(Boolean)
         .join(" ")}
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-2">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(228,196,140,0.55)] to-transparent shadow-[0_-8px_32px_rgba(228,196,140,0.12)]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-[20%] bottom-[-40%] h-[min(55vw,420px)] w-[min(55vw,420px)] rounded-full opacity-[0.07]"
+        style={{
+          background: "radial-gradient(circle at 40% 40%, rgba(200,165,110,0.9), transparent 68%)",
+          filter: "blur(48px)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-[15%] top-[-30%] h-[min(45vw,360px)] w-[min(45vw,360px)] rounded-full opacity-[0.06]"
+        style={{
+          background: "radial-gradient(circle at 55% 55%, rgba(175,135,88,0.85), transparent 70%)",
+          filter: "blur(52px)",
+        }}
+      />
+      <div className="relative mx-auto grid w-full max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 md:gap-12 md:py-16">
         <div>
           <h2 className="font-serif text-lg font-semibold tracking-wide text-[#f0e4c8]">Weddingassistant.pl</h2>
           <p className="mt-2 text-sm leading-relaxed text-[#c9bba8]">
