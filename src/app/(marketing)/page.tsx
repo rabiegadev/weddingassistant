@@ -55,7 +55,7 @@ export default function HomePage() {
   return (
     <main>
       <section
-        className="relative isolate flex min-h-[max(100svh,100dvh)] flex-col overflow-hidden border-b border-[#E8DCC4]/45"
+        className="relative -mt-[var(--wa-sticky-offset)] isolate flex min-h-[max(100svh,100dvh)] flex-col overflow-hidden border-b border-[#E8DCC4]/45 pt-[var(--wa-sticky-offset)]"
         aria-label="Weddingassistant — strona główna"
       >
         <HeroBackground />

@@ -55,14 +55,14 @@ function MarketingNavLink({
     <Link
       href={href}
       onClick={onNavigate}
-      className={`group relative font-medium text-[#fff2de] tracking-[0.02em] transition-colors hover:text-[#fffaf2] ${
-        variant === "desktop" ? "whitespace-nowrap px-3 py-2 text-sm" : "block px-3 py-2.5 text-sm"
+      className={`group relative font-wa-display text-[#f4e6d2] tracking-[0.012em] transition-colors hover:text-[#fff7eb] ${
+        variant === "desktop" ? "whitespace-nowrap px-4 py-2 text-[1.03rem]" : "block px-3 py-2.5 text-sm"
       }`}
     >
       <span className="relative z-10">{label}</span>
       <span
         aria-hidden
-        className={`pointer-events-none absolute bottom-1 left-1/2 z-[5] h-[2px] ${lineWidth} -translate-x-1/2 rounded-full bg-gradient-to-r from-transparent via-[#f8e4b0] via-[#ecc267] to-transparent shadow-[0_0_10px_rgba(248,228,176,0.55)] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] [transform-origin:center] ${
+        className={`pointer-events-none absolute bottom-1 left-1/2 z-[5] h-[2px] ${lineWidth} -translate-x-1/2 rounded-full bg-gradient-to-r from-transparent via-[#ecd9b4] to-transparent shadow-[0_0_10px_rgba(236,217,180,0.48)] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] [transform-origin:center] ${
           active ? "scale-x-100 opacity-100" : "scale-x-0 opacity-95 group-hover:scale-x-100 group-hover:opacity-100 group-focus-visible:scale-x-100"
         }`}
       />
@@ -125,30 +125,30 @@ export function SiteHeaderClient({
     <header
       className={`fixed inset-x-0 top-0 z-50 w-full border-b transition-[opacity,transform,background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-out ${
         visible
-          ? "pointer-events-auto translate-y-0 border-[#8a6a47]/55 bg-[#3f2f21]/62 opacity-100 shadow-[0_12px_40px_-22px_rgba(20,14,9,0.62)] backdrop-blur-xl backdrop-saturate-[1.08]"
+          ? "pointer-events-auto translate-y-0 border-b border-[#e1c9a2]/38 bg-[linear-gradient(180deg,rgba(71,49,30,0.62)_0%,rgba(58,40,24,0.52)_45%,rgba(45,31,19,0.56)_100%)] opacity-100 shadow-[0_16px_42px_-24px_rgba(20,14,9,0.72)] backdrop-blur-[12px] backdrop-saturate-[1.18]"
           : "pointer-events-none -translate-y-2 border-transparent bg-transparent opacity-0 backdrop-blur-none"
       }`}
       aria-hidden={false}
     >
-      <div className="flex w-full items-center gap-3 px-4 py-2 sm:gap-4 sm:px-6 sm:py-2.5">
-        <Link href="/" className="flex min-w-0 shrink-0 items-center gap-2.5 lg:gap-3">
-          <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-md sm:h-10 sm:w-10">
+      <div className="flex w-full items-center gap-3 px-4 py-2.5 sm:gap-4 sm:px-6 sm:py-3">
+        <Link href="/" className="flex min-w-0 shrink-0 items-center gap-2 lg:gap-2.5">
+          <span className="relative h-8 w-8 shrink-0 overflow-hidden rounded-sm sm:h-9 sm:w-9">
             <Image
               src="/images/icon.png"
               alt=""
               fill
-              className="object-contain brightness-[0.58] contrast-[1.08] saturate-[0.95]"
+              className="object-contain brightness-[0.82] contrast-[1.04] saturate-[0.9]"
               sizes="40px"
               priority
             />
           </span>
-          <span className="truncate font-serif text-lg font-light tracking-[0.06em] text-[#f8ecdc] sm:text-xl">
+          <span className="truncate font-wa-display text-[1.45rem] font-medium tracking-[0.02em] text-[#f1e4d1] sm:text-[1.6rem]">
             Weddingassistant
           </span>
         </Link>
 
-        <div className="flex min-w-0 flex-1 items-center justify-end gap-4 lg:gap-5">
-          <nav className="hidden items-center lg:flex" aria-label="Nawigacja główna">
+        <div className="flex min-w-0 flex-1 items-center justify-end gap-4 lg:gap-6">
+          <nav className="hidden items-center gap-1.5 lg:flex" aria-label="Nawigacja główna">
             {nav.map((item) => (
               <MarketingNavLink
                 key={item.href}
@@ -159,7 +159,7 @@ export function SiteHeaderClient({
             ))}
           </nav>
 
-          <div className="hidden shrink-0 items-center gap-2 lg:flex">
+          <div className="hidden shrink-0 items-center gap-2.5 lg:flex">
             {isAdmin2faPending && twoFaHref ? (
               <>
                 <Link
@@ -216,16 +216,20 @@ export function SiteHeaderClient({
             ) : null}
             {showAuthButtons ? (
               <>
+                <span
+                  aria-hidden
+                  className="mx-1 h-8 w-px bg-gradient-to-b from-transparent via-[#e4cda7]/65 to-transparent shadow-[0_0_8px_rgba(228,205,167,0.35)]"
+                />
                 <button
                   type="button"
-                  className="rounded-md border border-[#e5c48c]/75 bg-[#fff4e2] px-3 py-1.5 text-sm font-semibold tracking-[0.02em] text-[#2e2926] shadow-sm transition hover:bg-[#fff9f0]"
+                  className="rounded-full border border-[#dbc299]/55 bg-transparent px-4 py-2 text-sm font-medium tracking-[0.02em] text-[#f4e8d7] transition hover:border-[#ebd4af]/75 hover:bg-white/[0.06]"
                   onClick={() => openLogin()}
                 >
                   Zaloguj się
                 </button>
                 <button
                   type="button"
-                  className="rounded-md border border-[#d9b57a]/70 bg-[#c69a58] px-3 py-1.5 text-sm font-semibold tracking-[0.02em] text-[#1e140a] shadow-sm transition hover:brightness-110"
+                  className="rounded-full border border-[#e2c18d]/70 bg-[#d0ab72] px-4 py-2 text-sm font-semibold tracking-[0.02em] text-[#261a10] shadow-[0_10px_26px_-18px_rgba(45,31,16,0.9)] transition hover:brightness-105"
                   onClick={() => openRegister()}
                   aria-label="Załóż darmowe konto"
                 >
@@ -249,6 +253,10 @@ export function SiteHeaderClient({
           </div>
         </div>
       </div>
+      <div
+        aria-hidden
+        className="pointer-events-none h-px w-full bg-gradient-to-r from-transparent via-[#e9d7b8]/60 to-transparent shadow-[0_0_12px_rgba(233,215,184,0.3)]"
+      />
 
       {open ? (
         <div

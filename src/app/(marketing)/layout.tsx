@@ -16,7 +16,7 @@ export default async function MarketingLayout({ children }: { children: ReactNod
     >
       <div className="flex min-h-full flex-1 flex-col">
         <SiteHeader />
-        <div className="bg-[#5a4430] pt-[var(--wa-sticky-offset)]">{children}</div>
+        <div className="pt-[var(--wa-sticky-offset)]">{children}</div>
         <SiteFooter />
       </div>
     </MarketingAuthWrapper>
