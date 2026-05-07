@@ -1,273 +1,346 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { type MarketingFeature, marketingFeatures } from "@/data/marketing-features";
+import { AnimatePresence, motion } from "framer-motion";
+import { useMemo, useState } from "react";
 
-function useSectionRevealOnce() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || visible) {
-      return;
-    }
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const hit = entries[0];
-        if (hit?.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.06, rootMargin: "0px 0px -4% 0px" }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [visible]);
-
-  return { ref, visible };
-}
-
-type HighlightRect = { top: number; height: number };
-
-type PreviewPair = {
-  desktopSrc: "/images/f1desktop.png" | "/images/f2desktop.png";
-  mobileSrc: "/images/f1mobile.png" | "/images/f2mobile.png";
+type CardSpec = {
+  id: string;
+  imageSrc: string;
+  replaceHint: string;
+  x: string;
+  y: string;
+  w: string;
+  ratio: string;
+  rotate: number;
+  z: number;
 };
 
-function getFeaturePreviewPair(feature: MarketingFeature, index: number): PreviewPair {
-  if (feature.id === "wedding-web") {
-    return { desktopSrc: "/images/f1desktop.png", mobileSrc: "/images/f1mobile.png" };
-  }
-  if (feature.id === "domain") {
-    return { desktopSrc: "/images/f2desktop.png", mobileSrc: "/images/f2mobile.png" };
-  }
-  return index % 2 === 0
-    ? { desktopSrc: "/images/f1desktop.png", mobileSrc: "/images/f1mobile.png" }
-    : { desktopSrc: "/images/f2desktop.png", mobileSrc: "/images/f2mobile.png" };
+type FeatureSpec = {
+  id: string;
+  title: string;
+  marketingHeading: string;
+  marketingDescription: string;
+  cards: readonly CardSpec[];
+};
+
+const featureSpecs: readonly FeatureSpec[] = [
+  {
+    id: "wedding-web",
+    title: "Strona wesela",
+    marketingHeading: "Wasza własna strona weselna",
+    marketingDescription:
+      "Udostępnij gościom wszystkie najważniejsze informacje w eleganckiej formie — harmonogram dnia, lokalizację, RSVP, noclegi i wyjątkowe chwile zapisane we wspomnieniach.",
+    cards: [
+      { id: "a", imageSrc: "/images/funcimg/func1_1.jpg", replaceHint: "Hero strony wesela", x: "12%", y: "6%", w: "56%", ratio: "aspect-[16/10]", rotate: -2, z: 20 },
+      { id: "b", imageSrc: "/images/funcimg/func1_2.jpg", replaceHint: "Harmonogram wesela", x: "64%", y: "8%", w: "24%", ratio: "aspect-[4/5]", rotate: 2, z: 30 },
+      { id: "c", imageSrc: "/images/funcimg/func1_3.jpg", replaceHint: "Kontakt", x: "56%", y: "54%", w: "30%", ratio: "aspect-[5/3]", rotate: -1, z: 25 },
+    ],
+  },
+  {
+    id: "domain",
+    title: "Twoja własna domena",
+    marketingHeading: "Adres, który od razu zapada w pamięć",
+    marketingDescription:
+      "Wasza wizytówka weselna pod własną domeną wygląda spójnie z zaproszeniami i podkreśla charakter całej uroczystości.",
+    cards: [
+      { id: "a", imageSrc: "/images/funcimg/func2_1.jpg", replaceHint: "Twoja domena", x: "23%", y: "9%", w: "54%", ratio: "aspect-[16/9]", rotate: -1, z: 30 },
+    ],
+  },
+  {
+    id: "planner",
+    title: "Planer weselny",
+    marketingHeading: "Planowanie z wyjątkową lekkością",
+    marketingDescription:
+      "W jednym miejscu zbieracie terminy, checklisty i notatki, dzięki czemu przygotowania przebiegają spokojnie i bez chaosu.",
+    cards: [
+      { id: "a", imageSrc: "/images/funcimg/bg6.jpg", replaceHint: "Podmień: func3_1.jpg (kalendarz/zadania)", x: "21%", y: "8%", w: "48%", ratio: "aspect-[16/10]", rotate: -2, z: 25 },
+      { id: "b", imageSrc: "/images/funcimg/bg2.jpg", replaceHint: "Podmień: func3_2.jpg (harmonogram)", x: "66%", y: "8%", w: "21%", ratio: "aspect-[4/5]", rotate: 2, z: 30 },
+      { id: "c", imageSrc: "/images/funcimg/bg4.jpg", replaceHint: "Podmień: func3_3.jpg (notatki)", x: "10%", y: "51%", w: "28%", ratio: "aspect-[5/3]", rotate: 1, z: 24 },
+      { id: "d", imageSrc: "/images/funcimg/bg3.jpg", replaceHint: "Podmień: func3_4.jpg (lista zadań)", x: "54%", y: "54%", w: "31%", ratio: "aspect-[5/3]", rotate: -2, z: 26 },
+    ],
+  },
+  {
+    id: "guests",
+    title: "Lista gości",
+    marketingHeading: "Goście pod pełną kontrolą",
+    marketingDescription:
+      "W kilka chwil sprawdzicie statusy zaproszeń, potwierdzenia obecności i najważniejsze informacje organizacyjne.",
+    cards: [
+      { id: "a", imageSrc: "/images/funcimg/bg4.jpg", replaceHint: "Podmień: func4_1.jpg (lista gości)", x: "18%", y: "8%", w: "58%", ratio: "aspect-[16/10]", rotate: -1, z: 25 },
+      { id: "b", imageSrc: "/images/funcimg/bg2.jpg", replaceHint: "Podmień: func4_2.jpg (RSVP status)", x: "58%", y: "44%", w: "30%", ratio: "aspect-[5/4]", rotate: 2, z: 30 },
+    ],
+  },
+  {
+    id: "rsvp",
+    title: "RSVP online",
+    marketingHeading: "Potwierdzenia obecności bez stresu",
+    marketingDescription:
+      "Goście odpowiadają online, a Wy od razu widzicie aktualny obraz frekwencji i możecie spokojnie podejmować kolejne decyzje.",
+    cards: [
+      { id: "a", imageSrc: "/images/funcimg/bg3.jpg", replaceHint: "Podmień: func5_1.jpg (formularz RSVP)", x: "16%", y: "10%", w: "50%", ratio: "aspect-[16/10]", rotate: -2, z: 25 },
+      { id: "b", imageSrc: "/images/funcimg/bg5.jpg", replaceHint: "Podmień: func5_2.jpg (email potwierdzenia RSVP)", x: "46%", y: "50%", w: "42%", ratio: "aspect-[16/8]", rotate: 1, z: 30 },
+    ],
+  },
+  {
+    id: "checklists",
+    title: "Checklisty",
+    marketingHeading: "Każdy etap pod ręką",
+    marketingDescription:
+      "Małe kroki prowadzą do wielkiego dnia — odhaczajcie zadania i trzymajcie harmonogram przygotowań w idealnym porządku.",
+    cards: [
+      { id: "a", imageSrc: "/images/funcimg/bg2.jpg", replaceHint: "Podmień: func6_1.jpg (checklista)", x: "18%", y: "10%", w: "34%", ratio: "aspect-[4/5]", rotate: -2, z: 24 },
+      { id: "b", imageSrc: "/images/funcimg/bg6.jpg", replaceHint: "Podmień: func6_2.jpg (progress)", x: "42%", y: "6%", w: "38%", ratio: "aspect-[16/10]", rotate: 1, z: 27 },
+      { id: "c", imageSrc: "/images/funcimg/bg4.jpg", replaceHint: "Podmień: func6_3.jpg (odhaczanie)", x: "54%", y: "46%", w: "32%", ratio: "aspect-[5/4]", rotate: -1, z: 30 },
+    ],
+  },
+  {
+    id: "stats",
+    title: "Statystyki",
+    marketingHeading: "Czytelny obraz postępów",
+    marketingDescription:
+      "Najważniejsze liczby widzicie od razu: goście, RSVP i organizacja zadań — bez szukania informacji w wielu miejscach.",
+    cards: [
+      { id: "a", imageSrc: "/images/funcimg/bg5.jpg", replaceHint: "Podmień: func7_1.jpg (wykresy)", x: "16%", y: "10%", w: "56%", ratio: "aspect-[16/10]", rotate: -1, z: 24 },
+      { id: "b", imageSrc: "/images/funcimg/bg3.jpg", replaceHint: "Podmień: func7_2.jpg (RSVP + liczby)", x: "60%", y: "44%", w: "28%", ratio: "aspect-[4/5]", rotate: 2, z: 30 },
+    ],
+  },
+  {
+    id: "tables",
+    title: "Plan stołów",
+    marketingHeading: "Rozmieszczenie gości bez chaosu",
+    marketingDescription:
+      "Szybko ułożycie plan stołów i dopasujecie miejsca, aby każdy gość czuł się komfortowo podczas przyjęcia.",
+    cards: [
+      { id: "a", imageSrc: "/images/funcimg/bg6.jpg", replaceHint: "Podmień: func8_1.jpg (układ stołów)", x: "20%", y: "8%", w: "50%", ratio: "aspect-[16/10]", rotate: -2, z: 24 },
+      { id: "b", imageSrc: "/images/funcimg/bg4.jpg", replaceHint: "Podmień: func8_2.jpg (edycja gości)", x: "66%", y: "10%", w: "22%", ratio: "aspect-[4/5]", rotate: 2, z: 30 },
+      { id: "c", imageSrc: "/images/funcimg/bg2.jpg", replaceHint: "Podmień: func8_3.jpg (drag & drop)", x: "56%", y: "54%", w: "28%", ratio: "aspect-[5/3]", rotate: -1, z: 26 },
+    ],
+  },
+  {
+    id: "support",
+    title: "Kontakt z administracją",
+    marketingHeading: "Szybki kontakt, gdy go potrzebujesz",
+    marketingDescription:
+      "W każdej chwili możecie napisać do naszego zespołu i sprawnie uzyskać wsparcie przy organizacji oraz konfiguracji.",
+    cards: [
+      { id: "a", imageSrc: "/images/funcimg/bg3.jpg", replaceHint: "Podmień: func9_1.jpg (czat/mail)", x: "24%", y: "10%", w: "52%", ratio: "aspect-[16/10]", rotate: -1, z: 28 },
+    ],
+  },
+  {
+    id: "inspiration",
+    title: "Inspiracje",
+    marketingHeading: "Pomysły, które tworzą klimat",
+    marketingDescription:
+      "Zbierajcie inspiracje i detale, by od początku budować spójną oprawę estetyczną Waszego wyjątkowego dnia.",
+    cards: [
+      { id: "a", imageSrc: "/images/funcimg/bg5.jpg", replaceHint: "Podmień: func10_1.jpg (moodboard)", x: "18%", y: "10%", w: "50%", ratio: "aspect-[16/10]", rotate: -2, z: 24 },
+      { id: "b", imageSrc: "/images/funcimg/bg4.jpg", replaceHint: "Podmień: func10_2.jpg (dekoracje)", x: "56%", y: "40%", w: "32%", ratio: "aspect-[4/5]", rotate: 2, z: 30 },
+    ],
+  },
+  {
+    id: "budget",
+    title: "Budżet i koszty",
+    marketingHeading: "Budżet pod pełną kontrolą",
+    marketingDescription:
+      "Na bieżąco monitorujecie wydatki i postępy, dzięki czemu decyzje finansowe podejmujecie spokojnie i świadomie.",
+    cards: [
+      { id: "a", imageSrc: "/images/funcimg/bg2.jpg", replaceHint: "Podmień: func11_1.jpg (budżet)", x: "20%", y: "10%", w: "54%", ratio: "aspect-[16/10]", rotate: -1, z: 25 },
+      { id: "b", imageSrc: "/images/funcimg/bg6.jpg", replaceHint: "Podmień: func11_2.jpg (progress wydatków)", x: "58%", y: "50%", w: "30%", ratio: "aspect-[5/4]", rotate: 2, z: 30 },
+    ],
+  },
+  {
+    id: "qr",
+    title: "Kody QR",
+    marketingHeading: "Szybki dostęp dla Waszych gości",
+    marketingDescription:
+      "Udostępniajcie najważniejsze informacje jednym skanem — prosto, wygodnie i zawsze pod ręką na telefonie.",
+    cards: [
+      { id: "a", imageSrc: "/images/funcimg/bg3.jpg", replaceHint: "Podmień: func12_1.jpg (kod QR)", x: "18%", y: "10%", w: "44%", ratio: "aspect-[1/1]", rotate: -2, z: 24 },
+      { id: "b", imageSrc: "/images/funcimg/bg5.jpg", replaceHint: "Podmień: func12_2.jpg (telefon skanujący QR)", x: "52%", y: "24%", w: "34%", ratio: "aspect-[4/5]", rotate: 2, z: 30 },
+    ],
+  },
+] as const;
+
+function FeatureIcon({ active }: { active: boolean }) {
+  return (
+    <span className={`inline-flex h-9 w-9 items-center justify-center rounded-xl border ${active ? "border-[#cfb48d]/70 bg-[#fbf6ee]" : "border-[#e7ddd0]/80 bg-white/60"}`}>
+      <svg viewBox="0 0 24 24" className={`h-4.5 w-4.5 ${active ? "text-[#6f5840]" : "text-[#8b7a68]"}`} fill="none" stroke="currentColor" strokeWidth="1.55">
+        <path d="M4 6.5h16M7.5 4v5M16.5 4v5M5 11h14v8H5z" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </span>
+  );
 }
 
-function FeatureListItem({
+function FeatureButton({
   feature,
-  index,
   active,
-  hovered,
-  reveal,
-  onActivate,
-  onHoverStart,
+  onClick,
 }: {
-  feature: MarketingFeature;
-  index: number;
+  feature: FeatureSpec;
   active: boolean;
-  hovered: boolean;
-  reveal: boolean;
-  onActivate: () => void;
-  onHoverStart: () => void;
+  onClick: () => void;
 }) {
   return (
     <button
       type="button"
-      onMouseEnter={onHoverStart}
-      onFocus={onHoverStart}
-      onClick={onActivate}
+      onClick={onClick}
       aria-pressed={active}
-      className={`group relative z-10 flex w-full items-center gap-3 rounded-2xl border px-3 py-2.5 text-left transition duration-200 ease-out sm:gap-3.5 ${
-        active || hovered
-          ? "border-[#dcccad] bg-[#fdfaf5]"
-          : "border-transparent bg-transparent hover:border-[#e6d9c6]/80 hover:bg-[#fefbf6]/80"
-      } ${
-        reveal
-          ? "translate-y-0 opacity-100"
-          : "translate-y-2 opacity-0 motion-reduce:translate-y-0 motion-reduce:opacity-100"
+      className={`group flex h-[62px] w-full items-center gap-3 rounded-[20px] border px-4 text-left transition-all duration-300 ${
+        active
+          ? "border-[#cfb48d]/70 bg-[#f9f4ec] shadow-[0_14px_28px_-24px_rgba(105,76,43,0.9)] ring-1 ring-[#d8c09a]/35"
+          : "border-[#ece4d8]/88 bg-[#f5f0e7]/70 hover:border-[#decbb0]/78 hover:bg-[#fbf7f0]"
       }`}
-      style={{ transitionDelay: `${Math.min(index, 8) * 34}ms` }}
     >
-      <Image
-        src={feature.imageSrc}
-        alt=""
-        width={26}
-        height={26}
-        className="h-[1.62rem] w-[1.62rem] shrink-0 object-contain sm:h-7 sm:w-7"
+      <span
+        aria-hidden
+        className={`h-7 w-[3px] rounded-full transition-all ${
+          active ? "bg-[#cfb48d] shadow-[0_0_10px_rgba(207,180,141,0.55)]" : "bg-transparent"
+        }`}
       />
-      <span className="min-w-0 flex-1 pr-1">
-        <span className="font-wa-display text-[1rem] font-semibold text-[#1f1c19] sm:text-[1.08rem]">{feature.title}</span>
+      <FeatureIcon active={active} />
+      <span className="min-w-0 flex-1 font-wa-display text-[1.02rem] font-medium text-[#342c24]">
+        {feature.title}
       </span>
+      <span className={`text-sm transition ${active ? "text-[#7a6144]" : "text-[#9b8a78] group-hover:text-[#7a6144]"}`}>›</span>
     </button>
   );
 }
 
-function DevicePreview({
-  features,
-  activeIndex,
-}: {
-  features: MarketingFeature[];
-  activeIndex: number;
-}) {
-  const activeFeature = features[activeIndex];
-
+function FloatingCollage({ feature }: { feature: FeatureSpec }) {
+  /*
+   * Cards are absolutely positioned; they don't expand this box.
+   * min-height must clear the lowest card (many specs use y ≈ 50–54% + tall aspect ratios).
+   */
   return (
-    <div className="mx-auto w-full max-w-[58rem]">
-      <div className="relative flex min-h-[24.5rem] items-end justify-center gap-3 pb-2 sm:min-h-[31rem] sm:gap-6">
-        <div className="relative h-[16.4rem] w-[92%] max-w-[42rem] rounded-[1rem] border border-[#3b404a] bg-[#2f3540] p-2 shadow-[0_24px_56px_-42px_rgba(12,14,19,0.9)] sm:h-[23rem] sm:rounded-[1.2rem] sm:p-2.5">
-          <div className="relative h-full w-full overflow-hidden rounded-[0.56rem] border border-[#4a525e] bg-[#1c212b] sm:rounded-[0.72rem]">
-            {features.map((feature, i) => {
-              const pair = getFeaturePreviewPair(feature, i);
-              return (
-                <Image
-                  key={`${feature.id}-desktop`}
-                  src={pair.desktopSrc}
-                  alt={`Podgląd desktop: ${feature.title}`}
-                  fill
-                  sizes="(min-width: 1024px) 450px, (min-width: 640px) 72vw, 88vw"
-                  className={`object-cover transition-opacity duration-500 ${i === activeIndex ? "opacity-100" : "opacity-0"}`}
-                  priority={i === 0}
-                />
-              );
-            })}
-          </div>
-          <span className="absolute -bottom-4 left-1/2 h-3.5 w-[35%] -translate-x-1/2 rounded-full bg-[#29303b] sm:h-4.5" />
-          <span className="absolute -bottom-8 left-1/2 h-2.5 w-[57%] -translate-x-1/2 rounded-full bg-[#404958]" />
-        </div>
+    <div className="relative min-h-[min(92vw,34rem)] sm:min-h-[40rem] lg:min-h-[42rem]">
+      <div className="pointer-events-none absolute left-[14%] top-[8%] h-56 w-[72%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(215,183,139,0.28)_0%,rgba(215,183,139,0.12)_38%,transparent_74%)] blur-3xl" />
 
-        <div className="relative -ml-8 h-[14.2rem] w-[7.15rem] rounded-[1.34rem] border border-[#4a505c] bg-[#2f3540] p-[0.32rem] shadow-[0_26px_42px_-34px_rgba(7,8,12,0.9)] sm:-ml-16 sm:h-[19.8rem] sm:w-[9.95rem] sm:rounded-[1.7rem] sm:p-[0.45rem]">
-          <div className="relative h-full w-full overflow-hidden rounded-[1rem] border border-[#555e6d] bg-[#1b2029] sm:rounded-[1.24rem]">
-            {features.map((feature, i) => {
-              const pair = getFeaturePreviewPair(feature, i);
-              return (
-                <Image
-                  key={`${feature.id}-mobile`}
-                  src={pair.mobileSrc}
-                  alt={`Podgląd mobile: ${feature.title}`}
-                  fill
-                  sizes="(min-width: 640px) 105px, 82px"
-                  className={`object-cover transition-opacity duration-500 ${i === activeIndex ? "opacity-100" : "opacity-0"}`}
-                />
-              );
-            })}
-          </div>
-          <span className="absolute left-1/2 top-[0.3rem] h-[0.22rem] w-[2.3rem] -translate-x-1/2 rounded-full bg-[#717a8a] sm:top-[0.4rem] sm:w-[2.9rem]" />
-        </div>
-      </div>
-
-      <div className="mx-auto mt-7 h-px w-[72%] bg-[linear-gradient(90deg,rgba(43,48,57,0)_0%,rgba(43,48,57,0.7)_16%,rgba(43,48,57,0.92)_50%,rgba(43,48,57,0.7)_84%,rgba(43,48,57,0)_100%)] sm:mt-8 sm:w-[68%]" />
-
-      <div className="mt-7 text-center sm:mt-9">
-        <p className="font-wa-display text-[1.55rem] font-semibold tracking-[0.01em] text-[#2f2a25] sm:text-[2rem]">
-          {activeFeature?.title}
-        </p>
-        <p className="mx-auto mt-3 max-w-2xl text-pretty text-[0.9rem] leading-relaxed text-[#685f55] sm:text-[1rem]">
-          {activeFeature?.description}
-        </p>
-      </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={feature.id}
+          initial={{ opacity: 0, y: 12, scale: 0.985 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -10, scale: 0.985 }}
+          transition={{ type: "spring", stiffness: 120, damping: 24, mass: 0.8 }}
+          className="absolute inset-0"
+        >
+          {feature.cards.map((card, index) => (
+            <motion.div
+              key={`${feature.id}-${card.id}`}
+              layout
+              initial={{ opacity: 0, y: 18, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 180,
+                damping: 26,
+                delay: index * 0.04,
+              }}
+              className={`absolute ${card.ratio} overflow-hidden rounded-[26px] shadow-[0_22px_44px_-28px_rgba(45,32,18,0.55)]`}
+              style={{
+                left: card.x,
+                top: card.y,
+                width: card.w,
+                zIndex: card.z,
+                rotate: `${card.rotate}deg`,
+              }}
+            >
+              <Image
+                src={card.imageSrc}
+                alt={card.replaceHint}
+                fill
+                className="object-cover"
+                sizes="(min-width: 1536px) 760px, (min-width: 1280px) 680px, (min-width: 768px) 58vw, 92vw"
+                quality={92}
+              />
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(22,18,14,0.12)_0%,rgba(22,18,14,0.18)_100%)]" />
+              <div className="absolute inset-x-2 bottom-2 rounded-xl border border-white/45 bg-[#fff9ef]/84 px-2.5 py-1.5 text-[10px] font-medium leading-tight tracking-[0.01em] text-[#4a3a2a] backdrop-blur-[2px]">
+                {card.replaceHint}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
 
 export function HomeFeaturesSection() {
-  const { ref, visible } = useSectionRevealOnce();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
-  const listRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const hoverDelayRef = useRef<number | null>(null);
-  const [highlightRect, setHighlightRect] = useState<HighlightRect>({ top: 0, height: 0 });
-
-  const highlightIndex = hoveredIndex ?? activeIndex;
-
-  useEffect(() => {
-    const listEl = listRef.current;
-    const itemEl = itemRefs.current[highlightIndex];
-    if (!listEl || !itemEl) {
-      return;
-    }
-    const nextTop = itemEl.offsetTop;
-    const nextHeight = itemEl.offsetHeight;
-    setHighlightRect({ top: nextTop, height: nextHeight });
-  }, [highlightIndex, visible]);
-
-  useEffect(() => {
-    const listEl = listRef.current;
-    if (!listEl) {
-      return;
-    }
-    const refreshHighlight = () => {
-      const itemEl = itemRefs.current[highlightIndex];
-      if (!itemEl) {
-        return;
-      }
-      setHighlightRect({ top: itemEl.offsetTop, height: itemEl.offsetHeight });
-    };
-    refreshHighlight();
-    const observer = new ResizeObserver(refreshHighlight);
-    observer.observe(listEl);
-    window.addEventListener("resize", refreshHighlight);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", refreshHighlight);
-    };
-  }, [highlightIndex]);
-
-  useEffect(() => {
-    return () => {
-      if (hoverDelayRef.current != null) {
-        window.clearTimeout(hoverDelayRef.current);
-      }
-    };
-  }, []);
-
-  const scheduleHoverIndex = (index: number) => {
-    if (hoverDelayRef.current != null) {
-      window.clearTimeout(hoverDelayRef.current);
-    }
-    hoverDelayRef.current = window.setTimeout(() => {
-      setHoveredIndex(index);
-    }, 80);
-  };
+  const active = featureSpecs[activeIndex];
+  const mobileTabs = useMemo(() => featureSpecs, []);
 
   return (
-    <div ref={ref} className="w-full border-t border-[#ebe7e0]/90 pb-10 pt-3 sm:pb-12 sm:pt-5">
+    <section id="sekcja-funkcje" className="w-full border-t border-[#ebe3d7]/80 bg-[#f5f1ea] pb-16 pt-7 sm:pb-20 sm:pt-10">
       <div className="mx-auto w-[min(100%,96vw)] max-w-[1800px] px-4 sm:px-6 lg:px-10">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:items-start lg:gap-10">
-          <div className={`order-1 ${visible ? "opacity-100" : "opacity-0"} transition-opacity duration-500 lg:order-2`}>
-            <DevicePreview features={marketingFeatures} activeIndex={activeIndex} />
+        <header className="mx-auto mb-8 max-w-4xl text-center sm:mb-10">
+          <div className="mx-auto mb-4 flex items-center justify-center gap-3 text-[#b79463]">
+            <span className="h-px w-12 bg-gradient-to-r from-transparent to-[#c8a575]/60" />
+            <span className="text-[11px] uppercase tracking-[0.24em]">✦</span>
+            <span className="h-px w-12 bg-gradient-to-l from-transparent to-[#c8a575]/60" />
           </div>
+          <h2 className="font-wa-display text-balance text-[2rem] font-semibold leading-tight tracking-[0.01em] text-[#2f2720] sm:text-[2.45rem]">
+            Wszystko, czego potrzebujecie w jednym miejscu
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-pretty text-sm leading-[1.82] text-[#78695b] sm:text-base">
+            Od pierwszego zaproszenia po plan stołów — Wasze przygotowania płyną spokojnie, elegancko i zawsze w Waszym rytmie.
+          </p>
+        </header>
 
-          <div
-            ref={listRef}
-            onMouseLeave={() => scheduleHoverIndex(activeIndex)}
-            className="order-2 relative space-y-2.5 rounded-3xl bg-[#fcfaf6] p-2 sm:space-y-2 sm:p-2.5 lg:order-1"
-          >
-            <div
-              className={`pointer-events-none absolute left-2 right-2 rounded-2xl border border-[#d7c6aa] bg-[#fbf7f0] shadow-[0_10px_26px_-22px_rgba(52,40,20,0.95)] transition-[top,height,opacity] duration-320 ease-[cubic-bezier(0.22,1,0.36,1)] sm:left-2.5 sm:right-2.5 ${
-                visible ? "opacity-100" : "opacity-0"
+        <div className="mb-5 flex gap-2 overflow-x-auto pb-2 lg:hidden">
+          {mobileTabs.map((feature, index) => (
+            <button
+              key={feature.id}
+              onClick={() => setActiveIndex(index)}
+              className={`shrink-0 rounded-full border px-4 py-2 text-sm ${
+                index === activeIndex
+                  ? "border-[#cfb48d]/70 bg-[#f9f4ec] text-[#463627]"
+                  : "border-[#e8ddcf] bg-[#f7f2e9] text-[#6f6154]"
               }`}
-              style={{ top: `${highlightRect.top}px`, height: `${highlightRect.height}px` }}
-              aria-hidden
-            />
-            {marketingFeatures.map((feature, index) => (
-              <div
-                key={feature.id}
-                ref={(node: HTMLDivElement | null) => {
-                  itemRefs.current[index] = node;
-                }}
-              >
-                <FeatureListItem
+            >
+              {feature.title}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.6fr)_minmax(0,1.4fr)] lg:items-start lg:gap-12">
+          <aside className="hidden lg:block">
+            <div className="space-y-3">
+              {featureSpecs.map((feature, index) => (
+                <FeatureButton
+                  key={feature.id}
                   feature={feature}
-                  index={index}
                   active={index === activeIndex}
-                  hovered={index === hoveredIndex}
-                  reveal={visible}
-                  onActivate={() => setActiveIndex(index)}
-                  onHoverStart={() => scheduleHoverIndex(index)}
+                  onClick={() => setActiveIndex(index)}
                 />
-              </div>
-            ))}
+              ))}
+            </div>
+          </aside>
+
+          <div>
+            <FloatingCollage feature={active} />
+            <div className="mx-auto mt-10 h-px w-28 bg-gradient-to-r from-transparent via-[#c8a575]/65 to-transparent sm:mt-14" />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active.id}
+                initial={{ opacity: 0, y: 10, filter: "blur(2px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -8, filter: "blur(2px)" }}
+                transition={{ duration: 0.34, ease: "easeOut" }}
+                className="relative z-10 mx-auto mt-6 max-w-2xl text-center sm:mt-8"
+              >
+                <h3 className="font-wa-display text-[1.45rem] font-semibold tracking-[0.01em] text-[#2f2923] sm:text-[1.8rem]">
+                  {active.marketingHeading}
+                </h3>
+                <p className="mt-2 text-pretty text-sm leading-[1.82] text-[#685b4f] sm:text-base">
+                  {active.marketingDescription}
+                </p>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

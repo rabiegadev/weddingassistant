@@ -1,9 +1,74 @@
 import Link from "next/link";
 import { PlanTier } from "@prisma/client";
 import { prisma } from "@/lib/db";
+import { HomeOfferSectionClient } from "@/components/marketing/home-offer-section.client";
+import type { OfferPackageVm } from "@/components/marketing/offer-packages-types";
 
-function formatPln(cents: number) {
-  return (cents / 100).toLocaleString("pl-PL", { style: "currency", currency: "PLN" });
+const PREVIEW_SRC: Record<PlanTier, string> = {
+  FREE: "/images/funcimg/bg5.jpg",
+  ASSIST_BASIC: "/images/funcimg/bg6.jpg",
+  WWW_TEMPLATE: "/images/funcimg/bg4.jpg",
+  ASSIST_BASIC_WWW_TEMPLATE: "/images/funcimg/bg3.jpg",
+  ASSIST_PREMIUM_WWW_TEMPLATE: "/images/funcimg/bg2.jpg",
+  ASSIST_PREMIUM_WWW_CUSTOM: "/images/funcimg/bg6.jpg",
+};
+
+function tierSubtitle(tier: PlanTier): string {
+  const m: Record<PlanTier, string> = {
+    FREE: "Podstawowe funkcje — start dla każdej pary",
+    ASSIST_BASIC: "Asystent planowania dla spokojnych przygotowań",
+    WWW_TEMPLATE: "Wasza wizytówka od szczęśliwego pierwszego tak",
+    ASSIST_BASIC_WWW_TEMPLATE: "Asystent i strona z szablonu w zestawie",
+    ASSIST_PREMIUM_WWW_TEMPLATE: "Rozbudowany pakiet z elegancką wizytówką",
+    ASSIST_PREMIUM_WWW_CUSTOM: "Indywidualna oprawa opracowana dla Was",
+  };
+  return m[tier];
+}
+
+function packageHighlights(tier: PlanTier): readonly string[] {
+  switch (tier) {
+    case PlanTier.FREE:
+      return [
+        "lista gości (limit jak w pakiecie)",
+        "podstawowy planer przygotowań",
+        "spokojne tempo — idealny start",
+      ];
+    case PlanTier.ASSIST_BASIC:
+      return [
+        "moduły asystenta i wyższe limity niż FREE",
+        "checklisty, harmonogram, przypomnienia",
+        "dostęp po dacie ślubu — wg ustawień pakietu",
+      ];
+    case PlanTier.WWW_TEMPLATE:
+      return ["wizytówka na podstawie szablonu", "domena i publikacja strony", "RSVP oraz kluczowe informacje dla gości"];
+    case PlanTier.ASSIST_BASIC_WWW_TEMPLATE:
+      return [
+        "wszystkie atuty pakietu asystenta",
+        "strona ślubna wybrana z kolekcji motywów",
+        "jeden spójny panel od inspiracji po RSVP",
+      ];
+    case PlanTier.ASSIST_PREMIUM_WWW_CUSTOM:
+      return [
+        "najwyższe widełki funkcji planera",
+        "indywidualny wygląd wizytówki pod Was",
+        "brief i poprawki w ramach realizacji",
+      ];
+    case PlanTier.ASSIST_PREMIUM_WWW_TEMPLATE:
+      return ["rozszerzony zestaw przygotowany na duże przyjęcia", "wizytówka premium z szablonu", "płynniejszy kontakt przy najważniejszych momentach"];
+    default:
+      return [];
+  }
+}
+
+function previewSrcOrFallback(tier: PlanTier, index: number): string {
+  const base = PREVIEW_SRC[tier] ?? `/images/funcimg/bg${(index % 4) + 2}.jpg`;
+  return base;
+}
+
+function pickCta(i: number, tier: PlanTier): OfferPackageVm["ctaLabel"] {
+  if (tier === PlanTier.ASSIST_PREMIUM_WWW_CUSTOM) return "Porozmawiajmy";
+  if (i % 2 === 0) return "Zobacz szczegóły";
+  return "Poznaj pakiet";
 }
 
 export async function HomeOfferSection() {
@@ -12,125 +77,33 @@ export async function HomeOfferSection() {
     orderBy: { sortOrder: "asc" },
     take: 5,
   });
+
   if (packages.length === 0) {
     return (
-      <p className="mt-2 text-sm text-[#4A4A4A] sm:text-base">
+      <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-[#7d746d] sm:text-base">
         Cennik jest w przygotowaniu.{" "}
-        <Link className="font-medium text-[#6B5427] underline" href="/cennik">
-          Zobacz stronę cennika
+        <Link className="font-semibold text-[#8a6f45] underline underline-offset-4 hover:text-[#2b2118]" href="/cennik">
+          Zajrzyj na stronę cennika
         </Link>{" "}
         — wkrótce pakiety pojawią się i tutaj.
       </p>
     );
   }
 
-  const tierMeta: Record<PlanTier, { accent: string; ring: string; glow: string }> = {
-    FREE: {
-      accent: "from-[#f8f3eb] to-[#fefcf8]",
-      ring: "ring-[#dcc8ab]/70",
-      glow: "bg-[#ceb184]/20",
-    },
-    ASSIST_BASIC: {
-      accent: "from-[#f4ecdf] to-[#fcf8f0]",
-      ring: "ring-[#d8c09b]/70",
-      glow: "bg-[#b8955c]/20",
-    },
-    WWW_TEMPLATE: {
-      accent: "from-[#efe3d1] to-[#f9f2e8]",
-      ring: "ring-[#d5b992]/70",
-      glow: "bg-[#a9743a]/20",
-    },
-    ASSIST_BASIC_WWW_TEMPLATE: {
-      accent: "from-[#eadcca] to-[#f6efe5]",
-      ring: "ring-[#cfb089]/70",
-      glow: "bg-[#8f5f2b]/20",
-    },
-    ASSIST_PREMIUM_WWW_TEMPLATE: {
-      accent: "from-[#e9ddcf] to-[#f5eee4]",
-      ring: "ring-[#cda67a]/70",
-      glow: "bg-[#845225]/20",
-    },
-    ASSIST_PREMIUM_WWW_CUSTOM: {
-      accent: "from-[#e5d3bc] to-[#f2e9dd]",
-      ring: "ring-[#c79f6d]/70",
-      glow: "bg-[#7a4a1f]/20",
-    },
-  };
+  const midpoint = Math.floor(packages.length / 2);
 
-  const packageHighlights = (tier: PlanTier): string[] => {
-    switch (tier) {
-      case PlanTier.FREE:
-        return [
-          "lista gości do 25 osób",
-          "podstawowe moduły planera",
-          "tygodniowy reset danych w planie darmowym",
-        ];
-      case PlanTier.ASSIST_BASIC:
-        return [
-          "większość narzędzi asystenta",
-          "wyższe limity niż w pakiecie darmowym",
-          "dostęp do 6 miesięcy po dacie ślubu",
-        ];
-      case PlanTier.WWW_TEMPLATE:
-        return [
-          "wizytówka weselna na gotowym szablonie",
-          "domena i publikacja strony",
-          "podstawowe RSVP dla gości",
-        ];
-      case PlanTier.ASSIST_BASIC_WWW_TEMPLATE:
-        return [
-          "pakiet asystenta + wizytówka z szablonu",
-          "wybór motywu strony przy zamówieniu",
-          "dostęp do 6 miesięcy po ślubie",
-        ];
-      case PlanTier.ASSIST_PREMIUM_WWW_CUSTOM:
-        return [
-          "asystent z najwyższymi limitami",
-          "indywidualny projekt wizytówki",
-          "brief, inspiracje i poprawki w ramach realizacji",
-        ];
-      case PlanTier.ASSIST_PREMIUM_WWW_TEMPLATE:
-        return ["szablon premium", "rozszerzone RSVP", "dostęp po ślubie"];
-      default:
-        return [];
-    }
-  };
+  const vm: OfferPackageVm[] = packages.map((p, idx) => ({
+    id: p.id,
+    slug: p.slug,
+    planTier: p.planTier,
+    name: p.name,
+    subtitle: tierSubtitle(p.planTier),
+    priceCents: p.priceCents,
+    highlights: packageHighlights(p.planTier),
+    previewSrc: previewSrcOrFallback(p.planTier, idx),
+    featured: idx === midpoint,
+    ctaLabel: pickCta(idx, p.planTier),
+  }));
 
-  return (
-    <div className="mt-8">
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
-        {packages.map((p, i) => {
-          const meta = tierMeta[p.planTier];
-          const highlights = packageHighlights(p.planTier);
-          return (
-            <article
-              key={p.id}
-              className={`group animate-wa-offer-card-in relative flex min-h-[560px] flex-col overflow-hidden rounded-2xl border border-[#d9c5a5]/70 bg-gradient-to-b ${meta.accent} p-5 shadow-[0_14px_30px_-20px_rgba(62,44,18,0.65)] ring-1 ring-inset ${meta.ring} transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_38px_-22px_rgba(62,44,18,0.72)]`}
-              style={{ animationDelay: `${i * 100}ms` }}
-            >
-              <div className={`absolute -right-7 -top-7 h-24 w-24 rounded-full ${meta.glow} blur-2xl transition group-hover:scale-105`} />
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#7f6a4c]">Plan {i + 1}</p>
-              <h3 className="mt-2 min-h-16 font-wa-display text-lg font-semibold leading-snug text-[#2B2B2B]">{p.name}</h3>
-              <div className="my-3 h-px bg-gradient-to-r from-[#cdb089]/80 via-[#e4d3bc]/80 to-transparent" />
-              <p className="text-sm leading-relaxed text-[#4A4A4A]">{p.description}</p>
-              <ul className="mt-4 flex-1 space-y-1.5 text-sm text-[#3e362d]">
-                {highlights.map((line) => (
-                  <li key={line} className="leading-relaxed">
-                    - {line}
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-4 font-wa-display text-3xl font-semibold text-[#6B5427]">{formatPln(p.priceCents)}</p>
-              <Link
-                className="mt-4 inline-flex w-full items-center justify-center rounded-md border border-[#B8955C] bg-white/90 py-2.5 text-sm font-semibold text-[#2B2B2B] transition hover:bg-[#B8955C] hover:text-white"
-                href="/cennik"
-              >
-                Szczegóły pakietu
-              </Link>
-            </article>
-          );
-        })}
-      </div>
-    </div>
-  );
+  return <HomeOfferSectionClient packages={vm} />;
 }

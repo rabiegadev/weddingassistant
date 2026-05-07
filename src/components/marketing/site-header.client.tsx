@@ -125,7 +125,7 @@ export function SiteHeaderClient({
     <header
       className={`fixed inset-x-0 top-0 z-50 w-full border-b transition-[opacity,transform,background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-out ${
         visible
-          ? "pointer-events-auto translate-y-0 border-b border-[#e1c9a2]/38 bg-[linear-gradient(180deg,rgba(71,49,30,0.62)_0%,rgba(58,40,24,0.52)_45%,rgba(45,31,19,0.56)_100%)] opacity-100 shadow-[0_16px_42px_-24px_rgba(20,14,9,0.72)] backdrop-blur-[12px] backdrop-saturate-[1.18]"
+          ? "pointer-events-auto translate-y-0 border-b border-[#cfb48a]/34 bg-[linear-gradient(180deg,rgba(38,25,14,0.9)_0%,rgba(31,21,12,0.86)_50%,rgba(25,17,10,0.9)_100%)] opacity-100 shadow-[0_18px_46px_-24px_rgba(14,10,7,0.82)] backdrop-blur-[10px] backdrop-saturate-[1.1]"
           : "pointer-events-none -translate-y-2 border-transparent bg-transparent opacity-0 backdrop-blur-none"
       }`}
       aria-hidden={false}

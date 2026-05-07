@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Suspense } from "react";
 import { HomeFeaturesSection } from "@/components/marketing/home-features-section";
+import { HomeHowItWorksSection } from "@/components/marketing/home-how-it-works-section";
 import { HomeOfferSection } from "@/components/marketing/home-offer-section";
 import { HomeToolDemoSection } from "@/components/marketing/home-tool-demo-section";
 import { HomeWeddingSitesSection } from "@/components/marketing/home-wedding-sites-section";
@@ -9,37 +10,48 @@ import { HomeContactForm } from "@/components/marketing/home-contact-form";
 
 function OfferSectionFallback() {
   return (
-    <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-5">
-      {[1, 2, 3, 4, 5].map((i) => (
-        <div
-          key={i}
-          className="h-[560px] animate-pulse rounded-2xl border border-[#d9c5a5]/60 bg-[#f3eadf]"
-        />
-      ))}
+    <div className="relative mx-auto min-h-[520px] max-w-[1500px] animate-pulse px-4 py-16 sm:px-8">
+      <div className="absolute inset-0 bg-[#f6f1ea]" aria-hidden />
+      <div className="relative mx-auto h-8 max-w-xl rounded-full bg-[#eae2d6]" />
+      <div className="relative mx-auto mt-10 h-12 max-w-xl rounded-xl bg-[#e5ddd2]" />
+      <div className="relative mx-auto mt-6 h-28 max-w-xl rounded-xl bg-[#e8dfd3]" />
+      <div className="relative mx-auto mt-14 flex gap-6 overflow-hidden">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} className="h-[520px] min-w-[16rem] flex-1 rounded-3xl border border-[#e0d3c6] bg-[#f1e9df]" />
+        ))}
+      </div>
     </div>
   );
 }
 
 function HeroBackground() {
   const blurMask =
-    "linear-gradient(to right, black 0%, black 16%, rgba(0,0,0,0.62) 38%, rgba(0,0,0,0.28) 62%, rgba(0,0,0,0.08) 82%, transparent 100%)";
+    "linear-gradient(to right, black 0%, black 14%, rgba(0,0,0,0.4) 26%, rgba(0,0,0,0.12) 34%, rgba(0,0,0,0) 42%, rgba(0,0,0,0) 100%)";
 
   return (
     <div className="pointer-events-none absolute inset-0">
       <Image
-        src="/images/bazkgr.png"
+        src="/images/bgnew3.jpg"
         alt=""
         fill
         priority
-        className="object-cover object-center"
+        className="object-cover object-center saturate-[1.18] sepia-[0.14]"
         sizes="100vw"
       />
       <div
-        className="absolute inset-0 bg-[linear-gradient(to_right,rgba(52,38,25,0.72)_0%,rgba(76,56,36,0.62)_16%,rgba(104,77,49,0.44)_38%,rgba(140,106,70,0.28)_62%,rgba(186,146,100,0.14)_82%,rgba(255,255,255,0)_100%)]"
+        className="absolute inset-0 bg-[linear-gradient(to_right,rgba(22,12,6,0.92)_0%,rgba(34,20,10,0.86)_18%,rgba(62,38,20,0.66)_36%,rgba(106,70,40,0.38)_58%,rgba(162,114,67,0.16)_80%,rgba(255,255,255,0)_100%)]"
         aria-hidden
       />
       <div
-        className="absolute inset-0 backdrop-blur-[min(22px,3.2vw)] backdrop-saturate-[1.06]"
+        className="absolute inset-0 bg-[linear-gradient(to_right,rgba(18,10,6,0.88)_0%,rgba(26,15,9,0.7)_10%,rgba(0,0,0,0)_24%,rgba(0,0,0,0)_76%,rgba(26,15,9,0.7)_90%,rgba(18,10,6,0.88)_100%)]"
+        aria-hidden
+      />
+      <div
+        className="absolute inset-0 bg-[radial-gradient(78%_72%_at_25%_38%,rgba(181,132,74,0.26)_0%,rgba(0,0,0,0)_68%)] mix-blend-screen"
+        aria-hidden
+      />
+      <div
+        className="absolute inset-0 backdrop-blur-[min(9px,1.4vw)] backdrop-saturate-[1.03]"
         style={{ WebkitMaskImage: blurMask, maskImage: blurMask }}
         aria-hidden
       />
@@ -59,24 +71,23 @@ export default function HomePage() {
         aria-label="Weddingassistant — strona główna"
       >
         <HeroBackground />
-        <div className="relative z-10 flex flex-1 flex-col justify-center px-4 pb-8 pt-10 sm:px-8 lg:px-14 lg:pb-12 lg:pt-14">
+        <div className="relative z-10 flex flex-1 flex-col justify-center px-5 pb-8 pt-10 sm:px-10 lg:px-16 lg:pb-12 lg:pt-14">
           <div className="max-w-xl lg:max-w-2xl">
-            <h1 className="font-wa-display text-balance text-3xl font-semibold tracking-[0.02em] text-[#f6efe6] drop-shadow-[0_1px_8px_rgba(15,11,7,0.45)] sm:text-4xl lg:text-5xl">
-              Weddingassistant
-            </h1>
-            <p className="mt-4 font-wa-display text-balance text-lg font-medium leading-snug text-[#f0e3d2] sm:text-xl lg:text-2xl">
+            <h1 className="font-wa-display text-balance text-3xl font-semibold leading-tight tracking-[0.02em] text-[#f1e4d3] drop-shadow-[0_1px_8px_rgba(15,11,7,0.45)] sm:text-4xl lg:text-5xl">
               Zaplanujcie ten wyjątkowy dzień z maksymalną starannością dzięki naszemu wsparciu
-            </p>
+            </h1>
             <p className="mt-5 max-w-xl text-pretty text-[0.9375rem] leading-relaxed text-[#eadbca] sm:text-base">
               Nasza platforma powstała aby ułatwić proces planowania wesela oraz zebrać wszystkie niezbędne informacje w
               jednym miejscu, które jest dla Was dostępne w każdej chwili.
             </p>
             <p className="mt-8">
               <Link
-                className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#d2b27e]/70 bg-[#d7b173] px-7 py-2.5 text-sm font-semibold text-[#2b2117] shadow-[0_12px_36px_-18px_rgba(32,23,14,0.65)] transition hover:brightness-105"
+                className="inline-flex min-h-11 items-center justify-center gap-3 rounded-full border border-[#d2b27e]/70 bg-[#d7b173] px-7 py-2.5 text-sm font-semibold text-[#2b2117] shadow-[0_12px_36px_-18px_rgba(32,23,14,0.65)] transition hover:brightness-105"
                 href="/#oferta"
               >
-                Sprawdź możliwości, które oferuje Weddingassistant
+                <span>Sprawdź możliwości</span>
+                <span aria-hidden className="h-4 w-px bg-[#6d5332]/45" />
+                <span aria-hidden className="text-base leading-none">→</span>
               </Link>
             </p>
           </div>
@@ -105,21 +116,12 @@ export default function HomePage() {
       <section
         id="funkcje"
         className={`scroll-mt-wa border-b border-[#e1d2bc]/70 ${SECTION_A}`}
-        aria-labelledby="sekcja-funkcje"
+        aria-label="Sekcja funkcji Weddingassistant"
       >
-        <div className="mx-auto w-[min(100%,96vw)] max-w-[1800px] px-4 pb-4 pt-6 text-center sm:px-6 sm:pb-5 sm:pt-7 lg:text-left">
-          <h2
-            className="font-wa-display text-balance text-xl font-semibold tracking-[0.02em] text-[#2E2A26] sm:text-2xl"
-            id="sekcja-funkcje"
-          >
-            Funkcje
-          </h2>
-          <p className="mx-auto mt-2 max-w-2xl text-pretty text-xs leading-snug text-[#5a534c] sm:text-sm lg:mx-0">
-            Jedna platforma dla Was i gości — przejrzysty przegląd narzędzi bez zbędnego „szumu” wizualnego.
-          </p>
-        </div>
         <HomeFeaturesSection />
       </section>
+
+      <HomeHowItWorksSection />
 
       <HomeToolDemoSection />
 
@@ -127,27 +129,12 @@ export default function HomePage() {
 
       <section
         id="oferta"
-        className={`scroll-mt-wa border-b border-[#dcc9ab]/70 ${SECTION_A}`}
-        aria-labelledby="sekcja-oferta"
+        className="scroll-mt-wa overflow-hidden border-b border-[rgba(212,176,122,0.22)] bg-transparent"
+        aria-label="Oferta i cennik"
       >
-        <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14">
-          <h2
-            className="font-wa-display text-xl font-medium tracking-[0.02em] text-[#2E2A26] sm:text-2xl"
-            id="sekcja-oferta"
-          >
-            Oferowane funkcjonalności i cennik
-          </h2>
-          <p className="mt-2 max-w-2xl text-sm text-[#4A4A4A] sm:text-base">
-            Poniżej pakiety takie same jak w{" "}
-            <Link className="font-medium text-[#6B5427] underline underline-offset-2" href="/cennik">
-              cenniku
-            </Link>{" "}
-            — wybierzesz, co odpowiada Twojemu weselu, a potem w panelu dopracujesz szczegóły z obsługą.
-          </p>
-          <Suspense fallback={<OfferSectionFallback />}>
-            <HomeOfferSection />
-          </Suspense>
-        </div>
+        <Suspense fallback={<OfferSectionFallback />}>
+          <HomeOfferSection />
+        </Suspense>
       </section>
 
       <section
