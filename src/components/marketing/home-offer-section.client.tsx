@@ -2,20 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { OfferPackageVm } from "@/components/marketing/offer-packages-types";
 
 function formatPln(cents: number): string {
   return (cents / 100).toLocaleString("pl-PL", { style: "currency", currency: "PLN" });
 }
-
-function formatMonthlyFromTotalCents(priceCents: number): string {
-  const monthly = Math.round(priceCents / 12);
-  return `${formatPln(monthly)} / mies.`;
-}
-
-type Billing = "monthly" | "one-time";
 
 function WeddingRingsIcon({ className }: { className?: string }) {
   return (
@@ -48,7 +41,7 @@ function CheckGold({ className }: { className?: string }) {
 
 function IconHeart({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden className={className} fill="none" stroke="currentColor" strokeWidth="1.65">
+    <svg viewBox="0 0 24 24" aria-hidden className={className} fill="none" stroke="currentColor" strokeWidth="1.2">
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 20s-8-4.76-8-11a5 5 0 0 1 9.19-2.71A5 5 0 0 1 20 9c0 6.24-8 11-8 11z" />
     </svg>
   );
@@ -56,7 +49,7 @@ function IconHeart({ className }: { className?: string }) {
 
 function IconLock({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden className={className} fill="none" stroke="currentColor" strokeWidth="1.65">
+    <svg viewBox="0 0 24 24" aria-hidden className={className} fill="none" stroke="currentColor" strokeWidth="1.2">
       <rect x="5" y="11" width="14" height="10" rx="2" ry="2" strokeLinecap="round" />
       <path strokeLinecap="round" d="M8 11V9a4 4 0 1 1 8 0v2" />
     </svg>
@@ -65,7 +58,7 @@ function IconLock({ className }: { className?: string }) {
 
 function IconHeadphones({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden className={className} fill="none" stroke="currentColor" strokeWidth="1.65">
+    <svg viewBox="0 0 24 24" aria-hidden className={className} fill="none" stroke="currentColor" strokeWidth="1.2">
       <path strokeLinecap="round" strokeLinejoin="round" d="M4 15v4a3 3 0 0 0 3 3h2M20 15v4a3 3 0 0 1-3 3h-2M4 13a10 10 0 0 1 16 0" />
       <path strokeLinecap="round" d="M16 17h1a3 3 0 0 1 3 3v4M8 17H7a3 3 0 0 0-3 3v4" />
     </svg>
@@ -74,7 +67,7 @@ function IconHeadphones({ className }: { className?: string }) {
 
 function IconMobile({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden className={className} fill="none" stroke="currentColor" strokeWidth="1.65">
+    <svg viewBox="0 0 24 24" aria-hidden className={className} fill="none" stroke="currentColor" strokeWidth="1.2">
       <rect x="7.5" y="3.5" width="9" height="17" rx="2.2" strokeLinecap="round" />
       <path strokeLinecap="round" d="M11 17.5h2" />
     </svg>
@@ -92,7 +85,6 @@ const featuredShadowHover =
   "lg:group-hover/card:shadow-[0_42px_92px_rgba(60,40,20,0.13),0_28px_56px_-12px_rgba(120,88,48,0.16),0_0_0_1px_rgba(212,176,122,0.38)]";
 
 export function HomeOfferSectionClient({ packages }: { packages: readonly OfferPackageVm[] }) {
-  const [billing, setBilling] = useState<Billing>("one-time");
   const reduceMotion = useReducedMotion();
   const prefersReducedMotion = !!reduceMotion;
 
@@ -178,54 +170,21 @@ export function HomeOfferSectionClient({ packages }: { packages: readonly OfferP
           <p className="mx-auto mt-3 max-w-[600px] text-pretty text-[0.9375rem] leading-[1.75] tracking-[0.01em] text-[#71685f] sm:text-[0.9625rem]">
             Rozwiązanie dopasowane do skali przyjęcia — od spokojnego startu po pełną wizytówkę weselną pod Wasz adres.
           </p>
-        </header>
-
-        <div className="mt-7 flex flex-col items-center gap-1.5 sm:mt-6">
-          <div className="inline-flex rounded-full border border-[rgba(185,146,94,0.2)] bg-[rgba(254,251,246,0.92)] p-1 shadow-[0_6px_20px_-8px_rgba(60,42,28,0.12)] backdrop-blur-[10px]">
-            <button
-              type="button"
-              aria-pressed={billing === "monthly"}
-              onClick={() => setBilling("monthly")}
-              className={`rounded-full px-[1.125rem] py-2 text-[13px] font-medium tracking-[0.04em] transition ${
-                billing === "monthly"
-                  ? "bg-[rgba(218,182,126,0.48)] text-[#251c15] shadow-[inset_0_1px_0_rgba(255,252,246,0.65)]"
-                  : "bg-transparent text-[#7d746d] hover:text-[#2b2118]"
-              }`}
-            >
-              Miesięcznie
-            </button>
-            <button
-              type="button"
-              aria-pressed={billing === "one-time"}
-              onClick={() => setBilling("one-time")}
-              className={`rounded-full px-[1.125rem] py-2 text-[13px] font-medium tracking-[0.04em] transition ${
-                billing === "one-time"
-                  ? "bg-[rgba(218,182,126,0.48)] text-[#251c15] shadow-[inset_0_1px_0_rgba(255,252,246,0.65)]"
-                  : "bg-transparent text-[#7d746d] hover:text-[#2b2118]"
-              }`}
-            >
-              Jednorazowo
-            </button>
-          </div>
-          <p className="max-w-md text-center text-[10.5px] leading-snug text-[#9a928a]">
-            {billing === "monthly"
-              ? "Orientacyjnie: cała kwota podzielona na 12 miesięcy."
-              : "Cena zakupu wybranego pakietu z aktualnego cennika."}
+          <p className="mx-auto mt-2 max-w-[600px] text-center text-[11px] leading-snug text-[#9a928a]">
+            Ceny jednorazowe według aktualnego cennika.
           </p>
-        </div>
+        </header>
 
         {/* Siatka: zwarta kompozycja, nie full-bleed kolumn */}
         <div className="mx-auto mt-9 max-w-[1280px] lg:mt-10 lg:pt-4">
           <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 pt-1 [scrollbar-width:none] [-ms-overflow-style:none] lg:auto-rows-fr lg:snap-none lg:grid lg:grid-cols-5 lg:gap-[0.875rem] lg:overflow-visible lg:pb-2 lg:pt-2 xl:gap-[1.05rem] [&::-webkit-scrollbar]:hidden">
             {packages.map((pkg, idx) => {
               const featured = pkg.featured;
-              const monthlyLine = billing === "monthly" ? formatMonthlyFromTotalCents(pkg.priceCents) : null;
-              const oneTimeLine = billing === "one-time" ? formatPln(pkg.priceCents) : null;
+              const priceLine = formatPln(pkg.priceCents);
 
               return (
                 <motion.article
                   key={pkg.id}
-                  layout
                   initial={prefersReducedMotion ? undefined : { opacity: 0, y: 16 }}
                   whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -283,13 +242,11 @@ export function HomeOfferSectionClient({ packages }: { packages: readonly OfferP
 
                   <div className="mt-5 border-t border-[rgba(187,154,112,0.16)] pt-5">
                     <p className="font-wa-display text-[clamp(1.55rem,2.55vw,1.875rem)] font-semibold leading-none tracking-[0.01em] text-[#251c15]">
-                      {billing === "monthly" ? monthlyLine : oneTimeLine}
+                      {priceLine}
                     </p>
-                    {billing === "one-time" ? (
-                      <span className="mt-1 block text-[11px] font-medium uppercase tracking-[0.14em] text-[#8e857b]">
-                        jednorazowo
-                      </span>
-                    ) : null}
+                    <span className="mt-1 block text-[11px] font-medium uppercase tracking-[0.14em] text-[#8e857b]">
+                      jednorazowo
+                    </span>
                   </div>
 
                   <div className="mt-5">
@@ -310,26 +267,26 @@ export function HomeOfferSectionClient({ packages }: { packages: readonly OfferP
           </div>
         </div>
 
-        {/* Pływający panel benefitów */}
+        {/* Kompaktowy premium strip — nie „panel z dashboardu” */}
         <motion.div
-          className="relative z-[2] mx-auto mt-11 max-w-[1280px] rounded-[2.25rem] border border-[rgba(192,154,106,0.26)] bg-[linear-gradient(180deg,#fffdf9_0%,#faf4e8_48%,#f4e9da_100%)] px-7 py-10 shadow-[0_32px_72px_rgba(60,40,20,0.11),0_18px_44px_-18px_rgba(52,38,24,0.09),inset_0_1px_0_rgba(255,253,249,0.92)] backdrop-blur-[8px] sm:px-10 sm:py-11 lg:mt-12"
+          className="relative z-[2] mx-auto mt-8 max-w-[1280px] rounded-xl border border-[rgba(185,148,98,0.22)] bg-[linear-gradient(180deg,rgba(255,253,249,0.92)_0%,rgba(250,244,234,0.88)_100%)] px-4 py-4 shadow-[0_18px_44px_-28px_rgba(42,32,22,0.12),0_8px_22px_-18px_rgba(52,38,26,0.08),inset_0_1px_0_rgba(255,252,246,0.85)] backdrop-blur-[6px] sm:mt-9 sm:px-6 sm:py-5 lg:mt-10"
           initial={prefersReducedMotion ? undefined : { opacity: 0, y: 8 }}
           whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.08, duration: 0.35 }}
+          transition={{ delay: 0.06, duration: 0.35 }}
         >
-          <div className="mx-auto grid max-w-[1120px] grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-[rgba(190,154,108,0.2)] lg:gap-y-0">
+          <div className="mx-auto grid max-w-[1120px] grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-y-0 lg:divide-x lg:divide-[rgba(185,148,98,0.14)]">
             {benefits.map((b) => (
               <div
                 key={b.title}
-                className="flex items-start gap-5 sm:justify-center lg:justify-start lg:gap-6 lg:px-8 xl:px-10"
+                className="flex items-start gap-3 sm:justify-center lg:justify-start lg:gap-3.5 lg:px-5 xl:px-6"
               >
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[1.125rem] bg-[rgba(226,192,138,0.22)] text-[#8f7048] shadow-[inset_0_1px_0_rgba(255,251,238,0.75),0_12px_24px_-16px_rgba(70,52,32,0.12)]">
-                  <b.icon className="h-7 w-7" aria-hidden />
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[rgba(190,158,108,0.28)] bg-[rgba(255,252,246,0.35)] text-[#a08056] shadow-[inset_0_1px_0_rgba(255,252,246,0.9)]">
+                  <b.icon className="h-[18px] w-[18px]" aria-hidden />
                 </span>
                 <div className="min-w-0 text-left">
-                  <p className="font-wa-display text-[1.05rem] font-semibold tracking-[0.02em] text-[#271f18]">{b.title}</p>
-                  <p className="mt-1 text-sm leading-relaxed text-[#766d63]">{b.subtitle}</p>
+                  <p className="font-wa-display text-[0.9375rem] font-semibold tracking-[0.015em] text-[#271f18]">{b.title}</p>
+                  <p className="mt-0.5 text-[13px] leading-snug text-[#6f6760]">{b.subtitle}</p>
                 </div>
               </div>
             ))}

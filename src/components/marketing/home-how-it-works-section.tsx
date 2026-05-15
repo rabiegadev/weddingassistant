@@ -94,7 +94,16 @@ export function HomeHowItWorksSection() {
             <motion.li
               key={step.id}
               variants={listItem}
-              className="relative flex min-h-[15.5rem] flex-col items-center p-1 text-center sm:min-h-[17rem] sm:p-2"
+              whileHover={
+                reduce
+                  ? undefined
+                  : {
+                      y: -4,
+                      boxShadow: "0 22px 44px -22px rgba(0,0,0,0.45)",
+                      transition: { type: "spring" as const, stiffness: 260, damping: 22 },
+                    }
+              }
+              className="relative flex min-h-[15.5rem] cursor-default flex-col items-center rounded-2xl p-3 text-center sm:min-h-[17rem] sm:p-4"
             >
               {index < steps.length - 1 ? (
                 <span
@@ -126,6 +135,12 @@ export function HomeHowItWorksSection() {
           )}
         </motion.p>
       </div>
+
+      {/* Lekki „odbicie” u dołu — bez pełnego blendu do kremu (unika podwójnej jasnej belki z następną sekcją) */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-12 bg-gradient-to-t from-[#1a1512]/85 to-transparent sm:h-14"
+      />
     </section>
   );
 }

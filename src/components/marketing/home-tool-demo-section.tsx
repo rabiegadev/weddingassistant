@@ -31,7 +31,13 @@ export function HomeToolDemoSection() {
       className="wa-marketing-section scroll-mt-wa overflow-hidden border-b border-[#e1d2bc]/70 bg-[#fdfbf7]"
       aria-labelledby="sekcja-darmowe-mozliwosci"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[42%] bg-[radial-gradient(ellipse_80%_65%_at_70%_-5%,rgba(200,165,110,0.07),transparent_58%)] max-lg:right-0 max-lg:left-auto max-lg:w-[85%]" aria-hidden />
+      {/* Jeden krótki, stonowany blend — bez jasnego radiala (ten dawał grubą „belkę”) */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-[3] h-16 bg-gradient-to-b from-[#231c17]/92 via-[#d9cfc5]/18 to-transparent sm:h-[4.5rem] md:h-20"
+      />
+
+      <div className="pointer-events-none absolute inset-x-0 top-[18%] h-[42%] bg-[radial-gradient(ellipse_80%_65%_at_70%_-5%,rgba(200,165,110,0.06),transparent_58%)] max-lg:right-0 max-lg:left-auto max-lg:w-[85%]" aria-hidden />
 
       <div className="relative grid min-h-0 grid-cols-1 lg:grid-cols-[minmax(0,1.07fr)_minmax(340px,0.93fr)] lg:min-h-[28rem] xl:min-h-[32rem]">
         <motion.div
@@ -45,17 +51,17 @@ export function HomeToolDemoSection() {
             src="/images/flowers1.jpg"
             alt="Stół weselny z kwiatami i świecami — klimat uroczystości."
             fill
-            className="object-cover object-[50%_45%]"
+            className="object-cover object-[50%_45%] saturate-[1.05] contrast-[0.98]"
             sizes="(min-width: 1024px) 55vw, 100vw"
             quality={92}
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[linear-gradient(105deg,rgba(253,251,247,0.14)_0%,transparent_42%,rgba(42,32,22,0.12)_100%)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_85%_75%_at_50%_45%,transparent_35%,rgba(42,32,24,0.18)_100%)],linear-gradient(165deg,rgba(253,251,247,0.12)_0%,transparent_38%,rgba(28,22,18,0.15)_100%)]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-[linear-gradient(to_top,rgba(253,251,247,0.55),transparent)]"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-[linear-gradient(to_top,rgba(253,251,247,0.28),transparent)]"
           />
         </motion.div>
 
